@@ -1,0 +1,26 @@
+.stm-cell{
+	position:relative;
+	padding:15px 0;
+	.cell-warp{
+		display:flex;
+		align-items:center;
+		.cell-main{
+			flex:1;
+			display:flex;
+			align-items:center;
+		}
+	}
+	&:last-child:after{
+		display:none;
+	}
+	&:after{
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		height:1px;
+		background:#e8e8e8;
+		width:100%;
+	}
+
+}
