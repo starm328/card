@@ -25,75 +25,75 @@
 		<mpvue-picker ref="mpvuePicker" :mode="mode" :deepLength=deepLength :pickerValueDefault="pickerValueDefault" @onChange="onChange" @onConfirm="onConfirm" @pickerCancel="pickerCancel" :pickerValueArray="pickerValueArray"></mpvue-picker>
 
 		<mpvue-picker ref="address" :mode="mode" :deepLength=addLength :pickerValueDefault="addValueDefault"  @onChange="addConfirm" @onConfirm="addConfirm"  @pickerCancel="addCancel" :pickerValueArray="addValueArray"></mpvue-picker>
-		<form @submit="formSubmit">
+		<form @submit="formSubmit" v-if="cardbasic">
 			<dl  class="upimg">
 				<dd>
 					<p>头像</p>
 					<span>你的头像将会由超级AI人脸识别系统审核，请上传真实个人头像，不要使用产品、风景、动物、明显、色情、暴力、卡通人物等图片做为名片头像，否则无法保存。</span>
 				</dd>
 				<dt  @click="chooseimg" >
-					<i class="iconfont icon-tianjia" v-if="!img_url"></i>
-					<input type="text" name="img_url" :value="img_url" style="display:none;">
-					<img :src="img_url"  mode="aspectFit" class="tempFilePaths" >
+					<i class="iconfont icon-tianjia" v-if="!tempFilePaths && cardbasic ? !cardbasic.card.img_url : !cardbasic"></i>
+					<input type="text" name="img_url" :value="img_url?img_url:cardbasic?cardbasic.card.img_url:''" style="display:none;">
+					<img :src="img_url?img_url:cardbasic?cardbasic.card.img_url:''"  mode="aspectFit" class="tempFilePaths" >
 				</dt>
 			</dl>
 			<dl class="dl-li">
 				<dd>
 					<p>姓名</p>
-					<input type="text" name="name" placeholder="必填项" placeholder-style="color:#888;">
+					<input type="text" name="name" placeholder="必填项" placeholder-style="color:#888;" v-model="cardbasic.card.name" >
 				</dd>
 			</dl>
 			<dl class="dl-li">
 				<dd @click="screen">
 					<p>性别</p>
-					<input type="text" name="gender" :value="genderNumber" placeholder="必填项" placeholder-style="color:#888;" style="display:none">
-					<input type="text"  :value="gender" placeholder="必填项" placeholder-style="color:#888;" disabled="">
+					<input type="text" name="gender" :value="genderNumber ? genderNumber : cardbasic ? cardbasic.card.gender : ''" placeholder="必填项" placeholder-style="color:#888;" style="display:none">
+					<input type="text"  :value="gender ? gender : cardbasic? cardbasic.card.gender == 0 ? '保密' :cardbasic.card.gender == 1 ? '男' :cardbasic.card.gender == 2 ? '女' :'' :'' " placeholder="必填项" placeholder-style="color:#888;" disabled="">
 				</dd>
 			</dl>
 			<dl class="dl-li">
 				<dd>
 					<p>公司</p>
-					<input type="text" name="company" placeholder="必填项" placeholder-style="color:#888;">
+					<input type="text" name="company" placeholder="必填项" placeholder-style="color:#888;" v-model="cardbasic.card.company">
 				</dd>
 			</dl>
 			<dl class="dl-li">
 				<dd>
 					<p>职务</p>
-					<input type="text" name="position" placeholder="必填项" placeholder-style="color:#888;">
+					<input type="text" name="position" placeholder="必填项" placeholder-style="color:#888;" v-model="cardbasic.card.position">
 				</dd>
 			</dl>
 			<dl class="dl-li">
 				<dd class="after">
 					<p>手机</p>
-					<input type="number" name="phone" placeholder="必填项" placeholder-style="color:#888;">
+					<input type="number" name="phone" placeholder="必填项" placeholder-style="color:#888;" v-model="cardbasic.card.phone">
 				</dd>
 				<div class="radio">
 					<radio-group class="group" @change="radio">
 						<label>
-							<radio color='#d95940' checked value="1"></radio>
+							<radio color='#d95940' :checked="phoneconfig ? phoneconfig == 1 ? true:false : cardbasic?cardbasic.card.phoneconfig == '1' ? true :  false : true" value="1"></radio>
 							隐私保护，仅相互交换了名片的用户可见。
 						</label>
 						<label>
-							<radio color='#d95940' value="2"></radio>
+							<radio color='#d95940' :checked="phoneconfig ? phoneconfig == 2 ? true:false :cardbasic?cardbasic.card.phoneconfig == '2' ? true :  false : false" value="2"></radio>
 							完全公开，手机号码对所有人可见。
 						</label>
 					</radio-group>
-					<input type="test" name="phoneconfig" :value="phoneconfig" style="display:none;">
+					<input type="test" name="phoneconfig" :value="phoneconfig ? phoneconfig : cardbasic ? cardbasic.card.phoneconfig : 1" style="display:none;">
 				</div>
 
 			</dl>
 			<dl class="dl-li">
 				<dd>
 					<p>行业</p>
-					<input type="test" name="trade" :value="province !=  '' ? province.title +'|'+ city.title :''"  style="display:none">
-					<input type="text" @click="showPicker" :placeholder="province !=  '' ?'' :'请选择行业'" :value="province !=  '' ? province.title +'|'+ city.title :''" disabled=""  placeholder-style="color:#888;">
+					<input type="test" name="trade" :value="province !=  '' ? province.title +'|'+ city.title :  cardbasic ? cardbasic.card.trade: ''"  style="display:none">
+					<input type="text" @click="showPicker" :placeholder="province !=  '' ?'' :'请选择行业'" :value="province !=  '' ? province.title +'|'+ city.title : cardbasic ? cardbasic.card.trade: ''" disabled=""  placeholder-style="color:#888;">
 				</dd>
 			</dl>
 			<dl class="dl-li">
 				<dd>
 					<p>地区</p>
-					<input type="test" name="area" :value="adds != '' ? add.title + ','+ adds.title : ''"  style="display:none">
-					<input @click="addPicker" type="text"  :placeholder="adds != '' ? '' : '请选择地区'" :value="adds != '' ? add.title + ','+ adds.title : ''" disabled=""  placeholder-style="color:#888;">
+					<input type="test" name="area" :value="adds != '' ? add.title + ','+ adds.title : cardbasic? cardbasic.card.area:''"  style="display:none">
+					<input @click="addPicker" type="text"  :placeholder="adds != '' ? '' : '请选择地区'" :value="adds != '' ? add.title + ','+ adds.title : cardbasic? cardbasic.card.area:''" disabled=""  placeholder-style="color:#888;">
 				</dd>
 			</dl>
 			<div style="width:96%;margin:0px auto;padding-bottom:20px;">
@@ -125,7 +125,6 @@ export default {
 
 	data () {
 		return {
-			cropper:false,
 			img_url:'',
 			province:'',
 			city:'',
@@ -136,7 +135,7 @@ export default {
 			pageid:'',
 			gender:'',
 			genderNumber:'',
-			phoneconfig:'1',
+			phoneconfig:'',
 			mulLinkageThreePicker:'',
 			addThreePicker: [
 			  {
@@ -169,6 +168,8 @@ export default {
 			pickerValueDefault: [0,0],
 			addValueDefault: [0,0],
 			tempFilePaths:'',
+			cardbasic:'',
+			cropper:false,
 			cropperOpt: {
 				id: 'cropper',
 				width,
@@ -193,35 +194,119 @@ export default {
 		})
 		if(option){
 			this.pageid = option.id
+
 		}
-		var _this = this;
-		wx.pro.request({
-			url:`${configs.card.apiBaseUrl}api/index/trade`,
-			method: 'GET',
-		})
-		.then(d => {
-			if(d.statusCode == 200){
-				_this.mulLinkageThreePicker = d.data
-			}
-			// 2XX, 3XX
-		})
-		.catch(err => {
-			if(err.statusCode == 500){
-				wx.hideLoading ();
-				wx.showToast({
-					title: '系统错误',
-					icon: 'none',
-					duration: 2000,
-				})
-			}
-			// 网络错误、或服务器返回 4XX、5XX
-		})
-	},
-	mounted () {
-		wecropper = this.$refs.cropper
+		if(option.id){
+			var _this = this;
+			console.log('1')
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/user/showcard/`+option.id,
+				method: 'GET',
+				header: {
+					token:Auth.proxy.token.access_token
+				}
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					wx.hideLoading ();
+					_this.cardbasic = d.data
+					console.log(_this.cardbasic)
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 404){
+					wx.hideLoading ();
+					wx.removeStorageSync('token')
+					// if(Auth.proxy.token.access_token){
+					// 	Auth.refresh(Auth.proxy.token.access_token);
+					// 	this.getdata();
+					// }
+				}else if(err.statusCode == 500){
+					wx.hideLoading ();
+					wx.showToast({
+						title: '系统错误',
+						icon: 'none',
+						duration: 2000,
+					})
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/index/trade`,
+				method: 'GET',
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					_this.mulLinkageThreePicker = d.data
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 500){
+					wx.hideLoading ();
+					wx.showToast({
+						title: '系统错误',
+						icon: 'none',
+						duration: 2000,
+					})
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
+		}
+
 	},
 
+
 	methods: {
+		screen() {
+			var _this = this;
+			wx.showActionSheet({
+				itemList: ['保密', '男', '女'],
+				success: function(res) {
+					_this.genderNumber = res.tapIndex
+					if(res.tapIndex == 0){
+						_this.gender = '保密'
+					}else if(res.tapIndex == 1){
+						_this.gender = '男'
+					}else{
+						_this.gender = '女'
+					}
+				},
+				fail: function(res) {
+					console.log(res.errMsg)
+				}
+			})
+		},
+		radio(e) {
+			this.phoneconfig = e.mp.detail.value
+		},
+
+		showPicker() {
+			this.pickerValueArray = this.mulLinkageThreePicker;
+			this.mode = 'multiLinkageSelector';
+			this.deepLength = 2;
+			this.pickerValueDefault = [0, 0];
+			this.$refs.mpvuePicker.show();
+		},
+
+		addPicker() {
+			this.addValueArray = this.addThreePicker;
+			this.mode = 'multiLinkageSelector';
+			this.deepLength = 2;
+			this.addValueDefault = [0, 0];
+			this.$refs.address.show();
+		},
+
+		onConfirm(e) {
+			this.province = this.mulLinkageThreePicker[e[0]]
+			this.city = this.mulLinkageThreePicker[e[0]].children[e[1]]
+		},
+
+		addConfirm(e) {
+			this.add = this.addThreePicker[e[0]]
+			this.adds = this.addThreePicker[e[0]].children[e[1]]
+		},
 		cropperReady (...args) {
 		  console.log('cropper ready!')
 		},
@@ -235,6 +320,7 @@ export default {
 		  // Todo: 绘制水印等等
 		},
 		uploadTap () {
+			this.cropper = true
 		  wx.chooseImage({
 			count: 1, // 默认9
 			sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -310,57 +396,9 @@ export default {
 			  console.error('获取图片失败')
 			})
 		},
-		screen() {
-			var _this = this;
-			wx.showActionSheet({
-				itemList: ['保密', '男', '女'],
-				success: function(res) {
-					_this.genderNumber = res.tapIndex
-					if(res.tapIndex == 0){
-						_this.gender = '保密'
-					}else if(res.tapIndex == 1){
-						_this.gender = '男'
-					}else{
-						_this.gender = '女'
-					}
-				},
-				fail: function(res) {
-					console.log(res.errMsg)
-				}
-			})
-		},
-		radio(e) {
-			this.phoneconfig = e.mp.detail.value
-		},
-
-		showPicker() {
-			this.pickerValueArray = this.mulLinkageThreePicker;
-			this.mode = 'multiLinkageSelector';
-			this.deepLength = 2;
-			this.pickerValueDefault = [0, 0];
-			this.$refs.mpvuePicker.show();
-		},
-
-		addPicker() {
-			this.addValueArray = this.addThreePicker;
-			this.mode = 'multiLinkageSelector';
-			this.deepLength = 2;
-			this.addValueDefault = [0, 0];
-			this.$refs.address.show();
-		},
-
-		onConfirm(e) {
-			this.province = this.mulLinkageThreePicker[e[0]]
-			this.city = this.mulLinkageThreePicker[e[0]].children[e[1]]
-		},
-
-		addConfirm(e) {
-			this.add = this.addThreePicker[e[0]]
-			this.adds = this.addThreePicker[e[0]].children[e[1]]
-		},
 		chooseimg() {
 			var _this =this
-			_this.cropper = true
+			_this.uploadTap()
 
 		},
 		formSubmit(e) {

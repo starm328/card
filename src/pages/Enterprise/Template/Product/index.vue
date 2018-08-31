@@ -1,5 +1,5 @@
 <template>
-	<div class="enterprise-template-product-warp">
+	<div class="enterprise-template-product-warp stm-warp">
 		<div class="stm-cell  enterprise-template-product-list">
 			<div class="cell-warp">
 				<div class="cell-left enterprise-template-product-tit">产品归属：</div>

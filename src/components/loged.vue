@@ -20,19 +20,22 @@
 		</swiper>
 
 	</div>
-	<swiper previous-margin="40px" next-margin="40px" current="0" v-else-if="Auth.token && !Auth.token.is_new">
-		<block>
-			<swiper-item item-id="dd" class="active">
-				<div class="swiper-content">
-						<div class="imgno">
-							<open-data type="userAvatarUrl" class="img"></open-data>
-						</div>
-						<button type="default" class="stm-mt10" @click="gosign">注册</button>
-				</div>
-			</swiper-item>
-		</block>
+	<div  v-else-if="Auth.token && !Auth.token.is_new" class="login">
+		<swiper previous-margin="40px" next-margin="40px" current="0">
+			<block>
+				<swiper-item item-id="dd" class="active">
+					<div class="swiper-content">
+							<div class="imgno">
+								<open-data type="userAvatarUrl" class="img"></open-data>
+							</div>
+							<button type="default" class="stm-mt10" @click="gosign">注册</button>
+					</div>
+				</swiper-item>
+			</block>
+		</swiper>
 		<stm-phone v-if="sign" @log="oversign"></stm-phone>
-	</swiper>
+	</div>
+
 
 </template>
 
@@ -76,7 +79,26 @@ export default {
 
 <style lang="less" scoped>
 @import '../configs/style.less';
+.loding{
+	position:fixed;
+	width:100%;
+	height:100%;
+	text-align:center;
+	span{
+		display:block;
+		width:90px;
+		height:90px;
+		border-radius:10px;
+		background:rgba(000,000,000,0.5);
+		color:#fff;
+		text-align:center;
+		margin:0 auto;
+		line-height:90px;
+		font-size:13px;
+		margin-top:50%;
 
+	}
+}
 .login{
 	position:relative;
 	swiper{
@@ -113,26 +135,7 @@ export default {
 			}
 		}
 	}
-	.loding{
-		position:fixed;
-		width:100%;
-		height:100%;
-		text-align:center;
-		span{
-			display:block;
-			width:90px;
-			height:90px;
-			border-radius:10px;
-			background:rgba(000,000,000,0.5);
-			color:#fff;
-			text-align:center;
-			margin:0 auto;
-			line-height:90px;
-			font-size:13px;
-			margin-top:50%;
 
-		}
-	}
 }
 
 </style>

@@ -43,7 +43,7 @@
 			</dl>
 			<div class="fle-btn">
 				<button type="primary" formType="submit" class="stm-main-button stm-m10-t">保存</button>
-				<button type="primary"  bindtap="primary" class="stm-main-button stm-m10-t">删除此名片</button>
+				<button type="primary"  bindtap="primary" class="stm-main-button stm-m10-t" @click="delcard">删除此名片</button>
 			</div>
 		</form>
 	</div>
@@ -102,6 +102,11 @@ export default {
 							title: '保存成功',
 							icon: 'success',
 							duration: 2000,
+							success:()=>{
+								wx.navigateBack({
+									delta: 1
+								})
+							}
 						})
 						_this.cardid = d.data
 					}
@@ -136,7 +141,14 @@ export default {
 								}
 							}
 						})
-					}
+					}else if(err.statusCode == 500){
+							wx.showModal({
+								title: '错误提示',
+								content: '系统错误',
+								showCancel: false,
+
+							})
+						}
 					// 网络错误、或服务器返回 4XX、5XX
 				})
 			}else{
@@ -147,7 +159,56 @@ export default {
 				})
 			}
 
-		}
+		},
+		delcard() {
+			var _this = this;
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/user/delcard/`+this.id,
+				method: 'GET',
+				header: {
+					token:Auth.proxy.token.access_token
+				}
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					wx.hideLoading ();
+					wx.showToast({
+						title: '已删除',
+						icon: 'none',
+						duration: 2000,
+						success:() => {
+							wx.navigateTo({
+							  url: '/pages/Home/index/main'
+							})
+						}
+					})
+				}else{
+					wx.showToast({
+						title: '删除失败',
+						icon: 'none',
+						duration: 2000,
+					})
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 404){
+					wx.hideLoading ();
+					if(Auth.proxy.token.access_token){
+						Auth.refresh(Auth.proxy.token.access_token);
+						this.cardrequest();
+					}
+				}else if(err.statusCode == 500){
+					wx.showModal({
+						title: '错误提示',
+						content: '系统错误',
+						showCancel: false,
+
+					})
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
+		},
 	}
 }
 </script>
@@ -156,6 +217,7 @@ export default {
 @import '../../configs/style.less';
 @import '../../configs/main.less';
 .jurisdiction-index{
+	padding-top:10px;
 	.hr{
 		height:1px;
 		background:#ddd;

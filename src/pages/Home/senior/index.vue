@@ -1,29 +1,28 @@
 <template>
-	<div class="home-billing-index stm-warp">
+	<div class="home-senior-index stm-warp">
 		<cart-loged>
-			<stm-home-billing></stm-home-billing>
+			<stm-home-senior></stm-home-senior>
 		</cart-loged>
 	</div>
 </template>
 
 <script>
 import Loged from '@/components/loged';
-import Homebilling from '@/components/home/billing'
+import Homesenior from '@/components/home/senior'
 export default {
 	name: 'cart-home-show',
 	components: {
 		'cart-loged': Loged,
-		'stm-home-billing': Homebilling,
+		'stm-home-senior': Homesenior,
 	},
 	data () {
 		return {
 
 		}
 	},
-
 	onLoad() {
 		wx.setNavigationBarTitle({
-			title:'开票信息'
+			title:'高级选项'
 		})
 	}
 }

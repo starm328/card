@@ -16,12 +16,16 @@ export default {
 		'^pages/Home/index/main',
 		'pages/Home/show/main',
 		'pages/Home/share/main',
+		'pages/Home/product/main',
+		'pages/Home/enterprise/main',
+		'pages/Home/translate/main',
 		'pages/Home/show/authentication/main',
 		'pages/Home/show/authentication/identity/main',
 		'pages/Home/show/authentication/enterprise/main',
 		'pages/Home/show/authentication/legalperson/main',
 		'pages/Home/show/authentication/bankcar/main',
 		'pages/Home/basic/main',
+		'pages/Home/senior/main',
 		'pages/Home/Edit/basic/main',
 		'pages/Home/billing/main',
 		'pages/Home/detailed/main',
@@ -83,7 +87,7 @@ export default {
 		window: {
 			backgroundTextStyle: 'light',
 			navigationBarBackgroundColor: '#fa6b5b',
-			navigationBarTitleText: '我的全能名片',
+			navigationBarTitleText: '一生名片',
 			navigationBarTextStyle: '#fff'
 		},
 		// tabBar:{

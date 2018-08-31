@@ -145,7 +145,8 @@ export default {
 						phone: _this.phone,
 						vcode: _this.Inputcode,
 						access_token:_this.auth.proxy.token.access_token,
-						pass:'123456'
+						pass:'123456',
+						pid:wx.getStorageSync('pid')?wx.getStorageSync('pid'):''
 					}
 				})
 				.then(d => {
@@ -172,6 +173,26 @@ export default {
 								this.auth.proxy.token = ''
 								wx.removeStorageSync('token')
 							}
+						})
+						// Auth.RefreshToken();
+					}else if(err.statusCode == 500){
+						wx.showToast({
+							mask: true,
+							title: '系统错误',
+							icon: 'none',
+							duration: 2000,
+							success:()=>{
+								this.auth.proxy.token = ''
+								wx.removeStorageSync('token')
+							}
+						})
+						// Auth.RefreshToken();
+					}else if(err.statusCode == 403){
+						wx.showToast({
+							mask: true,
+							title: '验证码错误',
+							icon: 'none',
+							duration: 2000,
 						})
 						// Auth.RefreshToken();
 					}
@@ -243,6 +264,7 @@ export default {
 	height:100%;
 	top:0;
 	left:0;
+	z-index:9999;
 	.phone-bg{
 		position:fixed;
 		width:100%;

@@ -1,5 +1,5 @@
 <template>
-	<div class="authentication-index">
+	<div class="authentication-index stm-warp">
 		<div class="authentication-index-box">
 			<dl class="not" @click="open">
 				<dt>

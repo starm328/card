@@ -1,5 +1,5 @@
 <template>
-	<div class="bankcard-index">
+	<div class="bankcard-index stm-warp">
 		<dl class="dl-li">
 			<dd class="btn">
 				<p>招商银行</p>

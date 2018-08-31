@@ -1,5 +1,5 @@
 <template>
-	<div class="identity-index">
+	<div class="identity-index stm-warp">
 		<dl class="dl-li">
 			<dd class="btn">
 				<p>叶志勇<span>已认证</span></p>

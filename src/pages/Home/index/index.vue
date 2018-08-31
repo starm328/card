@@ -37,6 +37,8 @@ import Vue from 'vue';
 import Auth from '@/utils/Auth';
 import StmSwiper from '@/components/home/index';
 import Phone from '@/components/phone/phone';
+var util = require('@/utils/md5.js')
+
 export default {
 
 	name: 'home-index',
@@ -53,13 +55,23 @@ export default {
 			share:''
 		}
 	},
+	onLoad(option) {
+		if(option.pid){
+			wx.setStorageSync('pid',option.pid)
+		}else if(option.scene){
+			wx.setStorageSync('pid',option.scene)
+
+		}
+	},
 	onShareAppMessage(res) {
 		if (res.from === 'button') {
-			console.log(res.target.dataset)
+			var getshare = res.target.dataset
+			var date = new Date().getTime()
+			console.log('/pages/Home/share/main?id='+ getshare.id +'&time=' + date+'&token='+util.hexMD5(getshare.id + '_' + date) + '&pid=' +wx.getStorageSync('token').user_id)
 			return {
-				title: res.target.dataset.name,
-				path: '/pages/Home/show/main?id='+res.target.dataset.id,
-				imageUrl:res.target.dataset.img,
+				title: getshare.name,
+				path: '/pages/Home/share/main?id='+ getshare.id +'&time=' + date+'&token='+util.hexMD5(getshare.id + '_' + date) + '&pid=' +wx.getStorageSync('token').user_id,
+				imageUrl:getshare.img,
 			}
 		}
 	},
@@ -121,7 +133,7 @@ export default {
 		}
 		h5{
 			font-size:@fontfive;
-			margin:20px 0 20px 0;
+			margin:10px 0 10px 0;
 			font-weight:bold;
 			padding:0 10px;
 			overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
@@ -160,7 +172,7 @@ export default {
 	}
 	swiper{
 		padding-top:50px;
-		height:70vh;
+		height:75vh;
 		.wx-swiper-dot{
 			margin-top:10px;
 		}
@@ -350,6 +362,9 @@ export default {
 					button{
 						margin:0;padding:0;
 						background:none;
+						&:after{
+							display:none;
+						}
 					}
 					i{
 						background:#fff;

@@ -1,5 +1,5 @@
 <template>
-	<div class="enterprise-index">
+	<div class="enterprise-index stm-warp">
 		<dl class="dl-li">
 			<dd class="btn">
 				<p>上海猫口袋信息科技有限公司</p>

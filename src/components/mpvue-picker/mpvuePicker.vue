@@ -137,18 +137,18 @@ export default {
         let pickerValueMulTwoTwo = [];
         // 第一列
         for (let i = 0, length = pickerValueArray.length; i < length; i++) {
-          pickerValueMulTwoOne.push(pickerValueArray[i].label);
+          pickerValueMulTwoOne.push(pickerValueArray[i].title);
         }
         // 渲染第二列
         // 如果有设定的默认值
         if (this.pickerValueDefault.length === 2) {
           let num = this.pickerValueDefault[0];
           for (let i = 0, length = pickerValueArray[num].children.length; i < length; i++) {
-            pickerValueMulTwoTwo.push(pickerValueArray[num].children[i].label);
+            pickerValueMulTwoTwo.push(pickerValueArray[num].children[i].title);
           }
         } else {
           for (let i = 0, length = pickerValueArray[0].children.length; i < length; i++) {
-            pickerValueMulTwoTwo.push(pickerValueArray[0].children[i].label);
+            pickerValueMulTwoTwo.push(pickerValueArray[0].children[i].title);
           }
         }
         this.pickerValueMulTwoOne = pickerValueMulTwoOne;
@@ -159,19 +159,19 @@ export default {
         let pickerValueMulThreeThree = [];
         // 第一列
         for (let i = 0, length = pickerValueArray.length; i < length; i++) {
-          pickerValueMulThreeOne.push(pickerValueArray[i].label);
+          pickerValueMulThreeOne.push(pickerValueArray[i].title);
         }
         // 渲染第二列
         this.pickerValueDefault = this.pickerValueDefault.length === 3 ? this.pickerValueDefault : [0, 0, 0];
         if (this.pickerValueDefault.length === 3) {
           let num = this.pickerValueDefault[0];
           for (let i = 0, length = pickerValueArray[num].children.length; i < length; i++) {
-            pickerValueMulThreeTwo.push(pickerValueArray[num].children[i].label);
+            pickerValueMulThreeTwo.push(pickerValueArray[num].children[i].title);
           }
           // 第三列
           let numSecond = this.pickerValueDefault[1];
           for (let i = 0, length = pickerValueArray[num].children[numSecond].children.length; i < length; i++) {
-            pickerValueMulThreeThree.push(pickerValueArray[num].children[numSecond].children[i].label);
+            pickerValueMulThreeThree.push(pickerValueArray[num].children[numSecond].children[i].title);
           }
         }
         this.pickerValueMulThreeOne = pickerValueMulThreeOne;
@@ -225,7 +225,7 @@ export default {
         let pickerValueMulTwoTwo = [];
         // 第一列滚动第二列数据更新
         for (let i = 0, length = pickerValueArray[changeValue[0]].children.length; i < length; i++) {
-          pickerValueMulTwoTwo.push(pickerValueArray[changeValue[0]].children[i].label);
+          pickerValueMulTwoTwo.push(pickerValueArray[changeValue[0]].children[i].title);
         }
         this.pickerValueMulTwoTwo = pickerValueMulTwoTwo;
         this.pickerValue = changeValue;
@@ -239,18 +239,18 @@ export default {
         if (changeValue[0] !== this.pickerValue[0]) {
           this.pickerValueMulThreeTwo = [];
           for (let i = 0, length = pickerValueArray[changeValue[0]].children.length; i < length; i++) {
-            pickerValueMulThreeTwo.push(pickerValueArray[changeValue[0]].children[i].label);
+            pickerValueMulThreeTwo.push(pickerValueArray[changeValue[0]].children[i].title);
           }
           // 重新渲染第三列
           for (let i = 0, length = pickerValueArray[changeValue[0]].children[changeValue[1]].children.length; i < length; i++) {
-            pickerValueMulThreeThree.push(pickerValueArray[changeValue[0]].children[changeValue[1]].children[i].label);
+            pickerValueMulThreeThree.push(pickerValueArray[changeValue[0]].children[changeValue[1]].children[i].title);
           }
         } else { // 第二列滚动
           // 重新渲染第三列
           this.pickerValueMulThreeThree = [];
           pickerValueMulThreeTwo = this.pickerValueMulThreeTwo;
           for (let i = 0, length = pickerValueArray[changeValue[0]].children[changeValue[1]].children.length; i < length; i++) {
-            pickerValueMulThreeThree.push(pickerValueArray[changeValue[0]].children[changeValue[1]].children[i].label);
+            pickerValueMulThreeThree.push(pickerValueArray[changeValue[0]].children[changeValue[1]].children[i].title);
           }
         }
         this.pickerValueMulThreeTwo = pickerValueMulThreeTwo;

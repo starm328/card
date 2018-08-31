@@ -1,5 +1,5 @@
 <template>
-	<div class="enterprise-index">
+	<div class="enterprise-index stm-warp">
 		<div class="enterprise-index-car">
 			<!-- <dl>
 				<dt>姓名：也之用</dt>
@@ -47,23 +47,29 @@
 		</div> -->
 		<div class="enterprise-nav">
 			<div class="stm-cell  enterprise-nav-list">
+				<div class="cell-warp" @click="translate">
+					<div class="cell-left enterprise-tit">选择升级</div>
+					<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
+				</div>
+			</div>
+			<!-- <div class="stm-cell  enterprise-nav-list">
 				<div class="cell-warp" @click="detailed">
 					<div class="cell-left enterprise-tit">个人信息</div>
 					<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
 				</div>
-			</div>
-			<div class="stm-cell  enterprise-nav-list">
+			</div> -->
+			<!-- <div class="stm-cell  enterprise-nav-list">
 				<div class="cell-warp" @click="enterprise">
 					<div class="cell-left enterprise-tit">绑定企业</div>
 					<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
 				</div>
-			</div>
-			<div class="stm-cell  enterprise-nav-list">
+			</div> -->
+			<!-- <div class="stm-cell  enterprise-nav-list">
 				<div class="cell-warp" @click="authentication">
 					<div class="cell-left enterprise-tit">认证中心</div>
 					<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
 				</div>
-			</div>
+			</div> -->
 			<div class="stm-cell  enterprise-nav-list">
 				<div class="cell-warp" @click="JoinedTeam">
 					<div class="cell-left enterprise-tit">团队管理</div>
@@ -230,6 +236,11 @@ export default {
 				url: '/pages/Home/detailed/main',
 			})
 		},
+		translate(){
+			wx.navigateTo({
+				url: '/pages/Home/translate/main',
+			})
+		},
 		enterprise() {
 			wx.navigateTo({
 				url: '/pages/Home/authentication/enterprise/main',
@@ -268,6 +279,7 @@ export default {
 @import '../../configs/fonts.css';
 @import '../../configs/dialog.less';
 .enterprise-index{
+	padding-top:20px;
 	.main{
 		.img{
 			ul{
@@ -337,7 +349,7 @@ export default {
 			}
 		}
 		width:90%;
-		margin:10px auto;
+		margin:0 auto 20px auto;
 		background:@maincolor;
 		border-radius:4px;
 		box-shadow:2px 12px 2px -10px @auxiliary;

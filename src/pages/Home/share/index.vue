@@ -1,23 +1,26 @@
 <template>
-	<div class="home-card-show">
+	<div class="home-card-show" v-if="cardData">
 		<div class="top-img">
-			<open-data type="userAvatarUrl" class="img"></open-data>
+			<img :src="cardData.card.img_url" class="img" mode="aspectFill">
 		</div>
+		<div class="card-show-none"></div>
 		<div class="card-show-main">
 			<div class="card-show-information">
 				<div class="me-information">
-					<h5>叶志勇</h5>
-					<p>总经理</p>
-					<span>上海杯特信息技术有限公司</span>
+					<h5>{{cardData.card.name}}</h5>
+					<p>{{cardData.card.company}}</p>
+					<span>{{cardData.card.position}}</span>
 				</div>
-				<div class="me-phone">
-					<p>18964941319<span @click="tel('18964941319')">拨打电话</span></p>
+				<div class="me-phone" v-if="cardData.card.phoneconfig">
+					<p>{{cardData.card.phone}}<i @click="tel(cardData.card.phone)"  class="iconfont icon-dianhua"></i></p>
+					<p>{{cardData.card.trade}}</p>
+					<p>{{cardData.detail.email}}</p>
 				</div>
 				<div class="me-address">
-					<p>上海静安区万荣路222号中环时代广场6号楼708</p>
-					<i class="iconfont icon-location" @click="map"></i>
+					<p>{{cardData.card.area}}{{cardData.detail.address}}</p>
+					<stm-navigation :cardData="cardData" v-if="cardData"></stm-navigation>
 				</div>
-				<div class="me-authentication" @click="authentication">
+				<!-- <div class="me-authentication" @click="authentication">
 					<p>认证</p>
 					<div class="icon">
 						<i class="iconfont icon-huiyuan21">
@@ -33,7 +36,7 @@
 							<em class="iconfont icon-renzheng"></em>
 						</i>
 					</div>
-				</div>
+				</div> -->
 			</div>
 			<div class="card-nav-li">
 				<p @click="gocode"><i class="iconfont icon-xiaochengxu"></i>名片码</p>
@@ -44,97 +47,61 @@
 			<div class="card-nav-btn">
 				<p @click="Preservation">保存到通讯录</p>
 				<p>收藏</p>
-				<p>交换</p>
+				<p @click="cardrequest">交换</p>
 				<p>聊天</p>
 			</div>
-			<div class="card-nav-wBtn" @click="card">
-				我的超级名片
+
+			<div class="card-tile">
+				他的超级名片
 			</div>
-			<div class="card-other">
+			<div class="card-other" v-if="cardfirm && cardfirm.length > 0">
 				<div class="title">
 					<h5>公司介绍</h5>
-					<p @click="video(1)"><i class="iconfont icon-bofang"></i><span>看视频</span></p>
+					<p @click="playvideo1 = !playvideo1"><i class="iconfont icon-bofang"></i><span>看视频</span></p>
 				</div>
-				<video src="" controls v-if="playvideo == 1"></video>
+				<video :src="cardfirm[0].video"   controls v-if="playvideo1"></video>
 
 				<div class="summer">
-					上海猫口袋信息科技有限公司专注于互联网服务，从
-					始至终秉承为客户打造真正有价值的互联网平台的服
-					务理念，通过专业、专注、专研的职业素养为企业提
-					供高品质的个性服务，帮助各类企业策划并完成互联
-					网战略规划
+					{{cardfirm[0].desc}}
 				</div>
 
 				<swiper :indicator-dots="indicatorDots"
-					:autoplay="autoplay" :interval="interval" :duration="duration" indicator-active-color="#fff"current="0">
-					<block>
+					:autoplay="autoplay" :interval="interval" :duration="duration" indicator-active-color="#fff"current="0" style="height:240px;">
+					<block v-for="(item,i) in bill" :key="i">
 						<swiper-item  class="banner">
-								<open-data type="userAvatarUrl" class="img"></open-data>
+								 <img :src="item" style="width:100%" @click="previewImage(bill,i)">
 						</swiper-item>
 					</block>
-					<block>
-						<swiper-item  class="banner">
-								<open-data type="userAvatarUrl" class="img"></open-data>
-						</swiper-item>
-					</block>
+
 				</swiper>
 			</div>
-			<div class="card-other">
+			<div class="card-other" v-if="product && product.length > 0">
 				<div class="title">
 					<h5>产品介绍</h5>
-					<p @click="video(2)"><i class="iconfont icon-bofang"></i><span>看视频</span></p>
+					<p @click="playvideo2 = !playvideo2"><i class="iconfont icon-bofang"></i><span>看视频</span></p>
 				</div>
-				<video src=""   controls v-if="playvideo == 2"></video>
+				<video :src="product[0].video"   controls v-if="playvideo2"></video>
 				<div class="summer">
-					上海猫口袋信息科技有限公司专注于互联网服务，从
-					始至终秉承为客户打造真正有价值的互联网平台的服
-					务理念，通过专业、专注、专研的职业素养为企业提
-					供高品质的个性服务，帮助各类企业策划并完成互联
-					网战略规划
+					{{product[0].desc}}
 				</div>
-
 				<swiper :indicator-dots="indicatorDots"
-					:autoplay="autoplay" :interval="interval" :duration="duration" indicator-active-color="#fff"current="0">
-					<block>
+					:autoplay="autoplay" :interval="interval" :duration="duration" indicator-active-color="#fff"current="0" style="height:240px;">
+					<block v-for="(item,i) in proimg" :key="i">
 						<swiper-item  class="banner">
-								<open-data type="userAvatarUrl" class="img"></open-data>
-						</swiper-item>
-					</block>
-					<block>
-						<swiper-item  class="banner">
-								<open-data type="userAvatarUrl" class="img"></open-data>
+								 <img :src="item" style="width:100%" @click="previewImage(proimg,i)">
 						</swiper-item>
 					</block>
 				</swiper>
-			</div>
 
-			<div class="card-other">
-				<div class="title">
-					<h5>最新活动</h5>
-				</div>
-				<div class="activity">
-					<h6>某某活动</h6>
-					<p>互动状态：激活/关闭</p>
-					<p>活动时间：2018-12-12 下午1：30</p>
-					<p>活动地点：上海上马路2323号</p>
-					<p>活动人数：343人</p>
-					<p>已报人数：23人</p>
-					<p>活动简介：</p>
-					<span>上海猫口袋信息科技有限公司专注于互联网服务，从
-					始至终秉承为客户打造真正有价值的互联网平台的服
-					务理念，通过专业、专注、专研的职业素养为企业提
-					供高品质的个性服务，帮助各类企业策划并完成互联
-					网战略规划。
-					</span>
-					<div class="card-nav-wBtn" style="margin-top:10px;">
-						活动详情
-					</div>
-				</div>
-				<div style="height:45px"></div>
 			</div>
+			<div class="card-nav-wBtn" style="margin-top:10px;" @click="zhizuo" v-if="!Auth.proxy.token">
+					制作我的名片
+				</div>
+			<div style="height:45px"></div>
+
 		</div>
 
-		<div class="bottom-nav" v-if="bottomNav">
+		<!-- <div class="bottom-nav" v-if="bottomNav">
 			<p @click="showSkin"><i class="iconfont icon-caidan"></i></p>
 			<ul>
 				<li @click="activity">我的活动(0)</li>
@@ -154,37 +121,165 @@
 					<p>删除</p>
 				</li>
 			</ul>
-		</div>
+		</div> -->
+
 	</div>
 </template>
 
 <script>
+import configs from '@/utils/configs';
+import Navigation from '@/components/home/navigation';
+import Auth from '@/utils/Auth';
+
 export default {
 	name: 'home-card-show',
+	components: {
+		"stm-navigation" : Navigation,
+
+	},
 	data () {
 		return {
 			bottomNav:false,
 			isShow:false,
 			indicatorDots: true,
-			autoplay: false,
-			interval: 5000,
+			autoplay: true,
+			interval: 3000,
 			duration: 1000,
-			playvideo:0
+			playvideo:0,
+			cardData:'',
+			sign:false,
+			Auth:Auth,
+			id:'',
+			product:'',
+			proimg:'',
+			playvideo2:false,
+			playvideo1:false,
+			cardfirm:'',
+			bill:'',
+
+
 		}
 	},
-	onLoad() {
+	onLoad(option) {
+		console.log(option)
+		console.log( decodeURIComponent(option.scene))
+		if(option.pid){
+			wx.setStorageSync('pid',option.pid)
+		}
 		wx.setNavigationBarTitle({
 			title:'名片详情'
 		})
+		var _this = this;
+		_this.id = option.id;
+		wx.pro.request({
+			url:`${configs.card.apiBaseUrl}api/index/showcard/`+option.id + '/'+ option.time +'/'+option.token,
+			method: 'GET',
+		})
+		.then(d => {
+			if(d.statusCode == 200){
+				wx.hideLoading ();
+				console.log(d.data)
+				_this.cardData = d.data
+				_this.product = d.data.products
+				_this.proimg = d.data.products[0].img.split(',')
+				if(d.data.firm.length > 0){
+					_this.cardfirm = d.data.firm
+					_this.bill = d.data.firm[0].img.split(',')
+				}
+			}
+			// 2XX, 3XX
+		})
+		.catch(err => {
+			if(err.statusCode == 404){
+				wx.showModal({
+					title: '你不能查看他的名片',
+					icon: 'none',
+					duration: 2000,
+					success: function(res) {
+						if (res.confirm) {
+							wx.redirectTo({
+								url: '/pages/Home/index/main',
+							})
+						} else if (res.cancel) {
+							wx.redirectTo({
+								url: '/pages/Home/index/main',
+							})
+						}
+					}
 
-	},
-	onShareAppMessage(res) {
-		return {
-			title: '自定义转发标题',
-			path: '/page/user?id=123'
-		}
+				})
+
+			}else if(err.statusCode == 500){
+				wx.showModal({
+					title: '系统错误',
+					icon: 'none',
+					duration: 2000,
+					success:()=>{
+						wx.redirectTo({
+							url: '/pages/Home/index/main',
+						})
+					}
+				})
+			}
+			// 网络错误、或服务器返回 4XX、5XX
+		})
 	},
 	methods:{
+		cardrequest() {
+			if(Auth.proxy.token){
+				var _this = this;
+				wx.pro.request({
+					url:`${configs.card.apiBaseUrl}api/user/cardrequest/`+this.id,
+					method: 'GET',
+					header: {
+						token:Auth.proxy.token.access_token
+					}
+				})
+				.then(d => {
+					if(d.statusCode == 200){
+						wx.hideLoading ();
+
+						if(d.data.msg){
+							wx.showToast({
+								title: d.data.msg,
+								icon: 'none',
+								duration: 4000,
+							})
+						}else{
+							wx.showToast({
+								title:"发送交换申请",
+								icon: 'success',
+								duration: 4000,
+							})
+						}
+					}
+					// 2XX, 3XX
+				})
+				.catch(err => {
+					if(err.statusCode == 404){
+						wx.hideLoading ();
+						if(Auth.proxy.token.access_token){
+							Auth.refresh(Auth.proxy.token.access_token);
+							this.cardrequest();
+						}
+					}
+					// 网络错误、或服务器返回 4XX、5XX
+				})
+			}else{
+				wx.showToast({
+					title: '你为登陆或未注册',
+					icon: 'none',
+					duration: 4000,
+					success:()=>{
+						 wx.navigateTo({
+							url: '/pages/Home/index/main',
+						})
+					}
+				})
+
+			}
+
+		},
 		video(n){
 			this.playvideo = n
 		},
@@ -224,8 +319,8 @@ export default {
 		},
 		Preservation(){
 			wx.addPhoneContact({
-				firstName: '王呵呵',   //名字
-				mobilePhoneNumber: '123',    //手机号
+				firstName: this.cardData.card.name,   //名字
+				mobilePhoneNumber: this.cardData.card.phone,    //手机号
 				success(){
 					wx.showToast({
 					  title: '储存成功',
@@ -233,13 +328,6 @@ export default {
 					  duration: 2000
 					})
 				},
-				fail(){
-					wx.showToast({
-					  title: '储存失败',
-					  icon: 'none',
-					  duration: 2000
-					})
-				}
 			})
 		},
 		gocode(){
@@ -260,6 +348,17 @@ export default {
 				name: '中环时代广场',
 				address:'江场西路299弄'
 			})
+		},
+		zhizuo() {
+			wx.navigateTo({
+				url: '/pages/Home/index/main',
+			})
+		},
+		previewImage(img,i) {
+			wx.previewImage({
+				current: img[i], // 当前显示图片的http链接
+				urls: img // 需要预览的图片http链接列表
+			})
 		}
 	},
 	onPageScroll(Object){
@@ -268,7 +367,12 @@ export default {
 		}else{
 			this.bottomNav = false
 		}
-	}
+	},
+
+	oversign(){
+		this.sign = false;
+		Auth.refresh(this.auth.proxy.token.access_token)
+	},
 }
 </script>
 
@@ -321,6 +425,14 @@ export default {
 		position:fixed;
 		top:0;
 		width:100%;
+		z-index:2;
+		img{
+			width:100%;
+			height:350px;
+		}
+	}
+	.card-show-none{
+		height:350px;
 	}
 	.bottom-nav{
 		position:fixed;
@@ -345,11 +457,12 @@ export default {
 		}
 	}
 	.card-show-main{
-		position:absolute;
-		top:350px;
 		background:#242b35;
 		width:100%;
 		min-height:100%;
+		padding-bottom:20px;
+		position:relative;
+			z-index:3;
 		.card-show-information{
 			padding-bottom:30px;
 			box-shadow: inset 0px -4px 9px 0px rgba(000,000,000,0.6);
@@ -369,6 +482,12 @@ export default {
 			.me-phone{
 				padding:20px;
 				color:rgb(171, 175, 186);
+				p{
+					display:flex;
+					i{
+						margin-left:10px;
+					}
+				}
 				span{
 					background:rgb(171, 175, 186);
 					color:#242b35;
@@ -530,6 +649,14 @@ export default {
 					font-size:@fontthree;
 				}
 			}
+		}
+		.card-tile{
+			text-align:center;
+			color:#fff;
+			font-size:@fonttwo;
+			border-radius:40px;
+			padding:10px 0;
+			box-shadow: 0px -5px 8px 0px rgb(0, 0, 0, 0.1);
 		}
 		.card-nav-wBtn{
 			text-align:center;

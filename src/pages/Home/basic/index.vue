@@ -1,5 +1,5 @@
 <template>
-	<div class="home-basic-index">
+	<div class="home-basic-index stm-warp">
 		<cart-loged>
 			<stm-home-basic></stm-home-basic>
 		</cart-loged>

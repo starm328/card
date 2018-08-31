@@ -16,7 +16,10 @@ export default {
 }
 page{
 	height:100%;
-	background:#eee;
 	font-family: '微软雅黑'
+}
+.stm-warp{
+	background:#eee;
+	min-height: 100vh;
 }
 </style>

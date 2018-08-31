@@ -1,7 +1,7 @@
 <template>
 	<div class="home-index-component">
 		<swiper :indicator-dots="indicatorDots"
-		:duration="duration" previous-margin="40px" next-margin="40px" @change="bindchange"  v-if="loding">
+		:duration="duration" previous-margin="40px" next-margin="40px" @change="bindchange"  v-if="loding" :current="current">
 			<block>
 				<swiper-item item-id="dd" :class="[swiperCurrent == showcards.length -(showcards.length +1)? 'active' : '']">
 					<div class="swiper-box">
@@ -38,7 +38,7 @@
 								</div>
 
 							</div>
-							<div class="m-nav">
+							<!-- <div class="m-nav">
 								<ul>
 									<li @click="information">
 										<i class="iconfont icon-icon-test"></i>
@@ -57,7 +57,7 @@
 										<p>开票</p>
 									</li>
 								</ul>
-							</div>
+							</div> -->
 							<div class="box" @click="more">
 								<h5>我的更多...</h5>
 							</div>
@@ -219,6 +219,16 @@ export default {
 			piaoShow:false,
 			auther:false,
 			loding:false,
+			imgUrls: [
+			     'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
+			     'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
+			     'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
+			   ],
+			   indicatorDots: false,
+			   autoplay: false,
+			   interval: 5000,
+			   duration: 1000,
+			   current:0
 		}
 	},
 	onLoad() {
@@ -253,11 +263,6 @@ export default {
 					wx.hideLoading ();
 					this.showcards = d.data.data
 					console.log(d)
-					if(wx.getStorageSync('swiperCurrent') && wx.getStorageSync('swiperCurrent') != this.showcards.length) {
-						this.swiperCurrent = -1
-						wx.removeStorageSync('swiperCurrent')
-					}else{
-					}
 					this.loding = true
 
 				}
@@ -290,13 +295,16 @@ export default {
 		},
 		bindchange(e){
 			console.log(e)
-			this.swiperCurrent = e.target.current - 1;
+			if(e.target.source == 'touch'){
+				this.current = e.target.current
+				this.swiperCurrent = e.target.current - 1;
+			}
 		},
 		card(e){
 			wx.navigateTo({
 				url: '/pages/Home/show/main?id='+e,
 			})
-						wx.removeStorageSync('swiperCurrent')
+			wx.removeStorageSync('swiperCurrent')
 
 		},
 		newcard(){
@@ -304,7 +312,6 @@ export default {
 				 wx.navigateTo({
 					url: '/pages/Home/basic/main',
 				})
-				wx.setStorageSync('swiperCurrent',this.showcards.length)
 			}
 
 		},
@@ -341,7 +348,7 @@ export default {
 			this.RecordisShow = !this.RecordisShow
 		},
 		taggpiao() {
-			this.piaoShow = !this.piaoShow
+			// this.piaoShow = !this.piaoShow
 		},
 	}
 }

@@ -4,27 +4,36 @@
 			<dl class="dl-li">
 				<dd>
 					<p>电话</p>
-					<input type="number" name="phone" placeholder="请输入" placeholder-style="color:#888;">
+					<input type="number" name="phone" placeholder="请输入" placeholder-style="color:#888;" v-model="carddetailed.phone">
 				</dd>
 			</dl>
 			<dl class="dl-li">
 				<dd>
 					<p>邮箱</p>
-					<input type="text" name="emil" placeholder="请输入" placeholder-style="color:#888;">
+					<input type="text" name="emil" placeholder="请输入" placeholder-style="color:#888;" v-model="carddetailed.emil">
 				</dd>
 			</dl>
 			<dl class="dl-li">
 				<dd>
 					<p>地址</p>
-					<input type="text" name="address" placeholder="请输入" placeholder-style="color:#888;">
+					<input type="text" name="address" placeholder="请输入" placeholder-style="color:#888;" v-model="carddetailed.address">
 				</dd>
 			</dl>
 			<p class="dl-tit">
 				个性化展示
 			</p>
-			<dl class="dl-li">
+			<dl class="dl-li" v-if="tempFilePath">
 				<dd>
-					<input type="text" name="voice" :value="voicemp3" style="display:none;">
+					<input type="text" name="voice" v-model="voicemp3" style="display:none;">
+					<div class="music-play" @click="playaudio" v-if="stopp"><i class="iconfont icon-bofang"></i>播放</div>
+					<div class="music-play" @click="stopaudio" v-if="!stopp"><i class="iconfont icon-xiaochengxu"></i>暂停</div>
+					<audio :src="voicemp3" id="myAudio"></audio>
+					<p @click="deletebtn" class="music-delete"><i class="iconfont icon-zhongzhi"></i><span>重新录制</span></p>
+				</dd>
+			</dl>
+			<dl class="dl-li" v-else>
+				<dd>
+					<input type="text" name="voice" v-model="voicemp3" style="display:none;">
 					<p @click="startRecordMp3" v-if="start" class="music-start">点击录制60秒语音介绍</p>
 					<p @click="stopRecord" v-if="stop" class="music-start">结束</p>
 					<p @click="playRecord" v-if="play" class="music-play"><i class="iconfont icon-xiaolaba"></i><span>播放</span></p>
@@ -37,16 +46,16 @@
 					<i class="iconfont icon-tianjia right"></i>
 				</dd>
 				<div class="form" v-for="(item,i) in honor" :key="i">
-					<i class="iconfont icon-guanbi" @click="delet(i)"></i>
-					<input type="tel" name="title" placeholder="荣誉名称" :value="item.title" placeholder-style="color:#888;" v-model="item.title">
-					<input type="tel" name="organization" placeholder="颁发单位名称(非必填)" :value="item.organization"  placeholder-style="color:#888;" v-model="item.organization">
+					<i class="iconfont icon-guanbi" @click="delet(i,item)"></i>
+					<input type="text" name="title" placeholder="荣誉名称" :value="item.title" placeholder-style="color:#888;" v-model="item.title">
+					<input type="text" name="organization" placeholder="颁发单位名称(非必填)" :value="item.organization"  placeholder-style="color:#888;" v-model="item.organization">
 				</div>
 			</dl>
 			<dl class="dl-li">
 				<p class="dl-tit">
 					个人介绍
 				</p>
-				<textarea placeholder="介绍语" name="desc"/>
+				<textarea placeholder="介绍语" name="desc" v-model="carddetailed.desc"/>
 			</dl>
 			<div style="width:96%;margin:0 auto 10px auto">
 				<button  type="primary" formType="submit" class="stm-main-button stm-m10-t">保存</button>
@@ -70,19 +79,118 @@ export default {
 			honor:[],
 			id:'',
 			voicemp3:'',
-			tempFilePath:''
+			tempFilePath:'',
+			carddetailed:'',
+			stopp:true,
+
 		}
 	},
+	onReady: function (e) {
+	    // 使用 wx.createAudioContext 获取 audio 上下文 context
+	    this.audioCtx = wx.createAudioContext('myAudio')
+	  },
 	onLoad(option) {
 		if(option.id){
 			console.log(option.id)
 			this.id = option.id
 		}
+		if(option.id){
+			var _this = this;
+			console.log('1')
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/user/showcard/`+option.id,
+				method: 'GET',
+				header: {
+					token:Auth.proxy.token.access_token
+				}
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					wx.hideLoading ();
+					_this.carddetailed = d.data.detail
+					if(d.data.detail.voice){
+						_this.tempFilePath = d.data.detail.voice
+						_this.voicemp3 = d.data.detail.voice
+						_this.honor = d.data.honour
+					}
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 404){
+					wx.hideLoading ();
+					wx.removeStorageSync('token')
+					// if(Auth.proxy.token.access_token){
+					// 	Auth.refresh(Auth.proxy.token.access_token);
+					// 	this.getdata();
+					// }
+				}else if(err.statusCode == 500){
+					wx.hideLoading ();
+					wx.showToast({
+						title: '系统错误',
+						icon: 'none',
+						duration: 2000,
+					})
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
+		}
 
 	},
 	methods: {
-		delet(i) {
+		playaudio(){
+			var _this = this;
+			_this.audioCtx.play()
+			_this.stopp = false
+
+		},
+		stopaudio(){
+			var _this = this;
+			_this.audioCtx.pause()
+			_this.stopp = true
+
+		},
+		delet(i,item) {
 			this.honor.splice(i,1)
+			if(item.id){
+				wx.pro.request({
+					url:`${configs.card.apiBaseUrl}api/user/delcardhonour/`+item.id,
+					method: 'GET',
+					header: {
+						token:Auth.proxy.token.access_token
+					}
+				})
+				.then(d => {
+					if(d.statusCode == 200){
+						wx.showToast({
+							title: '删除成功',
+							mask:true,
+							icon: 'success',
+							duration: 2000,
+						})
+					}
+					// 2XX, 3XX
+				})
+				.catch(err => {
+					if(err.statusCode == 404){
+						wx.hideLoading ();
+						wx.removeStorageSync('token')
+						// if(Auth.proxy.token.access_token){
+						// 	Auth.refresh(Auth.proxy.token.access_token);
+						// 	this.getdata();
+						// }
+					}else if(err.statusCode == 500){
+						wx.hideLoading ();
+						wx.showToast({
+							title: '系统错误',
+							mask:true,
+							icon: 'none',
+							duration: 2000,
+						})
+					}
+					// 网络错误、或服务器返回 4XX、5XX
+				})
+			}
 		},
 		addhonor() {
 			this.honor.splice(0,0,{title:'',organization:''})
@@ -165,7 +273,7 @@ export default {
 		 playRecord(){
 			innerAudioContext.autoplay = true
 			innerAudioContext.src = this.tempFilePath
-
+			console.log(this.tempFilePath)
 			innerAudioContext.onPlay(() => {
 				console.log('开始播放')
 			})
@@ -211,11 +319,17 @@ export default {
 				})
 				.then(d => {
 					if(d.statusCode == 200){
+						console.log(e)
 						wx.hideLoading ();
 						wx.showToast({
 							title: '保存成功',
 							icon: 'success',
 							duration: 2000,
+							success:()=>{
+								wx.navigateBack({
+									delta: 1
+								})
+							}
 						})
 					}
 					// 2XX, 3XX
@@ -249,7 +363,11 @@ export default {
 					// 网络错误、或服务器返回 4XX、5XX
 				})
 				if(_this.honor.length> 0){
-					console.log(e)
+					var honors = new Array();
+					for(var i = 0; i< _this.honor.length; i++){
+						var hons = {title:_this.honor[i].title,organization:_this.honor[i].organization}
+						honors.push(hons)
+					}
 					wx.pro.request({
 						url:  `${configs.card.apiBaseUrl}api/user/newcardhonour/`+_this.id,
 						method: 'POST',
@@ -257,7 +375,7 @@ export default {
 							token:Auth.proxy.token.access_token
 						},
 						data:{
-							honour:_this.honor
+							honour:honors
 						}
 
 					})
@@ -268,6 +386,11 @@ export default {
 								title: '保存成功',
 								icon: 'success',
 								duration: 2000,
+								success:()=>{
+									wx.navigateBack({
+										delta: 1
+									})
+								}
 							})
 							_this.cardid = d.data
 						}
@@ -302,6 +425,13 @@ export default {
 									}
 								}
 							})
+						}else if(err.statusCode == 500){
+							wx.showModal({
+								title: '错误提示',
+								content: '系统错误',
+								showCancel: false,
+
+							})
 						}
 						// 网络错误、或服务器返回 4XX、5XX
 					})
@@ -323,6 +453,7 @@ export default {
 @import '../../configs/style.less';
 @import '../../configs/main.less';
 .home-detailed-component{
+	padding-top:10px;
 	.hr{
 		width:95%;
 		height:1px;
