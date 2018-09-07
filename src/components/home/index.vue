@@ -2,32 +2,52 @@
 	<div class="home-index-component">
 		<swiper :indicator-dots="indicatorDots"
 		:duration="duration" previous-margin="40px" next-margin="40px" @change="bindchange"  v-if="loding" :current="current">
+
 			<block>
-				<swiper-item item-id="dd" :class="[swiperCurrent == showcards.length -(showcards.length +1)? 'active' : '']">
-					<div class="swiper-box">
+				<swiper-item item-id="dd" :class="[swiperCurrent == showcards.length -(showcards.length + 2)? 'active' : '']">
+					<div class="swiper-box swiper-content">
 						<div class="box-main">
-							<div class="clip box">
+							<div class="clip box ">
 								<div class="title">
-									<p>名片夹</p>
-									<span>新世界<br/>从此无边界</span>
+									<p>发现</p>
+									<span>更大的世界<br/>从此无界限</span>
 								</div>
 								<div class="content">
-									<p>共13位</p>
-									<dl>
+									<p>共14310000位</p>
+									<dl @click="group()">
 										<dt>
-											<open-data type="userAvatarUrl" class="img" mode="widthFix"></open-data>
+											<img :src="collection[0].card.img_url" class="img" mode="widthFix" v-if="collection[0]">
+											<view v-else-if="!collection[0]" class="img" style="background:#eee;height:100%"></view>
+
 										</dt>
 										<dd>
-											<open-data type="userAvatarUrl" class="img" mode="widthFix"></open-data>
-											<open-data type="userAvatarUrl" class="img" mode="widthFix"></open-data>
-											<open-data type="userAvatarUrl" class="img" mode="widthFix"></open-data>
-											<open-data type="userAvatarUrl" class="img" mode="widthFix"></open-data>
+											<img :src="collection[1].card.img_url" v-if="collection[1]" class="img" mode="widthFix">
+											<view v-else-if="!collection[1]" class="img" style="background:#eee;height:50%"></view>
+											<img :src="collection[2].card.img_url" v-if="collection[2]" class="img" mode="widthFix">
+											<view v-else-if="!collection[2]" class="img" style="background:#eee;height:50%"></view>
+											<img :src="collection[3].card.img_url" v-if="collection[3]" class="img" mode="widthFix">
+											<view v-else-if="!collection[3]" class="img" style="background:#eee;height:50%"></view>
+											<img :src="collection[4].card.img_url" v-if="collection[4]" class="img" mode="widthFix">
+											<view v-else-if="!collection[4]" class="img" style="background:#eee;height:50%"></view>
+										</dd>
+									</dl>
+								</div>
+								<div class="col">
+									<dl>
+										<dt>
+											<img src="https://i1.vpinpai.cn/card/peDbJEcHXBHPiaeBPY9Y7FtLbGyfns0CXJpOdaoZ.png" mode="widthFix" @click="group()">
+											<em style="width:10px;height:10px;background:red;border-radius:50%;" v-if="message > 0"></em>
+											<img src="https://i1.vpinpai.cn/card/hTNT7FNOx8TZFM2FygLRvZOI3jkuBNDLHtkdp7K4.png"  mode="widthFix" @click="user">
+										</dt>
+										<dd>
+											<img src="https://i1.vpinpai.cn/card/lWCo8MjxvWQfr5qtbK0F67unxf1e1xipVXJai6Wb.png"  mode="widthFix" @click="group('collection')">
+											<img src="https://i1.vpinpai.cn/card/d3EMU8rCMINydBZAYr54P8evtJBlqdHpqbunCtUN.png"  mode="widthFix">
 										</dd>
 									</dl>
 								</div>
 							</div>
-							<div class="box">
-								<!-- <h5>我的活动</h5> -->
+							<!-- <div class="box">
+								<h5>我的活动</h5>
 								<div class="li">
 									<p @click="navigateTo">
 										<i class="iconfont icon-nav_activity"></i>参与的活动
@@ -37,7 +57,7 @@
 									</p>
 								</div>
 
-							</div>
+							</div> -->
 							<!-- <div class="m-nav">
 								<ul>
 									<li @click="information">
@@ -58,9 +78,46 @@
 									</li>
 								</ul>
 							</div> -->
-							<div class="box" @click="more">
-								<h5>我的更多...</h5>
+
+						</div>
+					</div>
+				</swiper-item>
+			</block>
+			<block>
+				<swiper-item item-id="dd" :class="[swiperCurrent == showcards.length -(showcards.length + 1)? 'active' : '']">
+					<div class="swiper-box swiper-content">
+						<div class="box-main">
+							<div class="clip box ">
+								<div class="title" style="padding:10rpx 20rpx;">
+									<p>人脉圈</p>
+									<span>用心做自己<br/>每一次交换都是商机</span>
+								</div>
+								<div class="people">
+									<dl v-if="morecard[0]">
+										<dt>
+											<img :src="morecard[0].img_url" class="img" mode="widthFix">
+										</dt>
+										<dd>
+											<h6>{{morecard[0].name}}</h6>
+											<p>{{morecard[0].company}}</p>
+										</dd>
+									</dl>
+									<dl v-if="morecard[1]">
+										<dt>
+											<img :src="morecard[1].img_url"  class="img" mode="widthFix">
+										</dt>
+										<dd>
+											<h6>{{morecard[1].name}}</h6>
+											<p>{{morecard[1].company}}</p>
+										</dd>
+									</dl>
+
+								</div>
+								<div class="people-more" @click="gopeople">
+									查看更多
+								</div>
 							</div>
+
 						</div>
 					</div>
 				</swiper-item>
@@ -89,6 +146,8 @@
 			</block>
 		</swiper>
 		<div class="dots">
+			<p v-for="(item,i) in dots" :class="[showcards.length -(showcards.length +2) == swiperCurrent? 'active' : '']" :key="i">
+			</p>
 			<p v-for="(item,i) in dots" :class="[showcards.length -(showcards.length +1) == swiperCurrent? 'active' : '']" :key="i">
 			</p>
 			<p v-for="(item,i) in showcards" :class="[ swiperCurrent == i? 'active' : '']" :key="i">
@@ -123,7 +182,7 @@
 						<i class="iconfont icon-xiaochengxu"></i>
 						<p>名片码</p>
 					</li>
-					<li @click="gobanner">
+					<li @click="gobanner(showcards[share].id)">
 						<i class="iconfont icon-guanggaowei"></i>
 						<p>海报</p>
 					</li>
@@ -211,7 +270,7 @@ export default {
 			],
 			indicatorDots: false,
 			duration: 500,
-			swiperCurrent: -1,
+			swiperCurrent: -2,
 			share:'',
 			auth:Auth,
 			isShow:false,
@@ -219,16 +278,9 @@ export default {
 			piaoShow:false,
 			auther:false,
 			loding:false,
-			imgUrls: [
-			     'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-			     'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
-			     'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
-			   ],
-			   indicatorDots: false,
-			   autoplay: false,
-			   interval: 5000,
-			   duration: 1000,
-			   current:0
+			collection:'',
+			message:0,
+			morecard:''
 		}
 	},
 	onLoad() {
@@ -277,6 +329,109 @@ export default {
 				}
 				// 网络错误、或服务器返回 4XX、5XX
 			})
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/user/showcollection/0`,
+				method: 'GET',
+				header: {
+					token:Auth.proxy.token.access_token
+				}
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					wx.hideLoading ();
+					this.collection = d.data
+					wx.setStorageSync('collection',d.data)
+
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 404){
+					wx.hideLoading ();
+					Auth.proxy.token = ''
+					wx.removeStorageSync('token')
+					// Auth.RefreshToken();
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
+
+
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/user/showrequest`,
+				method: 'GET',
+				header: {
+					token:Auth.proxy.token.access_token
+				}
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					wx.setStorageSync('showrequest',d.data.length)
+					this.message = d.data.length
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 404){
+					wx.removeStorageSync('token')
+				}else if(err.statusCode == 500){
+					wx.showToast({
+						title: '系统错误',
+						icon: 'none',
+						duration: 2000,
+					})
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
+
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/card/index/0`,
+				method: 'GET',
+				header: {
+					token:Auth.proxy.token.access_token
+				}
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					this.morecard = d.data
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 404){
+					wx.removeStorageSync('token')
+				}else if(err.statusCode == 500){
+					wx.showToast({
+						title: '系统错误',
+						icon: 'none',
+						duration: 2000,
+					})
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
+		},
+		group(page) {
+			if(page){
+				wx.navigateTo({
+				  url: '/pages/group/'+page+'/main'
+				})
+			}else{
+				wx.navigateTo({
+				  url: '/pages/group/main'
+				})
+			}
+
+		},
+		user() {
+			wx.navigateTo({
+			  url: '/pages/Enterprise/main'
+			})
+
+		},
+		gopeople() {
+			wx.navigateTo({
+			  url: '/pages/people/main'
+			})
+
 		},
 		gocode(){
 			wx.navigateTo({
@@ -285,9 +440,9 @@ export default {
 						wx.removeStorageSync('swiperCurrent')
 
 		},
-		gobanner(){
+		gobanner(id){
 			wx.navigateTo({
-			  url: '/pages/Card/Banner/main'
+			  url: '/pages/Card/Banner/main?id='+id
 			})
 						wx.removeStorageSync('swiperCurrent')
 
@@ -297,7 +452,7 @@ export default {
 			console.log(e)
 			if(e.target.source == 'touch'){
 				this.current = e.target.current
-				this.swiperCurrent = e.target.current - 1;
+				this.swiperCurrent = e.target.current - 2;
 			}
 		},
 		card(e){
@@ -355,4 +510,90 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import '../../configs/style.less';
+
+.home-index-component{
+	.col{
+		padding:0 20px;
+		dl{
+			img{
+				width:100%;
+			}
+			display:flex;
+			dt{
+				flex:1;
+				margin-right:5px;
+			}
+			dd{
+				flex:1;
+			}
+		}
+	}
+
+	.people{
+		margin-top:20px;
+		&:after{
+			clear:both;
+			display:block;
+			content:''
+		}
+		dl{
+			width:calc(50% - 16px);
+			border-radius:5px;
+			background:#fff;
+			margin:20px 8px 10px 8px;
+			float:left;
+			text-align:center;
+			padding:0 0 10px 0;
+			box-shadow:0px 2px 9px 3px rgba(000, 000, 000, 0.1);
+			dt{
+				width:100%;
+				border-radius:5px;
+				overflow:hidden;
+				margin-right:10px;
+				.img{
+					width:100%;
+				}
+			}
+			dd{
+				h6{
+					font-size:@fontt16;
+				}
+				.company{
+					margin:2px 0;
+					font-size:@fonttwo;
+					display:flex;
+					p{
+						flex:1;
+						overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
+						font-size:@fontone;
+						color:@fontcolor;
+					}
+					.img{
+						width:20px;
+						height:20px;
+						border-radius:5px;
+						overflow:hidden;
+						img{
+							width:100%
+						}
+					}
+				}
+
+			}
+		}
+	}
+	.people-more{
+		margin-top:20px;
+		width:80%;
+		height:45px;
+		border-radius:5px;
+		margin:0 auto;
+		background:  -webkit-linear-gradient(left,#ff4c43, #fc8752);
+		color:#fff;
+		font-size:15px;
+		line-height:45px;
+	}
+
+}
 </style>

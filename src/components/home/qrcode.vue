@@ -2,14 +2,14 @@
 	<div class="card-code stm-warp">
 		<div class="code-img">
 			<h5><span>专属名片小程序码</span></h5>
-			<img :src="config.card.apiBaseUrl+'api/promotion/index/2?scene='+scene+'&page=pages%2FHome%2Findex%2Fmain'" style="width:60%" mode="widthFix" lazy-load>
+			<canvas canvas-id="myCanvas" style="width:180px;height:180px;margin:0 auto" />
 		</div>
 		<div class="code-text">
 			<p>此名片码可印刷在</p>
 			<span>纸质名片、宣传单、海报、易拉宝等宣传册上</span>
 			<!-- <p>微信扫一扫名片即可存入通讯录，无需打字</p> -->
 		</div>
-		<!-- <button type="primary"  class="stm-main-button stm-m20-rl" @click="Preservation" style="margin:20px"> 保存图片 </button> -->
+		<button type="primary"  class="stm-main-button stm-m20-rl" @click="Preservation" style="margin:20px"> 保存图片 </button>
 	</div>
 </template>
 <script>
@@ -34,19 +34,42 @@ export default {
 		}
 	},
 	onReady(){
+		wx.downloadFile({
+			url: configs.card.apiBaseUrl+'api/promotion/index/2?scene='+this.scene+'&page=pages%2FHome%2Findex%2Fmain', //仅为示例，并非真实的资源
+			success: function(res) {
+			// 只要服务器有响应数据，就会把响应内容写入文件并进入 success 回调，业务需要自行判断是否下载到了想要的内容
+			if(res.statusCode == 200){
+				console.log(res.tempFilePath)
+				const ctx = wx.createCanvasContext('myCanvas')
+				ctx.drawImage(res.tempFilePath, 0, 0, 180, 180)
+				ctx.draw()
+			}
 
+			}
+		})
 	},
 
 	methods: {
 		Preservation() {
-			wx.downloadFile({
-			  url:  `${configs.card.apiBaseUrl}api/promotion/index/2?scene=${this.scene}&page=pages%2FHome%2Findex%2Fmain'`, //仅为示例，并非真实的资源
-			  success: function(res) {
-			    // 只要服务器有响应数据，就会把响应内容写入文件并进入 success 回调，业务需要自行判断是否下载到了想要的内容
-			    if (res.statusCode === 200) {
-			      console.log(res.tempFilePath)
-			    }
-			  }
+			var _this = this
+			wx.canvasToTempFilePath({
+				destWidth:300,
+				destHeight:300,
+				canvasId: 'myCanvas',
+				quality:1,
+				success: function(res) {
+					console.log(res.tempFilePath)
+					wx.saveImageToPhotosAlbum({
+						filePath:res.tempFilePath,
+						success(res) {
+							wx.showToast({
+							  title: '保存成功',
+							  icon: 'success',
+							  duration: 2000
+							})
+						}
+					})
+				}
 			})
 		}
 	}

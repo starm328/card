@@ -1,5 +1,7 @@
 <template>
 	<div class="home-basic-index stm-warp">
+		<stm-nav></stm-nav>
+
 		<cart-loged>
 			<stm-home-basic></stm-home-basic>
 		</cart-loged>
@@ -8,12 +10,16 @@
 
 <script>
 import Loged from '@/components/loged';
-import HomeBasic from '@/components/home/editbasic'
+import HomeBasic from '@/components/home/editbasic';
+import Nav from '@/components/Nav';
+
 export default {
 	name: 'cart-home-show',
 	components: {
 		'cart-loged': Loged,
 		'stm-home-basic': HomeBasic,
+		'stm-nav':Nav,
+
 	},
 	data () {
 		return {

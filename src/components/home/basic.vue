@@ -24,7 +24,6 @@
 		</div>
 		<mpvue-picker ref="mpvuePicker" :mode="mode" :deepLength=deepLength :pickerValueDefault="pickerValueDefault" @onChange="onChange" @onConfirm="onConfirm" @pickerCancel="pickerCancel" :pickerValueArray="pickerValueArray"></mpvue-picker>
 
-		<mpvue-picker ref="address" :mode="mode" :deepLength=addLength :pickerValueDefault="addValueDefault"  @onChange="addConfirm" @onConfirm="addConfirm"  @pickerCancel="addCancel" :pickerValueArray="addValueArray"></mpvue-picker>
 		<form @submit="formSubmit">
 			<dl  class="upimg">
 				<dd>
@@ -40,7 +39,7 @@
 			<dl class="dl-li">
 				<dd>
 					<p>姓名</p>
-					<input type="text" name="name" placeholder="必填项" placeholder-style="color:#888;">
+					<input type="text" name="name" placeholder="必填项" placeholder-style="color:#888;" >
 				</dd>
 			</dl>
 			<dl class="dl-li">
@@ -53,13 +52,13 @@
 			<dl class="dl-li">
 				<dd>
 					<p>公司</p>
-					<input type="text" name="company" placeholder="必填项" placeholder-style="color:#888;">
+					<input type="text" name="company" placeholder="必填项" placeholder-style="color:#888;" >
 				</dd>
 			</dl>
 			<dl class="dl-li">
 				<dd>
 					<p>职务</p>
-					<input type="text" name="position" placeholder="必填项" placeholder-style="color:#888;">
+					<input type="text" name="position" placeholder="必填项" placeholder-style="color:#888;" >
 				</dd>
 			</dl>
 			<dl class="dl-li">
@@ -70,11 +69,11 @@
 				<div class="radio">
 					<radio-group class="group" @change="radio">
 						<label>
-							<radio color='#d95940' checked value="1"></radio>
+							<radio color='#d95940'  value="1"></radio>
 							隐私保护，仅相互交换了名片的用户可见。
 						</label>
 						<label>
-							<radio color='#d95940' value="2"></radio>
+							<radio color='#d95940' checked value="2"></radio>
 							完全公开，手机号码对所有人可见。
 						</label>
 					</radio-group>
@@ -90,10 +89,14 @@
 				</dd>
 			</dl>
 			<dl class="dl-li">
-				<dd>
+				<dd @click="openBottomSheet">
 					<p>地区</p>
-					<input type="test" name="area" :value="adds != '' ? add.title + ','+ adds.title : ''"  style="display:none">
-					<input @click="addPicker" type="text"  :placeholder="adds != '' ? '' : '请选择地区'" :value="adds != '' ? add.title + ','+ adds.title : ''" disabled=""  placeholder-style="color:#888;">
+					<input type="test" name="area" :value="region.length > 2 ?region[0]+region[1]+region[2]: ''"  style="display:none">
+					<picker mode="region" @change="bindRegionChange" :value="region" :custom-item="customItem">
+						<input type="text"  :placeholder="region.length > 2 ?region[0]+region[1]+region[2]:region[0]" disabled=""  placeholder-style="color:#888;">
+						<view class="picker">
+						</view>
+					</picker>
 				</dd>
 			</dl>
 			<div style="width:96%;margin:0px auto;padding-bottom:20px;">
@@ -125,7 +128,6 @@ export default {
 
 	data () {
 		return {
-			cropper:false,
 			img_url:'',
 			province:'',
 			city:'',
@@ -138,37 +140,9 @@ export default {
 			genderNumber:'',
 			phoneconfig:'1',
 			mulLinkageThreePicker:'',
-			addThreePicker: [
-			  {
-				title: '上海',
-				value: 0,
-				children: [
-				  {
-					title: '浦东',
-					value: 1,
-				  },{
-					title: '杨浦',
-					value: 1,
-				  }
-				]
-			  },
-			  {
-				title: '浙江',
-				value: 0,
-				children: [
-				  {
-					title: '杭州',
-					value: 1,
-				  },{
-					title: '江苏',
-					value: 1,
-				  }
-				]
-			  },
-			],
 			pickerValueDefault: [0,0],
-			addValueDefault: [0,0],
 			tempFilePaths:'',
+			cropper:false,
 			cropperOpt: {
 				id: 'cropper',
 				width,
@@ -181,7 +155,8 @@ export default {
 					width: 300,
 					height: 300
 				}
-			}
+			},
+			region: ['请选择地址'],
 		}
 	},
 	onUnload() {
@@ -193,35 +168,75 @@ export default {
 		})
 		if(option){
 			this.pageid = option.id
+
 		}
-		var _this = this;
-		wx.pro.request({
-			url:`${configs.card.apiBaseUrl}api/index/trade`,
-			method: 'GET',
-		})
-		.then(d => {
-			if(d.statusCode == 200){
-				_this.mulLinkageThreePicker = d.data
-			}
-			// 2XX, 3XX
-		})
-		.catch(err => {
-			if(err.statusCode == 500){
-				wx.hideLoading ();
-				wx.showToast({
-					title: '系统错误',
-					icon: 'none',
-					duration: 2000,
-				})
-			}
-			// 网络错误、或服务器返回 4XX、5XX
-		})
-	},
-	mounted () {
-		wecropper = this.$refs.cropper
+			var _this = this;
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/index/trade`,
+				method: 'GET',
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					_this.mulLinkageThreePicker = d.data
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 500){
+					wx.hideLoading ();
+					wx.showToast({
+						title: '系统错误',
+						icon: 'none',
+						duration: 2000,
+					})
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
+
 	},
 
+
 	methods: {
+		bindRegionChange: function (e) {
+			this.region = e.mp.detail.value
+		},
+		screen() {
+			var _this = this;
+			wx.showActionSheet({
+				itemList: ['保密', '男', '女'],
+				success: function(res) {
+					_this.genderNumber = res.tapIndex
+					if(res.tapIndex == 0){
+						_this.gender = '保密'
+					}else if(res.tapIndex == 1){
+						_this.gender = '男'
+					}else{
+						_this.gender = '女'
+					}
+				},
+				fail: function(res) {
+					console.log(res.errMsg)
+				}
+			})
+		},
+		radio(e) {
+			this.phoneconfig = e.mp.detail.value
+		},
+
+		showPicker() {
+			this.pickerValueArray = this.mulLinkageThreePicker;
+			this.mode = 'multiLinkageSelector';
+			this.deepLength = 2;
+			this.pickerValueDefault = [0, 0];
+			this.$refs.mpvuePicker.show();
+		},
+
+
+		onConfirm(e) {
+			this.province = this.mulLinkageThreePicker[e[0]]
+			this.city = this.mulLinkageThreePicker[e[0]].children[e[1]]
+		},
+
 		cropperReady (...args) {
 		  console.log('cropper ready!')
 		},
@@ -235,6 +250,7 @@ export default {
 		  // Todo: 绘制水印等等
 		},
 		uploadTap () {
+			this.cropper = true
 		  wx.chooseImage({
 			count: 1, // 默认9
 			sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -255,9 +271,6 @@ export default {
 					url: `${configs.card.apiBaseUrl}api/user/upload`,
 					filePath: src,
 					name: 'url',
-					formData: {
-						'imgIndex': 'src'
-					},
 					header: {
 						token: Auth.proxy.token.access_token,
 						"Content-Type": "multipart/form-data"
@@ -310,57 +323,9 @@ export default {
 			  console.error('获取图片失败')
 			})
 		},
-		screen() {
-			var _this = this;
-			wx.showActionSheet({
-				itemList: ['保密', '男', '女'],
-				success: function(res) {
-					_this.genderNumber = res.tapIndex
-					if(res.tapIndex == 0){
-						_this.gender = '保密'
-					}else if(res.tapIndex == 1){
-						_this.gender = '男'
-					}else{
-						_this.gender = '女'
-					}
-				},
-				fail: function(res) {
-					console.log(res.errMsg)
-				}
-			})
-		},
-		radio(e) {
-			this.phoneconfig = e.mp.detail.value
-		},
-
-		showPicker() {
-			this.pickerValueArray = this.mulLinkageThreePicker;
-			this.mode = 'multiLinkageSelector';
-			this.deepLength = 2;
-			this.pickerValueDefault = [0, 0];
-			this.$refs.mpvuePicker.show();
-		},
-
-		addPicker() {
-			this.addValueArray = this.addThreePicker;
-			this.mode = 'multiLinkageSelector';
-			this.deepLength = 2;
-			this.addValueDefault = [0, 0];
-			this.$refs.address.show();
-		},
-
-		onConfirm(e) {
-			this.province = this.mulLinkageThreePicker[e[0]]
-			this.city = this.mulLinkageThreePicker[e[0]].children[e[1]]
-		},
-
-		addConfirm(e) {
-			this.add = this.addThreePicker[e[0]]
-			this.adds = this.addThreePicker[e[0]].children[e[1]]
-		},
 		chooseimg() {
 			var _this =this
-			_this.cropper = true
+			_this.uploadTap()
 
 		},
 		formSubmit(e) {
@@ -371,7 +336,7 @@ export default {
 			})
 			wx.pro.request({
 				// 通过_this.pageid  判断是修改还是新建
-				url: _this.pageid ? `${configs.card.apiBaseUrl}api/user/`+ 'updatecard/'+_this.pageid : `${configs.card.apiBaseUrl}api/user/newcard`,
+				url:`${configs.card.apiBaseUrl}api/user/newcard`,
 				method: 'POST',
 				header: {
 					token:Auth.proxy.token.access_token
@@ -405,8 +370,8 @@ export default {
 				// 2XX, 3XX
 			})
 			.catch(err => {
+				wx.hideLoading ();
 				if(err.statusCode == 422){
-					wx.hideLoading ();
 					console.log(err)
 					wx.showToast({
 					  title: '请填写必填项',
@@ -415,14 +380,12 @@ export default {
 					})
 				}else if(err.statusCode == 403){
 					console.log(err)
-					wx.hideLoading ();
 					wx.showToast({
 					  title: err.data.message,
 					  icon: 'none',
 					  duration: 2000
 					})
 				}else if(err.statusCode == 404){
-					wx.hideLoading ();
 					wx.showModal({
 						title: '错误提示',
 						content: '登录失效，重新上传',
@@ -435,7 +398,6 @@ export default {
 						}
 					})
 				}else if(err.statusCode == 500){
-					wx.hideLoading ();
 					wx.showModal({
 						title: '错误提示',
 						content: '系统错误',
@@ -574,6 +536,9 @@ export default {
 				p{
 					flex:1;
 				}
+			}
+			picker{
+				flex:1;
 			}
 		}
 		.radio{

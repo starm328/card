@@ -9,11 +9,11 @@
 				<div class="radio">
 					<radio-group class="group" @change="radio">
 						<label>
-							<radio color='#d95940' checked value="1"></radio>
+							<radio color='#d95940'  value="1"></radio>
 							隐私保护，仅相互交换了名片的用户可见。
 						</label>
 						<label>
-							<radio color='#d95940' value="2"></radio>
+							<radio color='#d95940' checked value="2"></radio>
 							完全公开，手机号码对所有人可见。
 						</label>
 						<label>

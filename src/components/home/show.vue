@@ -1,5 +1,6 @@
 <template>
 	<div class="home-card-show" v-if="cardData">
+
 		<div class="top-img" >
 			<img :src="cardData.card.img_url" class="img" mode="aspectFill">
 		</div>
@@ -19,10 +20,28 @@
 					<p>{{cardData.card.phone}}<i @click="tel(cardData.card.phone)" class="iconfont icon-dianhua"></i></p>
 					<p>{{cardData.card.trade}}</p>
 					<p>{{cardData.detail.email}}</p>
+					<p>{{cardData.detail.phone}}</p>
 				</div>
 				<div class="me-address">
 					<p>{{cardData.card.area}}{{cardData.detail.address}}</p>
 					<stm-navigation :cardData="cardData" v-if="cardData"></stm-navigation>
+				</div>
+				<div class="me-honour" v-if="cardData.detail.desc !== ''">
+					<h5>个性签名</h5>
+					<div>
+						<dl>
+							<dt>{{cardData.detail.desc}}</dt>
+						</dl>
+					</div>
+				</div>
+				<div class="me-honour" v-if="cardData.honour.length > 0">
+					<h5>获得荣誉</h5>
+					<div>
+						<dl v-for="(item,i) in cardData.honour" :key="i">
+							<dt>{{item.title}}</dt>
+							<dd>{{item.organization}}</dd>
+						</dl>
+					</div>
 				</div>
 				<!-- <div class="me-authentication" @click="authentication">
 					<p>认证</p>
@@ -61,15 +80,20 @@
 				<div class="summer">
 					{{cardfirm[0].desc}}
 				</div>
-				<swiper :indicator-dots="indicatorDots"
-					:autoplay="autoplay" :interval="interval" :duration="duration" indicator-active-color="#fff"current="0" style="height:240px;" v-if="bill[0] !==''">
+				<div class="showimg" :style="[billmore? 'height:300px;overflow:hidden':'height:auto']">
+					<img :src="item" v-for="(item,i) in bill" :key="i"  mode="widthFix" @click="previewImage(bill,i)" v-if="item">
+				</div>
+				<p class="more" v-if="bill.length > 1 && billmore" @click="lookmore('bill')">展示全部<i class="iconfont icon-arrow-right-copy-copy-copy" style="transform:rotate(90deg);"></i></p>
+				<p class="more" v-else-if="bill.length > 1 && !billmore" @click="lookmore('bill')">展示部分<i class="iconfont icon-arrow-right-copy-copy-copy" style="transform:rotate(270deg);"></i></p>
+				<!-- <swiper :indicator-dots="indicatorDots"
+					:autoplay="autoplay" :interval="interval" :duration="duration" indicator-active-color="#fff"current="0" style="height:240px;background:#141a23;" v-if="bill[0] !==''">
 					<block v-for="(item,i) in bill" :key="i">
 						<swiper-item  class="banner">
 								 <img :src="item" style="width:100%" mode="aspectFit" @click="previewImage(bill,i)">
 						</swiper-item>
 					</block>
 
-				</swiper>
+				</swiper> -->
 			</div>
 			<div class="card-other" v-if="product && product.length > 0">
 				<div class="title">
@@ -81,15 +105,20 @@
 					<h5>{{product[0].title}}</h5>
 					{{product[0].desc}}
 				</div>
+				<div class="showimg" :style="[proimgmore? 'height:300px;overflow:hidden':'height:auto']">
+					<img :src="item" v-for="(item,i) in proimg" :key="i"   mode="widthFix" @click="previewImage(proimg,i)" v-if="item">
+				</div>
+				<p class="more" v-if="proimg.length > 1 && proimgmore" @click="lookmore('proimg')">展示全部<i class="iconfont icon-arrow-right-copy-copy-copy" style="transform:rotate(90deg);"></i></p>
+				<p class="more" v-else-if="proimg.length > 1 && !proimgmore" @click="lookmore('proimg')">展示部分<i class="iconfont icon-arrow-right-copy-copy-copy" style="transform:rotate(270deg);"></i></p>
 
-				<swiper :indicator-dots="indicatorDots"
-					:autoplay="autoplay" :interval="interval" :duration="duration" indicator-active-color="#fff"current="0" style="height:240px;" v-if="proimg[0] !== ''">
+				<!-- <swiper :indicator-dots="indicatorDots"
+					:autoplay="autoplay" :interval="interval" :duration="duration" indicator-active-color="#fff"current="0" style="height:240px;background:#141a23;" v-if="proimg[0] !== ''">
 					<block v-for="(item,i) in proimg" :key="i">
 						<swiper-item  class="banner">
 								 <img :src="item" style="width:100%" mode="aspectFit" @click="previewImage(proimg,i)">
 						</swiper-item>
 					</block>
-				</swiper>
+				</swiper> -->
 			</div>
 <!--
 			<div class="card-other">
@@ -119,7 +148,7 @@
 			<div style="height:45px"></div>
 		</div>
 
-		<div class="bottom-nav" v-if="bottomNav">
+		<div class="bottom-nav" v-if="scroll > 50">
 			<p @click="showSkin"><i class="iconfont icon-caidan"></i></p>
 			<ul>
 				<!-- <li @click="activity">我的活动(0)</li> -->
@@ -161,6 +190,15 @@ export default {
 	components: {
 		"stm-navigation" : Navigation
 	},
+	props:{
+		scroll:Number
+	},
+	watch:{
+		scroll() {
+			this.playvideo1 = false,
+			this.playvideo2 = false
+		}
+	},
 	data () {
 		return {
 			bottomNav:false,
@@ -178,7 +216,9 @@ export default {
 			playvideo1:false,
 			cardfirm:'',
 			bill:'',
-			proimg:''
+			proimg:'',
+			billmore:true,
+			proimgmore:true
 		}
 	},
 	onReady: function (e) {
@@ -199,6 +239,16 @@ export default {
 		this.isShow = false
 	},
 	methods:{
+		lookmore(e){
+			if(e == 'bill'){
+				console.log('bill')
+				this.billmore = !this.billmore
+			}else if(e == 'proimg'){
+				console.log('proimg')
+				this.proimgmore = !this.proimgmore
+
+			}
+		},
 		share() {
 			wx.showToast({
 				title: '此名片没有转发权限',
@@ -217,7 +267,6 @@ export default {
 				})
 				.then(d => {
 					if(d.statusCode == 200){
-						wx.hideLoading ();
 						console.log(d.data)
 						_this.cardData = d.data
 						_this.$emit('getshare',d.data.card)
@@ -226,14 +275,12 @@ export default {
 				})
 				.catch(err => {
 					if(err.statusCode == 404){
-						wx.hideLoading ();
 						wx.removeStorageSync('token')
 						// if(Auth.proxy.token.access_token){
 						// 	Auth.refresh(Auth.proxy.token.access_token);
 						// 	this.getdata();
 						// }
 					}else if(err.statusCode == 500){
-						wx.hideLoading ();
 						wx.showToast({
 							title: '系统错误',
 							icon: 'none',
@@ -288,7 +335,6 @@ export default {
 				})
 				.then(d => {
 					if(d.statusCode == 200){
-						wx.hideLoading ();
 						console.log(d.data)
 						_this.cardfirm = d.data
 						_this.bill = d.data[0].img.split(',')
@@ -297,14 +343,12 @@ export default {
 				})
 				.catch(err => {
 					if(err.statusCode == 404){
-						wx.hideLoading ();
 						wx.removeStorageSync('token')
 						// if(Auth.proxy.token.access_token){
 						// 	Auth.refresh(Auth.proxy.token.access_token);
 						// 	this.getdata();
 						// }
 					}else if(err.statusCode == 500){
-						wx.hideLoading ();
 						wx.showToast({
 							title: '系统错误',
 							icon: 'none',
@@ -432,7 +476,7 @@ export default {
 		},
 		gobanner(){
 			wx.navigateTo({
-			  url: '/pages/Card/Banner/main'
+			  url: '/pages/Card/Banner/main?id='+this.id
 			})
 		},
 		playaudio(){
@@ -457,13 +501,7 @@ export default {
 
 
 	},
-	onPageScroll(Object){
-		if(Object.scrollTop >80){
-			this.bottomNav = true
-		}else{
-			this.bottomNav = false
-		}
-	}
+
 }
 </script>
 
@@ -636,6 +674,30 @@ export default {
 
 				}
 			}
+			.me-honour{
+				display:flex;
+				h5{
+					margin:0 10px 20px 20px ;
+					color:#fff;
+					font-size:@fontthree;
+				}
+				div{
+					flex:1;
+					margin:0 20px 20px 10px;;
+					dl{
+						color:#fff;
+						font-size:@fontthree;
+						dt{
+							width:100%;
+						}
+						dd{
+							color:rgb(171, 175, 186);
+							font-size:@fonttwo;
+						}
+					}
+				}
+
+			}
 			.me-authentication{
 				p{
 					color:#fff;
@@ -773,6 +835,21 @@ export default {
 					font-size:@fontthree;
 					line-height:35px;
 					text-align:center;
+				}
+			}
+			.more{
+				width:100%;
+				font-size:@fonttwo;
+				line-height:30px;
+				text-align:center;
+				color:#fff;
+			}
+			.showimg{
+				img{
+					width:100%;
+					margin:10px auto 0 auto;;
+
+
 				}
 			}
 			.activity{

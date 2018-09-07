@@ -21,5 +21,6 @@ page{
 .stm-warp{
 	background:#eee;
 	min-height: 100vh;
+	padding-top:80px;
 }
 </style>

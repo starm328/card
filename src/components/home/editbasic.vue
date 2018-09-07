@@ -24,7 +24,6 @@
 		</div>
 		<mpvue-picker ref="mpvuePicker" :mode="mode" :deepLength=deepLength :pickerValueDefault="pickerValueDefault" @onChange="onChange" @onConfirm="onConfirm" @pickerCancel="pickerCancel" :pickerValueArray="pickerValueArray"></mpvue-picker>
 
-		<mpvue-picker ref="address" :mode="mode" :deepLength=addLength :pickerValueDefault="addValueDefault"  @onChange="addConfirm" @onConfirm="addConfirm"  @pickerCancel="addCancel" :pickerValueArray="addValueArray"></mpvue-picker>
 		<form @submit="formSubmit" v-if="cardbasic">
 			<dl  class="upimg">
 				<dd>
@@ -92,8 +91,12 @@
 			<dl class="dl-li">
 				<dd>
 					<p>地区</p>
-					<input type="test" name="area" :value="adds != '' ? add.title + ','+ adds.title : cardbasic? cardbasic.card.area:''"  style="display:none">
-					<input @click="addPicker" type="text"  :placeholder="adds != '' ? '' : '请选择地区'" :value="adds != '' ? add.title + ','+ adds.title : cardbasic? cardbasic.card.area:''" disabled=""  placeholder-style="color:#888;">
+					<input type="test" name="area" :value="region.length > 0 ? region[0]+region[1]+region[2] : cardbasic? cardbasic.card.area:''"  style="display:none">
+					<picker mode="region" @change="bindRegionChange" :value="region" :custom-item="customItem">
+						<input type="text"  :placeholder="region.length > 0 ? region[0]+region[1]+region[2] : cardbasic? cardbasic.card.area:''" disabled=""  placeholder-style="color:#888;">
+						<view class="picker">
+						</view>
+					</picker>
 				</dd>
 			</dl>
 			<div style="width:96%;margin:0px auto;padding-bottom:20px;">
@@ -137,36 +140,7 @@ export default {
 			genderNumber:'',
 			phoneconfig:'',
 			mulLinkageThreePicker:'',
-			addThreePicker: [
-			  {
-				title: '上海',
-				value: 0,
-				children: [
-				  {
-					title: '浦东',
-					value: 1,
-				  },{
-					title: '杨浦',
-					value: 1,
-				  }
-				]
-			  },
-			  {
-				title: '浙江',
-				value: 0,
-				children: [
-				  {
-					title: '杭州',
-					value: 1,
-				  },{
-					title: '江苏',
-					value: 1,
-				  }
-				]
-			  },
-			],
 			pickerValueDefault: [0,0],
-			addValueDefault: [0,0],
 			tempFilePaths:'',
 			cardbasic:'',
 			cropper:false,
@@ -182,7 +156,8 @@ export default {
 					width: 300,
 					height: 300
 				}
-			}
+			},
+			region: [],
 		}
 	},
 	onUnload() {
@@ -259,6 +234,9 @@ export default {
 
 
 	methods: {
+		bindRegionChange: function (e) {
+			this.region = e.mp.detail.value
+		},
 		screen() {
 			var _this = this;
 			wx.showActionSheet({
@@ -290,23 +268,12 @@ export default {
 			this.$refs.mpvuePicker.show();
 		},
 
-		addPicker() {
-			this.addValueArray = this.addThreePicker;
-			this.mode = 'multiLinkageSelector';
-			this.deepLength = 2;
-			this.addValueDefault = [0, 0];
-			this.$refs.address.show();
-		},
 
 		onConfirm(e) {
 			this.province = this.mulLinkageThreePicker[e[0]]
 			this.city = this.mulLinkageThreePicker[e[0]].children[e[1]]
 		},
 
-		addConfirm(e) {
-			this.add = this.addThreePicker[e[0]]
-			this.adds = this.addThreePicker[e[0]].children[e[1]]
-		},
 		cropperReady (...args) {
 		  console.log('cropper ready!')
 		},
@@ -443,8 +410,8 @@ export default {
 				// 2XX, 3XX
 			})
 			.catch(err => {
+				wx.hideLoading ();
 				if(err.statusCode == 422){
-					wx.hideLoading ();
 					console.log(err)
 					wx.showToast({
 					  title: '请填写必填项',
@@ -453,14 +420,12 @@ export default {
 					})
 				}else if(err.statusCode == 403){
 					console.log(err)
-					wx.hideLoading ();
 					wx.showToast({
 					  title: err.data.message,
 					  icon: 'none',
 					  duration: 2000
 					})
 				}else if(err.statusCode == 404){
-					wx.hideLoading ();
 					wx.showModal({
 						title: '错误提示',
 						content: '登录失效，重新上传',
@@ -473,7 +438,6 @@ export default {
 						}
 					})
 				}else if(err.statusCode == 500){
-					wx.hideLoading ();
 					wx.showModal({
 						title: '错误提示',
 						content: '系统错误',
@@ -612,6 +576,9 @@ export default {
 				p{
 					flex:1;
 				}
+			}
+			picker{
+				flex:1;
 			}
 		}
 		.radio{

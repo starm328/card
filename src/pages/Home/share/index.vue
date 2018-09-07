@@ -1,144 +1,148 @@
 <template>
 	<div class="home-card-show" v-if="cardData">
-		<div class="top-img">
-			<img :src="cardData.card.img_url" class="img" mode="aspectFill">
-		</div>
-		<div class="card-show-none"></div>
-		<div class="card-show-main">
-			<div class="card-show-information">
-				<div class="me-information">
-					<h5>{{cardData.card.name}}</h5>
-					<p>{{cardData.card.company}}</p>
-					<span>{{cardData.card.position}}</span>
-				</div>
-				<div class="me-phone" v-if="cardData.card.phoneconfig">
-					<p>{{cardData.card.phone}}<i @click="tel(cardData.card.phone)"  class="iconfont icon-dianhua"></i></p>
-					<p>{{cardData.card.trade}}</p>
-					<p>{{cardData.detail.email}}</p>
-				</div>
-				<div class="me-address">
-					<p>{{cardData.card.area}}{{cardData.detail.address}}</p>
-					<stm-navigation :cardData="cardData" v-if="cardData"></stm-navigation>
-				</div>
-				<!-- <div class="me-authentication" @click="authentication">
-					<p>认证</p>
-					<div class="icon">
-						<i class="iconfont icon-huiyuan21">
-							<em class="iconfont icon-renzheng"></em>
-						</i>
-						<i class="iconfont icon-yinhangqia">
-							<em class="iconfont icon-renzheng"></em>
-						</i>
-						<i class="iconfont icon-qiyejianjie">
-							<em class="iconfont icon-renzheng"></em>
-						</i>
-						<i class="iconfont icon-renzheng">
-							<em class="iconfont icon-renzheng"></em>
-						</i>
+		<scroll-view scroll-y style="height: 100vh;" @scroll="scroll">
+			<stm-nav :scrollTop="scrollTop" :card="cardData.card.img_url" :isback="isback"></stm-nav>
+			<div class="top-img">
+				<img :src="cardData.card.img_url" class="img" mode="aspectFill">
+			</div>
+			<div class="card-show-none"></div>
+			<div class="card-show-main">
+				<div class="card-show-information">
+					<div class="me-information">
+						<h5>{{cardData.card.name}}</h5>
+						<p>{{cardData.card.company}}</p>
+						<span>{{cardData.card.position}}</span>
+						<div class="play" @click="playaudio" v-if="cardData.detail.voice && stop"><i class="iconfont icon-bofang"></i></div>
+						<div class="play" @click="stopaudio" v-if="cardData.detail.voice && !stop"><i class="iconfont icon-xiaochengxu"></i></div>
+						<audio :src="cardData.detail.voice" id="myAudio"></audio>
 					</div>
-				</div> -->
-			</div>
-			<div class="card-nav-li">
-				<p @click="gocode"><i class="iconfont icon-xiaochengxu"></i>名片码</p>
-				<p  @click="gobanner"><i class="iconfont icon-guanggaowei"></i>名片海报</p>
-				<p><i class="iconfont  icon-renqi"></i>人气(1)</p>
-				<p><i class="iconfont icon-shou"></i>靠谱(1)</p>
-			</div>
-			<div class="card-nav-btn">
-				<p @click="Preservation">保存到通讯录</p>
-				<p>收藏</p>
-				<p @click="cardrequest">交换</p>
-				<p>聊天</p>
-			</div>
+					<div class="me-phone" v-if="cardData.card.phoneconfig">
+						<p>{{cardData.card.phone}}<i @click="tel(cardData.card.phone)"  class="iconfont icon-dianhua"></i></p>
+						<p>{{cardData.card.trade}}</p>
+						<p>{{cardData.detail.email}}</p>
+						<p>{{cardData.detail.phone}}</p>
+					</div>
+					<div class="me-address">
+						<p>{{cardData.card.area}}{{cardData.detail.address}}</p>
+						<stm-navigation :cardData="cardData" v-if="cardData"></stm-navigation>
+					</div>
+					<div class="me-honour" v-if="cardData.detail.desc !== ''">
+						<h5>个性签名</h5>
+						<div>
+							<dl>
+								<dt>{{cardData.detail.desc}}</dt>
+							</dl>
+						</div>
+					</div>
+					<div class="me-honour" v-if="cardData.honour.length > 0">
+						<h5>获得荣誉</h5>
+						<div>
+							<dl v-for="(item,i) in cardData.honour" :key="i">
+								<dd>{{item.organization}}</dd>
+								<dt>{{item.title}}</dt>
+							</dl>
+						</div>
+					</div>
 
-			<div class="card-tile">
-				他的超级名片
-			</div>
-			<div class="card-other" v-if="cardfirm && cardfirm.length > 0">
-				<div class="title">
-					<h5>公司介绍</h5>
-					<p @click="playvideo1 = !playvideo1"><i class="iconfont icon-bofang"></i><span>看视频</span></p>
 				</div>
-				<video :src="cardfirm[0].video"   controls v-if="playvideo1"></video>
-
-				<div class="summer">
-					{{cardfirm[0].desc}}
+				<div class="card-nav-li">
+					<p><i class="iconfont  icon-renqi"></i>人气(1)</p>
+					<p><i class="iconfont icon-shou"></i>靠谱(1)</p>
+				</div>
+				<div class="card-nav-btn">
+					<p @click="Preservation">保存到通讯录</p>
+					<p @click="collection">收藏</p>
+					<p @click="grouping">交换</p>
+					<p>聊天</p>
 				</div>
 
-				<swiper :indicator-dots="indicatorDots"
-					:autoplay="autoplay" :interval="interval" :duration="duration" indicator-active-color="#fff"current="0" style="height:240px;">
-					<block v-for="(item,i) in bill" :key="i">
-						<swiper-item  class="banner">
-								 <img :src="item" style="width:100%" @click="previewImage(bill,i)">
-						</swiper-item>
-					</block>
+				<div class="card-tile">
+					他的超级名片
+				</div>
+				<div class="card-other" v-if="cardfirm && cardfirm.length > 0">
+					<div class="title">
+						<h5>公司介绍</h5>
+						<p @click="playvideo1 = !playvideo1"><i class="iconfont icon-bofang"></i><span>看视频</span></p>
+					</div>
+					<video :src="cardfirm[0].video"   controls v-if="playvideo1"></video>
 
-				</swiper>
+					<div class="summer">
+						{{cardfirm[0].desc}}
+					</div>
+					<div class="showimg" :style="[billmore? 'height:300px;overflow:hidden':'height:auto']">
+						<img :src="item" v-for="(item,i) in bill" :key="i"   mode="widthFix" @click="previewImage(bill,i)">
+					</div>
+					<p class="more" v-if="bill.length > 1 && billmore" @click="lookmore('bill')">展示全部<i class="iconfont icon-arrow-right-copy-copy-copy" style="transform:rotate(90deg);"></i></p>
+					<p class="more" v-else-if="bill.length > 1 && !billmore" @click="lookmore('bill')">展示部分<i class="iconfont icon-arrow-right-copy-copy-copy" style="transform:rotate(270deg);"></i></p>
+
+				</div>
+				<div class="card-other" v-if="product && product.length > 0">
+					<div class="title">
+						<h5>产品介绍</h5>
+						<p @click="playvideo2 = !playvideo2"><i class="iconfont icon-bofang"></i><span>看视频</span></p>
+					</div>
+					<video :src="product[0].video"   controls v-if="playvideo2"></video>
+					<div class="summer">
+						{{product[0].desc}}
+					</div>
+					<div class="showimg" :style="[proimgmore? 'height:300px;overflow:hidden':'height:auto']">
+						<img :src="item" v-for="(item,i) in proimg" :key="i"   mode="widthFix" @click="previewImage(proimg,i)">
+					</div>
+					<p class="more" v-if="proimg.length > 1 && proimgmore" @click="lookmore('proimg')">展示全部<i class="iconfont icon-arrow-right-copy-copy-copy" style="transform:rotate(90deg);"></i></p>
+					<p class="more" v-else-if="proimg.length > 1 && !proimgmore" @click="lookmore('proimg')">展示部分<i class="iconfont icon-arrow-right-copy-copy-copy" style="transform:rotate(270deg);"></i></p>
+
+				</div>
+				<div class="card-nav-wBtn" style="margin-top:10px;" @click="zhizuo" v-if="!Auth.proxy.token">
+						制作我的名片
+					</div>
+				<div style="height:45px"></div>
+
 			</div>
-			<div class="card-other" v-if="product && product.length > 0">
-				<div class="title">
-					<h5>产品介绍</h5>
-					<p @click="playvideo2 = !playvideo2"><i class="iconfont icon-bofang"></i><span>看视频</span></p>
-				</div>
-				<video :src="product[0].video"   controls v-if="playvideo2"></video>
-				<div class="summer">
-					{{product[0].desc}}
-				</div>
-				<swiper :indicator-dots="indicatorDots"
-					:autoplay="autoplay" :interval="interval" :duration="duration" indicator-active-color="#fff"current="0" style="height:240px;">
-					<block v-for="(item,i) in proimg" :key="i">
-						<swiper-item  class="banner">
-								 <img :src="item" style="width:100%" @click="previewImage(proimg,i)">
-						</swiper-item>
-					</block>
-				</swiper>
 
+		</scroll-view>
+		<div class="grouping"  v-if="groupingShow">
+			<div class="bg" @click="groupingShow = false"></div>
+			<div class="main">
+				<div class="title">选择名片交换</div>
+				<scroll-view scroll-x style=" white-space: nowrap;">
+						<dl v-for="(item,i) in  mecard" :key="i" @click="cardrequest(item.id)">
+							<dt>
+								<img :src="item.img_url" class="img" mode="widthFix">
+							</dt>
+							<dd>
+								<h5>{{item.name}}</h5>
+								<p>{{item.company}}</p>
+								<span>{{item.position}}</span>
+
+							</dd>
+						</dl>
+				</scroll-view>
 			</div>
-			<div class="card-nav-wBtn" style="margin-top:10px;" @click="zhizuo" v-if="!Auth.proxy.token">
-					制作我的名片
-				</div>
-			<div style="height:45px"></div>
-
 		</div>
-
-		<!-- <div class="bottom-nav" v-if="bottomNav">
-			<p @click="showSkin"><i class="iconfont icon-caidan"></i></p>
-			<ul>
-				<li @click="activity">我的活动(0)</li>
-				<li @click="product">我的产品(0)</li>
-			</ul>
-			<span><button open-type="share"><i class="iconfont icon-fenxiang"></i></button></span>
+		<div  v-if="!Auth.proxy.token && isAuth" style="position:fixed;top:0;left:0;width:100%;height:100vh;z-index:99;">
+			<div style="position:absolute;width:100%;height:100vh;background:rgba(000,000,000,0.5)" @click="isAuth = false"></div>
+			<cart-loged ></cart-loged>
 		</div>
-
-		<div class="skin-warp" :class="[isShow && bottomNav? 'show':'hidden']">
-			<ul>
-				<li @click="Enterprise">
-					<i class="iconfont icon-msnui-edit"></i>
-					<p>编辑超级名片</p>
-				</li>
-				<li>
-					<i class="iconfont icon-shanchu"></i>
-					<p>删除</p>
-				</li>
-			</ul>
-		</div> -->
-
 	</div>
 </template>
 
 <script>
 import configs from '@/utils/configs';
 import Navigation from '@/components/home/navigation';
+import Nav from '@/components/Navigation';
+import Loged from '@/components/loged';
 import Auth from '@/utils/Auth';
-
+const innerAudioContext = wx.createInnerAudioContext()
 export default {
 	name: 'home-card-show',
 	components: {
 		"stm-navigation" : Navigation,
-
+		'stm-nav':Nav,
+		'cart-loged': Loged,
 	},
 	data () {
 		return {
+			groupingShow:false,
 			bottomNav:false,
 			isShow:false,
 			indicatorDots: true,
@@ -149,6 +153,7 @@ export default {
 			cardData:'',
 			sign:false,
 			Auth:Auth,
+			stop:true,
 			id:'',
 			product:'',
 			proimg:'',
@@ -156,15 +161,26 @@ export default {
 			playvideo1:false,
 			cardfirm:'',
 			bill:'',
-
-
+			scrollTop:null,
+			mecard:'',
+			isAuth:false,
+			isback:false,
+			billmore:true,
+			proimgmore:true
 		}
 	},
+	onReady: function (e) {
+	    // 使用 wx.createAudioContext 获取 audio 上下文 context
+	    this.audioCtx = wx.createAudioContext('myAudio')
+	  },
 	onLoad(option) {
 		console.log(option)
 		console.log( decodeURIComponent(option.scene))
 		if(option.pid){
 			wx.setStorageSync('pid',option.pid)
+		}
+		if(option.isback){
+			this.isback = true
 		}
 		wx.setNavigationBarTitle({
 			title:'名片详情'
@@ -182,10 +198,8 @@ export default {
 				_this.cardData = d.data
 				_this.product = d.data.products
 				_this.proimg = d.data.products[0].img.split(',')
-				if(d.data.firm.length > 0){
-					_this.cardfirm = d.data.firm
-					_this.bill = d.data.firm[0].img.split(',')
-				}
+				_this.cardfirm = d.data.firm
+				_this.bill = d.data.firm[0].img.split(',')
 			}
 			// 2XX, 3XX
 		})
@@ -225,11 +239,22 @@ export default {
 		})
 	},
 	methods:{
-		cardrequest() {
+		lookmore(e){
+			if(e == 'bill'){
+				console.log('bill')
+				this.billmore = !this.billmore
+			}else if(e == 'proimg'){
+				console.log('proimg')
+				this.proimgmore = !this.proimgmore
+
+			}
+		},
+		grouping() {
 			if(Auth.proxy.token){
 				var _this = this;
+				_this.groupingShow = true;
 				wx.pro.request({
-					url:`${configs.card.apiBaseUrl}api/user/cardrequest/`+this.id,
+					url:`${configs.card.apiBaseUrl}api/user/showcards`,
 					method: 'GET',
 					header: {
 						token:Auth.proxy.token.access_token
@@ -237,19 +262,70 @@ export default {
 				})
 				.then(d => {
 					if(d.statusCode == 200){
-						wx.hideLoading ();
+						_this.mecard = d.data.data
 
+					}
+					// 2XX, 3XX
+				})
+				.catch(err => {
+					if(err.statusCode == 404){
+						Auth.proxy.token = ''
+						wx.removeStorageSync('token')
+						// Auth.RefreshToken();
+					}
+					// 网络错误、或服务器返回 4XX、5XX
+				})
+			}else{
+				 this.isAuth = true;
+			}
+
+		},
+		scroll (e) {
+			this.scrollTop= e.mp.detail.scrollTop
+			if(e.mp.detail.scrollTop > 169) {
+				wx.setNavigationBarColor({
+					  frontColor:'#000000',
+					  backgroundColor:'#ff0000'
+
+				})
+			}else{
+				wx.setNavigationBarColor({
+					  frontColor:'#ffffff',
+					  backgroundColor:'#ff0000'
+
+				})
+			}
+		},
+		cardrequest(id) {
+			if(Auth.proxy.token){
+				var _this = this;
+				wx.pro.request({
+					url:`${configs.card.apiBaseUrl}api/user/cardrequest/`+this.id +'/'+id,
+					method: 'GET',
+					header: {
+						token:Auth.proxy.token.access_token
+					}
+				})
+				.then(d => {
+					if(d.statusCode == 200){
 						if(d.data.msg){
 							wx.showToast({
 								title: d.data.msg,
 								icon: 'none',
-								duration: 4000,
+								duration: 3000,
 							})
 						}else{
 							wx.showToast({
 								title:"发送交换申请",
 								icon: 'success',
-								duration: 4000,
+								duration: 3000,
+							})
+							_this.groupingShow = false
+							innerAudioContext.autoplay = true
+							innerAudioContext.src = 'https://i1.vpinpai.cn/card/hpg7cij9hN8VYTnG35A75iBrNTP7KPfNG5eTNPbi.mpga'
+							console.log(this.tempFilePath)
+							innerAudioContext.onPlay(() => {
+								console.log('开始播放')
 							})
 						}
 					}
@@ -257,25 +333,77 @@ export default {
 				})
 				.catch(err => {
 					if(err.statusCode == 404){
-						wx.hideLoading ();
 						if(Auth.proxy.token.access_token){
 							Auth.refresh(Auth.proxy.token.access_token);
 							this.cardrequest();
 						}
+					}else if(err.statusCode == 500){
+						wx.showToast({
+							title: '系统错误',
+							icon: 'none',
+							duration: 3000,
+						})
 					}
 					// 网络错误、或服务器返回 4XX、5XX
 				})
 			}else{
-				wx.showToast({
-					title: '你为登陆或未注册',
-					icon: 'none',
-					duration: 4000,
-					success:()=>{
-						 wx.navigateTo({
-							url: '/pages/Home/index/main',
-						})
+				this.isAuth = true
+
+			}
+
+		},
+
+		collection() {
+			if(Auth.proxy.token){
+				var _this = this;
+				wx.pro.request({
+					url:`${configs.card.apiBaseUrl}api/user/collection/`+this.id,
+					method: 'GET',
+					header: {
+						token:Auth.proxy.token.access_token
 					}
 				})
+				.then(d => {
+					if(d.statusCode == 200){
+						if(d.data.msg){
+							wx.showToast({
+								title: d.data.msg,
+								icon: 'none',
+								duration: 3000,
+							})
+						}else{
+							wx.showToast({
+								title:"收藏成功",
+								icon: 'success',
+								duration: 3000,
+							})
+							innerAudioContext.autoplay = true
+							innerAudioContext.src = 'https://i1.vpinpai.cn/card/xFbqxLMkfSWnz1oi2djmKZLL0USr3FskajAjzBaj.mpga'
+							console.log(this.tempFilePath)
+							innerAudioContext.onPlay(() => {
+								console.log('开始播放')
+							})
+						}
+					}
+					// 2XX, 3XX
+				})
+				.catch(err => {
+					if(err.statusCode == 404){
+						if(Auth.proxy.token.access_token){
+							Auth.refresh(Auth.proxy.token.access_token);
+							this.collection();
+						}
+					}else if(err.statusCode == 500){
+						wx.showToast({
+							title: '系统错误',
+							icon: 'none',
+							duration: 3000,
+						})
+					}
+					// 网络错误、或服务器返回 4XX、5XX
+				})
+			}else{
+				this.isAuth = true
 
 			}
 
@@ -359,7 +487,19 @@ export default {
 				current: img[i], // 当前显示图片的http链接
 				urls: img // 需要预览的图片http链接列表
 			})
-		}
+		},
+		playaudio(){
+			var _this = this;
+			_this.audioCtx.play()
+			_this.stop = false
+
+		},
+		stopaudio(){
+			var _this = this;
+			_this.audioCtx.pause()
+			_this.stop = true
+
+		},
 	},
 	onPageScroll(Object){
 		if(Object.scrollTop >200){
@@ -468,6 +608,26 @@ export default {
 			box-shadow: inset 0px -4px 9px 0px rgba(000,000,000,0.6);
 			.me-information{
 				padding:10px 20px;
+				position:relative;
+				.play{
+					position:absolute;
+					right:0;
+					bottom:20px;
+					background:@maincolor;
+					border-radius:40px;
+					padding:4px 20px 4px 4px;
+					color:#fff;
+					font-size:@fonttwo;
+					line-height:30px;
+					border-top-right-radius:0;
+					border-bottom-right-radius:0;
+					i{
+						float:left;
+						font-size:25px;
+						color:#fff;
+						margin-right:10px
+					}
+				}
 				h5{
 					color:#fff;
 					font-size:@fontfive;
@@ -511,6 +671,28 @@ export default {
 					color:rgb(171, 175, 186);
 					font-size:40px;
 				}
+			}
+			.me-honour{
+				display:flex;
+				h5{
+					margin:0 20px 20px 20px ;
+					color:#fff;
+					font-size:@fontthree;
+				}
+				div{
+					flex:1;
+					margin:0 20px 10px 20px;;
+					dl{
+
+						color:#fff;
+						font-size:@fontthree;
+						dd{
+							width:100%;
+							color:rgb(171, 175, 186);
+						}
+					}
+				}
+
 			}
 			.me-authentication{
 				p{
@@ -613,9 +795,19 @@ export default {
 					flex:1;
 					text-align:left;
 					color:rgb(171, 175, 186);
-					font-size:@fontfive;
-					border-left:2px solid rgb(171, 175, 186);
+					font-size:@fontthree;
 					padding-left:10px;
+					position:relative;
+					&:after{
+						position:absolute;
+						content:'';
+						display:block;
+						left:0;
+						top:10%;
+						height:80%;
+						background:rgb(171, 175, 186);
+						width:2px;
+					}
 				}
 				p{
 					font-size:@fonttwo;
@@ -635,6 +827,14 @@ export default {
 				font-size:@fonttwo;
 				color:rgb(171, 175, 186);
 				margin:20px 0;
+			}
+			.showimg{
+				img{
+					width:100%;
+					margin:10px auto 0 auto;;
+
+
+				}
 			}
 			.activity{
 				margin-top:20px;
@@ -667,6 +867,94 @@ export default {
 			padding:10px 0;
 			margin:0 20px;
 		}
+	}
+	.grouping{
+		.bg{
+			position:fixed;
+			bottom:0;
+			width:100%;
+			height:100%;
+			z-index:88;
+			background:rgba(000,000,000,0.5)
+		}
+		.main{
+			position:fixed;
+			bottom:0;
+			background:#f1f1f1;
+			border-top-left-radius:10px;
+			border-top-right-radius:10px;
+			overflow:hidden;
+			width:100%;
+			z-index:99;
+			.title{
+				width:100%;
+				height:40px;
+				line-height:40px;
+				text-indent:10px;
+				color:#000;
+				background:#f1f1f1;
+			}
+			dl{
+				display: inline-block;
+				width:150px;
+				margin:10px 10px;
+				background:#fff;
+				border-radius:5px;
+				overflow:hidden;
+				padding-bottom:10px;
+				box-shadow:0px 2px 9px 3px rgba(000, 000, 000, 0.1);
+				dt{
+					.img{
+						width:100%;
+					}
+				}
+				dd{
+					text-align:center;
+					h5{
+						white-space:normal;
+						font-size:@fontthree;
+						font-weight:none;
+						margin:10px 0 10px 0;
+						font-weight:bold;
+						padding:0 10px;
+						overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
+					}
+					p{
+						padding:0 10px;
+						white-space:normal;
+						color:@fontcolor;
+						font-size:@fonttwo;
+						margin-bottom:10px;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						display: -webkit-box;
+						-webkit-box-orient: vertical;
+						-webkit-line-clamp: 1;
+
+					}
+					span{
+						white-space:normal;
+						padding:0 10px;
+						font-size:@fonttwo;
+						color:@fontcolor;
+						overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
+					}
+				}
+			}
+			&:after{
+				clear:both;
+				display:block;
+				content:''
+			}
+
+		}
+	}
+	.more{
+		width:100%;
+		font-size:@fonttwo;
+		line-height:30px;
+		text-align:center;
+		color:#fff;
 	}
 }
 </style>

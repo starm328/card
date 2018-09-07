@@ -1,5 +1,7 @@
 <template>
 	<div class="home-basic-index stm-warp">
+		<stm-nav></stm-nav>
+
 		<cart-loged>
 			<stm-home-jurisdiction></stm-home-jurisdiction>
 		</cart-loged>
@@ -8,12 +10,16 @@
 
 <script>
 import Loged from '@/components/loged';
-import HomeJurisdiction from '@/components/home/jurisdiction'
+import HomeJurisdiction from '@/components/home/jurisdiction';
+import Nav from '@/components/Nav';
+
 export default {
 	name: 'cart-home-show',
 	components: {
 		'cart-loged': Loged,
 		'stm-home-jurisdiction': HomeJurisdiction,
+		'stm-nav':Nav,
+
 	},
 	data () {
 		return {

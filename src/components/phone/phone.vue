@@ -22,17 +22,17 @@
 			</div>
 			<div class="keyboard">
 				<ul @click.stop='_handleKeyPress'>
-					<li data-num='1'><p data-num='1'>1</p></li>
-					<li data-num='2'><p data-num='2'>2</p></li>
-					<li data-num='3'><p data-num='3'>3</p></li>
-					<li data-num='4'><p data-num='4'>4</p></li>
-					<li data-num='5'><p data-num='5'>5</p></li>
-					<li data-num='6'><p data-num='6'>6</p></li>
-					<li data-num='7'><p data-num='7'>7</p></li>
-					<li data-num='8'><p data-num='8'>8</p></li>
-					<li data-num='9'><p data-num='9'>9</p></li>
+					<li data-num='1'><p data-num='1' :class="[active[1]? 'active':'']" @touchstart="typing('1')">1</p></li>
+					<li data-num='2'><p data-num='2' :class="[active[2]? 'active':'']" @touchstart="typing('2')">2</p></li>
+					<li data-num='3'><p data-num='3' :class="[active[3]? 'active':'']" @touchstart="typing('3')">3</p></li>
+					<li data-num='4'><p data-num='4' :class="[active[4]? 'active':'']" @touchstart="typing('4')">4</p></li>
+					<li data-num='5'><p data-num='5' :class="[active[5]? 'active':'']" @touchstart="typing('5')">5</p></li>
+					<li data-num='6'><p data-num='6' :class="[active[6]? 'active':'']" @touchstart="typing('6')">6</p></li>
+					<li data-num='7'><p data-num='7' :class="[active[7]? 'active':'']" @touchstart="typing('7')">7</p></li>
+					<li data-num='8'><p data-num='8' :class="[active[8]? 'active':'']" @touchstart="typing('8')">8</p></li>
+					<li data-num='9'><p data-num='9' :class="[active[9]? 'active':'']" @touchstart="typing('9')">9</p></li>
 					<li data-num='C'><span data-num='C' class="confirms">重输</span></li>
-					<li data-num='0'><p data-num='0'>0</p></li>
+					<li data-num='0'><p data-num='0' :class="[active[0]? 'active':'']" @touchstart="typing('0')">0</p></li>
 					<li data-num='S' v-if="phone.length == 11 && !hasCode"><span class="confirm" data-num='S'>确认</span></li>
 					<li data-num='S' v-if="code.length == 4 && hasCode"><span class="confirm" data-num='S'>确认</span></li>
 					<li data-num='D' v-if="phone.length !== 11 && !hasCode"><span class="confirm" data-num='D'>删除</span></li>
@@ -58,7 +58,8 @@ export default {
 			count: '',
 			timer: null,
 			show:false,
-			auth:Auth
+			auth:Auth,
+			active:[0,0,0,0,0,0,0,0,0,0,0,0,0],
 		}
 	},
 	watch: {
@@ -72,6 +73,13 @@ export default {
 			this.phone= '';
 			this.code=[];
 			this.hasCode = false
+		},
+		/*输入*/
+		typing(val) {
+			this.active[val]=1
+			setTimeout(()=>{
+				this.active[val]=0
+			},60)
 		},
 		_handleKeyPress(e) {
 			let num = e.target.dataset.num;
@@ -137,6 +145,10 @@ export default {
 		},
 		_handleConfirmKey() {
 			if(this.hasCode){
+				wx.showLoading({
+				  title: '注册中',
+				  mask:true
+				})
 				var _this = this;
 				wx.pro.request({
 					url:  `${configs.card.apiBaseUrl}api/login/register`,
@@ -145,12 +157,13 @@ export default {
 						phone: _this.phone,
 						vcode: _this.Inputcode,
 						access_token:_this.auth.proxy.token.access_token,
-						pass:'123456',
+						// pass:'123456',
 						pid:wx.getStorageSync('pid')?wx.getStorageSync('pid'):''
 					}
 				})
 				.then(d => {
 					if(d.statusCode == 200){
+						wx.hideLoading()
 						wx.showToast({
 							title: '注册成功',
 							icon: 'success',
@@ -163,6 +176,7 @@ export default {
 					// 2XX, 3XX
 				})
 				.catch(err => {
+					wx.hideLoading()
 					if(err.statusCode == 404){
 						wx.showToast({
 							mask: true,
@@ -181,16 +195,20 @@ export default {
 							title: '系统错误',
 							icon: 'none',
 							duration: 2000,
-							success:()=>{
-								this.auth.proxy.token = ''
-								wx.removeStorageSync('token')
-							}
 						})
 						// Auth.RefreshToken();
 					}else if(err.statusCode == 403){
 						wx.showToast({
 							mask: true,
-							title: '验证码错误',
+							title:err.data.message,
+							icon: 'none',
+							duration: 2000,
+						})
+						// Auth.RefreshToken();
+					}else if(err.statusCode == 401){
+						wx.showToast({
+							mask: true,
+							title:err.data.message,
 							icon: 'none',
 							duration: 2000,
 						})
@@ -202,7 +220,7 @@ export default {
 				// 	url: '/pages/Home/basic/main',
 				// })
 			}else{
-				this._getCode();
+				this._getCodeto();
 			}
 		},
 		_getCode(){
@@ -210,12 +228,21 @@ export default {
 
 		},
 		_getCodeto() {
+			wx.showLoading({
+			  title: '发送中',
+			  mask:true
+			})
 			wx.pro.request({
-				url:  `${configs.card.apiBaseUrl}api/login/code/${this.phone}/${Auth.proxy.token.access_token}`,
-				method: 'GET',
+				url:  `${configs.MobileEnd.apiBaseUrl}send-code`,
+				method: 'POST',
+				data: {
+					mobile:this.phone,
+					title:'一生名片'
+				}
 			})
 			.then(d => {
 				if(d.statusCode == 200){
+					  wx.hideLoading()
 					this.hasCode = true;
 					const TIME_COUNT = 60;
 					if (!this.timer) {
@@ -235,6 +262,7 @@ export default {
 				// 2XX, 3XX
 			})
 			.catch(err => {
+				wx.hideLoading()
 				if(err.statusCode == 404){
 					wx.showToast({
 						mask: true,
@@ -245,6 +273,14 @@ export default {
 							this.auth.proxy.token = ''
 							wx.removeStorageSync('token')
 						}
+					})
+					// Auth.RefreshToken();
+				}else if(err.statusCode == 422){
+					wx.showToast({
+						mask: true,
+						title: err.data.errors.mobile[0],
+						icon: 'none',
+						duration: 2000,
 					})
 					// Auth.RefreshToken();
 				}
@@ -277,9 +313,8 @@ export default {
 		position:fixed;
 		left:50%;
 		margin-left:-40%;
-		top:30px;
+		top:85px;
 		border-radius:5px;
-
 		.phone-top{
 			position:relative;
 			text-align:center;
@@ -375,6 +410,9 @@ export default {
 						font-size:@fontfive;
 						margin:0 auto;
 						border-radius:50%;
+						&.active{
+							background:#000;
+						}
 					}
 					span{
 						width:55px;
@@ -382,11 +420,11 @@ export default {
 						line-height:55px;
 						font-size:@fonttwo;
 						&.confirm{
-							font-size:@fontthree;
+							font-size:@fontfive;
 							color:@maincolor
 						}
 						&.confirms{
-							font-size:@fontthree;
+							font-size:@fontfive;
 						}
 					}
 				}

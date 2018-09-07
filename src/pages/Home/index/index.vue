@@ -62,14 +62,21 @@ export default {
 			wx.setStorageSync('pid',option.scene)
 
 		}
+		wx.vibrateLong({
+			success:()=>{
+				console.log('1574')
+			}
+		})
+		wx.hideShareMenu()
 	},
+
 	onShareAppMessage(res) {
 		if (res.from === 'button') {
 			var getshare = res.target.dataset
 			var date = new Date().getTime()
 			console.log('/pages/Home/share/main?id='+ getshare.id +'&time=' + date+'&token='+util.hexMD5(getshare.id + '_' + date) + '&pid=' +wx.getStorageSync('token').user_id)
 			return {
-				title: getshare.name,
+				title: getshare.name + '邀请你一起创建名片',
 				path: '/pages/Home/share/main?id='+ getshare.id +'&time=' + date+'&token='+util.hexMD5(getshare.id + '_' + date) + '&pid=' +wx.getStorageSync('token').user_id,
 				imageUrl:getshare.img,
 			}
@@ -171,8 +178,8 @@ export default {
 		}
 	}
 	swiper{
-		padding-top:50px;
-		height:75vh;
+		padding-top:80px;
+		height:65vh;
 		.wx-swiper-dot{
 			margin-top:10px;
 		}
@@ -186,7 +193,7 @@ export default {
 					transition: transform 0.5s;
 					.clip{
 						.title{
-							padding:5px 20px;
+							padding:5px 20px 0 20px;
 							p{
 								float:left;
 								font-size:30px;
@@ -275,22 +282,26 @@ export default {
 							text-align:left;
 							line-height:35px;
 							text-indent:20px;
+							margin-bottom:0
 						}
 						dl{
 							display:flex;
 							margin-top:3px;
 							margin-bottom:10px;
 							padding:0 20px;
-							max-height:105px;
+							height:105;
 							overflow:hidden;
+							width:85%;
 							dt{
 								flex:1;
+								height:105px;
 
 							}
 							dd{
 								flex:1;
 								margin-left:1px;
 								font-size:0;
+								height:105px;
 								.img{
 									width:calc(50% - 2px);
 									float:left;
@@ -327,12 +338,15 @@ export default {
 		.swiper-content{
 			transform:scale(1);
 			width:75%;
+			height:70vh;
 			padding-bottom:20px;
-			height:auto;
-			margin-top:-50px;
+			margin-top: -30px;
 		}
 		.nave{
-			margin-top:20px;
+			width:100%;
+			position:absolute;
+			bottom:20px;
+			left:0;
 			h5{
 				width:100%;;
 				text-align:center;
@@ -405,7 +419,7 @@ export default {
 		width: 100%;
 		z-index: 2;
 		left: 0;
-		top: 20px;
+		top:40px;
 		pointer-events: none;
 		display: -webkit-box;
 		display: -ms-flexbox;

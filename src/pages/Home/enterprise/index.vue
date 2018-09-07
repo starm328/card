@@ -1,5 +1,6 @@
 <template>
 	<div class="card-home-enterprise stm-warp">
+		<stm-nav></stm-nav>
 		<form @submit="formSubmit">
 			<div class="stm-cell  enterprise-template-product-list stm-m10-t">
 				<div class="cell-warp">
@@ -20,7 +21,7 @@
 				</div>
 				<div class="remind">(最多5张)图片尺寸：高600X480</div>
 			</div>
-			<!-- <div class="stm-cell  enterprise-template-product-list stm-m10-t">
+			<div class="stm-cell  enterprise-template-product-list stm-m10-t">
 				<div class="cell-warp">
 					<div class="cell-left enterprise-template-product-tit">海报：</div>
 					<div class="cell-main enterprise-template-product-main">
@@ -29,7 +30,7 @@
 					</div>
 				</div>
 				<div class="remind">(最多5张)图片尺寸：高600X480</div>
-			</div> -->
+			</div>
 			<div class="stm-cell  enterprise-template-product-list stm-m10-t">
 				<div class="cell-warp">
 					<div class="cell-left enterprise-template-product-tit">企业视频：</div>
@@ -76,7 +77,10 @@
 <script>
 import Auth from '@/utils/Auth';
 import configs from '@/utils/configs';
-import MpvueCropper from 'mpvue-cropper'
+import MpvueCropper from 'mpvue-cropper';
+import Nav from '@/components/Nav';
+
+
 let wecropper
 
 const device = wx.getSystemInfoSync()
@@ -86,7 +90,9 @@ export default {
 
 	name: 'card-home-enterprise',
 	components:{
-		'mpvue-cropper': MpvueCropper
+		'mpvue-cropper': MpvueCropper,
+		'stm-nav':Nav
+
 	},
 	data () {
 		return {
@@ -147,7 +153,7 @@ export default {
 					},
 					data:{
 						desc:e.mp.detail.value.desc,
-						bill:[],
+						bill:_this.img_url,
 						img:_this.imgs,
 						video: _this.video,
 					}
@@ -221,32 +227,59 @@ export default {
 		},
 		choosebanner() {
 			var _this =this
-			wx.chooseImage({
-				count: 5, // 默认9
+			  wx.chooseImage({
+				count: 1, // 默认9
 				sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
 				sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-				success: function (res) {
-					// 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-					var tempFilePaths = res.tempFilePaths;
-					wx.showToast({
-						title: '正在上传...',
-						icon: 'loading',
-						mask: true,
-						duration: 10000
-					})
+				success: (res) => {
+					const src = res.tempFilePaths[0]
+					wx.uploadFile({
+						url: `${configs.card.apiBaseUrl}api/user/upload`,
+						filePath: src,
+						name: 'url',
+						header: {
+							token: Auth.proxy.token.access_token,
+							"Content-Type": "multipart/form-data"
+						},
+						success: function (res) {
+							//服务器返回格式: { "Catalog": "testFolder", "FileName": "1.jpg", "Url": "https://test.com/1.jpg" }
+							if(res.statusCode == 404){
+								wx.showModal({
+									title: '错误提示',
+									content: '登录失效，重新上传',
+									showCancel: false,
+									success: function (res) {
+										if(Auth.proxy.token.access_token){
+											Auth.refresh(Auth.proxy.token.access_token);
+										}
+									}
+								})
 
-					if(_this.img_url.length > 0){
-						_this.img_url = []
-						for (var i = 0; i < tempFilePaths.length; i++) {
-								_this.uploadimg(tempFilePaths[i],i)
+							}else if(res.statusCode == 200){
+								_this.img_url.push(JSON.parse(res.data).data)
+								console.log(_this.img)
+								_this.cropper = false
+							}else if(res.statusCode == 500){
+								wx.showModal({
+									title: '错误提示',
+									content: '系统错误',
+									showCancel: false,
+
+								})
+							}
+						},
+						fail: function (res) {
+							console.log(res)
+							wx.showModal({
+							  title: '错误提示',
+							  content: '上传图片失败',
+							  showCancel: false,
+							  success: function (res) { }
+							})
 						}
-					}else{
-						for (var i = 0; i < tempFilePaths.length; i++) {
-								_this.uploadimg(tempFilePaths[i],i)
-						}
-					}
+					});
 				}
-			})
+			  })
 		},
 
 		editchooseimg(e) {
@@ -305,9 +338,6 @@ export default {
 					url: `${configs.card.apiBaseUrl}api/user/upload`,
 					filePath: src,
 					name: 'url',
-					formData: {
-						'imgIndex': 'src'
-					},
 					header: {
 						token: Auth.proxy.token.access_token,
 						"Content-Type": "multipart/form-data"
@@ -361,64 +391,66 @@ export default {
 
 		chooseimg() {
 			var _this =this
-			_this.uploadTap()
-		},
+			  wx.chooseImage({
+				count: 1, // 默认9
+				sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+				sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+				success: (res) => {
+					const src = res.tempFilePaths[0]
+					wx.uploadFile({
+						url: `${configs.card.apiBaseUrl}api/user/upload`,
+						filePath: src,
+						name: 'url',
+						formData: {
+							'imgIndex': 'src'
+						},
+						header: {
+							token: Auth.proxy.token.access_token,
+							"Content-Type": "multipart/form-data"
+						},
+						success: function (res) {
+							//服务器返回格式: { "Catalog": "testFolder", "FileName": "1.jpg", "Url": "https://test.com/1.jpg" }
+							if(res.statusCode == 404){
+								wx.hideToast();
+								wx.showModal({
+									title: '错误提示',
+									content: '登录失效，重新上传',
+									showCancel: false,
+									success: function (res) {
+										if(Auth.proxy.token.access_token){
+											Auth.refresh(Auth.proxy.token.access_token);
+										}
+									}
+								})
 
-		uploadimg(tempFilePaths,i) {
-			var _this = this;
-			wx.uploadFile({
-				url: `${configs.card.apiBaseUrl}api/user/upload`,
-				filePath: tempFilePaths,
-				name: 'url',
-				formData: {
-					'imgIndex': 'src'
-				},
-				header: {
-					token: Auth.proxy.token.access_token,
-					"Content-Type": "multipart/form-data"
-				},
-				success: function (res) {
-					//服务器返回格式: { "Catalog": "testFolder", "FileName": "1.jpg", "Url": "https://test.com/1.jpg" }
-					if(res.statusCode == 404){
+							}else if(res.statusCode == 200){
+								_this.imgs.push(JSON.parse(res.data).data)
+								console.log(_this.img)
+								wx.hideToast();
+								_this.cropper = false
+							}else if(res.statusCode == 500){
+								wx.hideToast();
+								wx.showModal({
+									title: '错误提示',
+									content: '系统错误',
+									showCancel: false,
 
-						wx.showModal({
-							title: '错误提示',
-							content: '登录失效，重新上传',
-							showCancel: false,
-						})
-					}else if(res.statusCode == 400){
-						wx.showModal({
-							title: '错误提示',
-							content: '上传失败，重新上传',
-							showCancel: false,
-						})
-						wx.hideToast();
-					}else if(res.statusCode == 200) {
-						_this.img_url.push(JSON.parse(res.data).data)
-						console.log(_this.img_url)
-						wx.hideToast();
-					}else if(res.statusCode == 500) {
-						wx.hideToast();
-						wx.showModal({
-							title: '错误提示',
-							content: '系统错误',
-							showCancel: false,
-
-						})
-					}
-
-				},
-				fail: function (res) {
-					console.log(res)
-					wx.hideToast();
-					wx.showModal({
-					  title: '错误提示',
-					  content: '上传失败，重新上传',
-					  showCancel: false,
-					  success: function (res) { }
-					})
+								})
+							}
+						},
+						fail: function (res) {
+							console.log(res)
+							wx.hideToast();
+							wx.showModal({
+							  title: '错误提示',
+							  content: '上传图片失败',
+							  showCancel: false,
+							  success: function (res) { }
+							})
+						}
+					});
 				}
-			});
+			  })
 		},
 
 		chooseVideo() {

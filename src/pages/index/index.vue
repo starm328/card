@@ -223,14 +223,7 @@ export default {
 		.scroll-view_H{
 			white-space: nowrap;
 		}
-		.scroll-view-item_H{
-			display: inline-block;
-			width:90px;
-			background:#000;
-			height: 90px;
-			margin:10px;
-			border-radius:5px;
-		}
+
 
 		ul{
 			li{

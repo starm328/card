@@ -1,5 +1,7 @@
 <template>
 	<div class="enterprise-template-product-warp stm-warp">
+		<stm-nav></stm-nav>
+
 		<form @submit="formSubmit">
 			<!-- <div class="stm-cell  enterprise-template-product-list">
 				<div class="cell-warp">
@@ -36,7 +38,7 @@
 					<div class="cell-left enterprise-template-product-tit">产品图片：</div>
 					<div class="cell-main enterprise-template-product-main">
 						<img :src="item" class="tempFilePaths" v-for="(item,index) in img_url" :key="index" @click="editchoosebanner(index)" style="float:left" >
-						<p class="opimg" @click="choosebanner" v-if="img_url.length <5 ">添加海报图片</p>
+						<p class="opimg" @click="choosebanner" v-if="img_url.length <5 ">添加产品图片</p>
 					</div>
 				</div>
 				<div class="remind">(最多5张)图片尺寸：高600X480</div>
@@ -87,7 +89,9 @@
 <script>
 import Auth from '@/utils/Auth';
 import configs from '@/utils/configs';
-import MpvueCropper from 'mpvue-cropper'
+import MpvueCropper from 'mpvue-cropper';
+import Nav from '@/components/Nav';
+
 let wecropper
 
 const device = wx.getSystemInfoSync()
@@ -97,7 +101,8 @@ export default {
 
 	name: 'enterprise-template-product-warp',
 	components:{
-		'mpvue-cropper': MpvueCropper
+		'mpvue-cropper': MpvueCropper,
+		'stm-nav':Nav
 	},
 	data () {
 		return {
@@ -220,7 +225,7 @@ export default {
 		  // Todo: 绘制水印等等
 		},
 		uploadTap () {
-			this.cropper = true
+		 // this.cropper = true
 		  wx.chooseImage({
 			count: 1, // 默认9
 			sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -230,6 +235,7 @@ export default {
 				//  获取裁剪图片资源后，给data添加src属性及其值
 				// console.log(res)
 				this.$refs.cropper.pushOrigin(src)
+				this.getCropperImage()
 			}
 		  })
 		},
@@ -302,7 +308,62 @@ export default {
 		},
 		choosebanner() {
 			var _this =this
-			_this.uploadTap()
+			  wx.chooseImage({
+				count: 1, // 默认9
+				success: (res) => {
+					const src = res.tempFilePaths[0]
+					console.log(res.tempFilePaths[0])
+					wx.uploadFile({
+						url: `${configs.card.apiBaseUrl}api/user/upload`,
+						filePath: src,
+						name: 'url',
+						header: {
+							token: Auth.proxy.token.access_token,
+							"content-type": "multipart/form-data",
+							"content-type": "application/x-www-form-urlencoded"
+						},
+						success: function (res) {
+							//服务器返回格式: { "Catalog": "testFolder", "FileName": "1.jpg", "Url": "https://test.com/1.jpg" }
+							if(res.statusCode == 404){
+								wx.hideToast();
+								wx.showModal({
+									title: '错误提示',
+									content: '登录失效，重新上传',
+									showCancel: false,
+									success: function (res) {
+										if(Auth.proxy.token.access_token){
+											Auth.refresh(Auth.proxy.token.access_token);
+										}
+									}
+								})
+
+							}else if(res.statusCode == 200){
+								wx.hideToast();
+								_this.img_url.push(JSON.parse(res.data).data)
+								_this.cropper = false
+							}else if(res.statusCode == 500){
+								wx.hideToast();
+								wx.showModal({
+									title: '错误提示',
+									content: '系统错误',
+									showCancel: false,
+
+								})
+							}
+						},
+						fail: function (res) {
+							console.log(res)
+							wx.hideToast();
+							wx.showModal({
+							  title: '错误提示',
+							  content: '上传图片失败',
+							  showCancel: false,
+							  success: function (res) { }
+							})
+						}
+					});
+				}
+			  })
 		},
 		editchoosebanner(e) {
 			var _this = this
@@ -335,9 +396,6 @@ export default {
 						url: `${configs.card.apiBaseUrl}api/user/upload`,
 						filePath: tempFilePaths,
 						name: 'url',
-						formData: {
-							'imgIndex': 'video'
-						},
 						header: {
 							token: Auth.proxy.token.access_token,
 							"Content-Type": "multipart/form-data"

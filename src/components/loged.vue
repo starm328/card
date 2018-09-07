@@ -6,33 +6,25 @@
 			<slot></slot>
 	</div>
 	<div v-else-if="!Auth.token" class="login">
-		<swiper previous-margin="40px" next-margin="40px" current="0">
-			<block>
-				<swiper-item item-id="dd" class="active">
+
 					<div class="swiper-content">
 							<div class="imgno">
 								<open-data type="userAvatarUrl" class="img"></open-data>
 							</div>
 							<button type="default" class="stm-mt10" open-type="getUserInfo" @getuserinfo="onGotUserInfo">授权登录</button>
 					</div>
-				</swiper-item>
-			</block>
-		</swiper>
+
 
 	</div>
 	<div  v-else-if="Auth.token && !Auth.token.is_new" class="login">
-		<swiper previous-margin="40px" next-margin="40px" current="0">
-			<block>
-				<swiper-item item-id="dd" class="active">
+
 					<div class="swiper-content">
 							<div class="imgno">
 								<open-data type="userAvatarUrl" class="img"></open-data>
 							</div>
 							<button type="default" class="stm-mt10" @click="gosign">注册</button>
 					</div>
-				</swiper-item>
-			</block>
-		</swiper>
+
 		<stm-phone v-if="sign" @log="oversign"></stm-phone>
 	</div>
 
@@ -101,6 +93,7 @@ export default {
 }
 .login{
 	position:relative;
+	padding-top:30px;
 	swiper{
 		height:80vh;
 	}

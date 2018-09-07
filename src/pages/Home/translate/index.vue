@@ -1,5 +1,6 @@
 <template>
-	<div class="cart-home-translate">
+	<div class="cart-home-translate" :style="'padding-top:'+navgationHeight+'px'">
+		<stm-nav></stm-nav>
 		<img src="https://vpinpai.oss-cn-hangzhou.aliyuncs.com/yscard/%E5%9B%BE%E5%B1%82%202.png" style="width:100%" mode="widthFix" @click="pay(1)">
 		<img src="https://vpinpai.oss-cn-hangzhou.aliyuncs.com/yscard/%E5%9B%BE%E5%B1%82%203.png" style="width:100%" mode="widthFix" @click="pay(2)">
 	</div>
@@ -8,17 +9,36 @@
 <script>
 import Auth from '@/utils/Auth';
 import configs from '@/utils/configs';
+import Nav from '@/components/Nav';
+
 export default {
 	name: 'cart-home-translate',
+	components: {
+		'stm-nav':Nav,
+
+	},
 	data () {
 		return {
-
+			navgationHeight:'',
 		}
 	},
 	onLoad() {
 		wx.setNavigationBarTitle({
 			title:'选择升级'
 		});
+		let startBarHeight = 20
+		let navgationHeight = 44
+		let that = this
+		wx.getSystemInfo({
+		  success: function (res) {
+			console.log(res.model)
+			if (res.model == 'iPhone X'){
+			  startBarHeight = 44
+			}
+			console.log('o')
+			that.navgationHeight= navgationHeight+startBarHeight
+		  }
+		})
 	},
 	methods: {
 		pay(type) {
