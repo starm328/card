@@ -2,6 +2,7 @@
 	<div class="about"  :style="'padding-top:'+navgationHeight+'px;min-height:100vh;'">
 		<stm-nav></stm-nav>
 		<h6>关于一生名片</h6>
+		<img src="https://i1.vpinpai.cn/card/C3B6PqRlqCi58B3dkB8UljlECTlIKvlLPHfQEZEd.jpeg" mode="widthFix">
 		<div class="main">
 			一生名片，发现更大的世界，让生意变得更容易、更简单！<br/>
 			一张神奇的互联网名片，一个以名片为入口、以移动互联网为载体的超级生意平台，超级个人和企业的流量自媒体分发平台，让你通过手机与全世界的人做生意。只需一部手机，就可以轻松把自已的品牌、产品、服务乃至整个企业都放进名片里。一生名片发送和交换简单方便，线上线下畅通无阻，你的名片不断发出去，生意就会不断带进来。<br/>
@@ -44,6 +45,11 @@ export default {
 
 <style lang="less" scoped>
 .about{
+	img{
+		width:100px;
+		display:block;
+		margin:0 auto;
+	}
 	h6{
 		text-align:center;
 		line-height:35px;

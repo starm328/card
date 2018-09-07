@@ -1,7 +1,9 @@
 <template>
 	<div class="information-exchange" :style="'padding-top:'+navgationHeight+'px'">
-		<div class="list">
-			<dl v-for="(item,i) in quest" :key="i" @tap="longtap(item.card_id)" @longpress="longpress(item.id,i)">
+		<st-nodata v-if="quest.length == 0"></st-nodata>
+
+		<div class="list" v-else>
+			<dl v-for="(item,i) in quest" :key="i" @tap="longtap(item.card_id)" @longpress="longpress(item.id,i)" :class="[scale ?' scale': '']" @touchend="touchend">
 				<dt>
 					<img :src="item.card.img_url" class="img" mode="widthFix">
 				</dt>
@@ -23,18 +25,26 @@
 <script>
 import Auth from '@/utils/Auth';
 import configs from '@/utils/configs';
+import Nodata from '@/components/nodata';
+
 var util = require('@/utils/md5.js')
 export default {
 	name: 'information-exchange',
+	components: {
+		'st-nodata': Nodata,
+	},
 	data () {
 		return {
 			navgationHeight:'',
 			groupingShow:false,
 			quest:'',
 			page:0,
-			onReachBottom:true
+			onReachBottom:true,
+			scale:false
+
 		}
 	},
+
 	onLoad() {
 			this.getdata();
 			let startBarHeight = 20
@@ -142,6 +152,10 @@ export default {
 						}
 					}
 				})
+				_this.scale = true
+		},
+		touchend() {
+			this.scale = false
 		},
 		longtap(cardid) {
 				var date = new Date().getTime()
@@ -150,6 +164,9 @@ export default {
 				})
 		},
 		getdata() {
+			wx.showLoading({
+				title: '玩命加载中',
+			})
 			var _this = this;
 			wx.pro.request({
 				url:`${configs.card.apiBaseUrl}api/user/showcollection/`+_this.page,
@@ -160,12 +177,16 @@ export default {
 			})
 			.then(d => {
 				if(d.statusCode == 200){
+					wx.hideLoading ();
+
 					_this.quest = d.data
 					console.log(_this.quest)
 				}
 				// 2XX, 3XX
 			})
 			.catch(err => {
+				wx.hideLoading ();
+
 				if(err.statusCode == 404){
 					wx.removeStorageSync('token')
 				}else if(err.statusCode == 500){
@@ -210,6 +231,7 @@ export default {
 			text-align:center;
 			padding:0 0 10px 0;
 			box-shadow:0px 2px 9px 3px rgba(000, 000, 000, 0.1);
+			transition:transform 2s;
 			dt{
 				width:100%;
 				border-radius:5px;
@@ -244,6 +266,9 @@ export default {
 					}
 				}
 
+			}
+			&.scale{
+				transform:scale(0.8,0.8)
 			}
 		}
 	}

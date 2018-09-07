@@ -7,6 +7,7 @@
 				</div>
 			</div>
 			<p v-for="(item,i) in user" :key="i">{{item.label}}</p>
+			<div class="tequan" v-if="user[0]" @click="privilege">{{user[0].label}}特权</div>
 		</div>
 		<div class="enterprise-nav" >
 			<div class="stm-cell  enterprise-nav-list" v-if="user[0] && user[0].id !==97">
@@ -36,7 +37,7 @@
 			</div>
 				<div class="stm-cell  enterprise-nav-list">
 				<div class="cell-warp" @click="agreement">
-					<div class="cell-left enterprise-tit">一生名片软件及服务</div>
+					<div class="cell-left enterprise-tit">一生名片服务及用户协议</div>
 					<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
 				</div>
 			</div>
@@ -63,7 +64,6 @@ export default {
 				this.message = wx.getStorageSync('showrequest')
 			}else {
 				this.message = 0
-
 			}
 	},
 	onShow() {
@@ -106,9 +106,6 @@ export default {
 					// 网络错误、或服务器返回 4XX、5XX
 				})
 			}
-
-
-
 		},
 		getuser(token){
 			var _this = this
@@ -123,6 +120,7 @@ export default {
 			.then(d => {
 				if(d.statusCode == 200){
 					_this.getroles(d.data)
+						wx.setStorageSync('nodes',d.data)
 				}
 				// 2XX, 3XX
 			})
@@ -153,12 +151,12 @@ export default {
 			.then(d => {
 				if(d.statusCode == 200){
 					wx.hideLoading ();
-
+					wx.setStorageSync('commission',d.data)
 					console.log(d.data)
 					d.data.forEach(exploitee=>{
 						role.find(x=>{
 							var data= d.data.filter(function(item){
-							     return item.id == x.role;
+								return item.id == x.role;
 							})
 							_this.user = data
 						})
@@ -205,6 +203,11 @@ export default {
 				url: '/pages/agreement/main',
 			})
 		},
+		privilege(){
+			wx.navigateTo({
+				url: '/pages/Team/privilege/main',
+			})
+		},
 
 	}
 }
@@ -245,6 +248,18 @@ export default {
 		padding-top:80px;
 		padding-bottom:20px;
 		margin-bottom:10px;
+		position:relative;
+		.tequan{
+			position:absolute;
+			right:-40px;
+			top:50%;
+			background:#ff4c43;
+			color:#fff;
+			font-size:@fontone;
+			padding:4px 50px 4px 10px;
+			border-radius:10px;
+
+		}
 		.user-img{
 			width:120px;
 			height:120px;

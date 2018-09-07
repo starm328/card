@@ -2,7 +2,7 @@
 	<div class="referress-component" :style="'padding-top:'+navgationHeight+'px'">
 		<dl v-for="(item,i) in referress" :key="i">
 			<dt class="img" v-if="item.head_picture" >
-				<img :src="item.head_picture">
+				<img :src="item.head_picture" mode="widthFix" style="width:100%">
 			</dt>
 			<dt class="visit" v-else>
 				<div class="icon">

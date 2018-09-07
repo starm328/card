@@ -17,8 +17,7 @@
 									<dl @click="group()">
 										<dt>
 											<img :src="collection[0].card.img_url" class="img" mode="widthFix" v-if="collection[0]">
-											<view v-else-if="!collection[0]" class="img" style="background:#eee;height:100%"></view>
-
+											<open-data type="userAvatarUrl" v-else-if="!collection[0]" class="img" mode="widthFix"></open-data>
 										</dt>
 										<dd>
 											<img :src="collection[1].card.img_url" v-if="collection[1]" class="img" mode="widthFix">
@@ -280,7 +279,8 @@ export default {
 			loding:false,
 			collection:'',
 			message:0,
-			morecard:''
+			morecard:'',
+			// current:0
 		}
 	},
 	onLoad() {

@@ -59,6 +59,7 @@ export default {
 		'pages/Team/main',
 		'pages/Team/exploitees/main',
 		'pages/Team/referress/main',
+		'pages/Team/privilege/main',
 		// 名片组
 		'pages/group/collection/main',
 		'pages/group/default/main',

@@ -62,11 +62,6 @@ export default {
 			wx.setStorageSync('pid',option.scene)
 
 		}
-		wx.vibrateLong({
-			success:()=>{
-				console.log('1574')
-			}
-		})
 		wx.hideShareMenu()
 	},
 

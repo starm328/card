@@ -1,11 +1,11 @@
 <template>
 	<div class="people-index" :style="'padding-top:'+navgationHeight+'px;background:#eee;min-height:100vh'">
-		<!-- <ul>
+		<ul>
 			<input type="" name="" placeholder="搜索">
 			<li class="active">最具人气</li>
 			<li>最为活跃</li>
 			<li>最新发布</li>
-		</ul> -->
+		</ul>
 		<dl v-for="(item,i) in list" @tap="longtap(item.id)" :key="i">
 			<dt>
 				<img :src="item.img_url"  class="img" mode="widthFix">

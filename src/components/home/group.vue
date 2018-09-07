@@ -5,8 +5,7 @@
 			<dl >
 				<dt>
 					<img :src="list[0].card.img_url" class="img" mode="widthFix" v-if="list[0]">
-					<view v-else-if="!list[0]" class="img" style="background:#eee;height:100%"></view>
-
+					<open-data type="userAvatarUrl" v-else-if="!list[0]" class="img" mode="widthFix"></open-data>
 				</dt>
 				<dd>
 					<img :src="list[1].card.img_url" v-if="list[1]" class="img" mode="widthFix">
@@ -27,7 +26,7 @@
 			<dl>
 				<dt>
 					<img :src="friend[0].card.img_url" class="img" mode="widthFix" v-if="friend[0]">
-					<view v-else-if="!friend[0]" class="img" style="background:#eee;height:100%"></view>
+					<open-data type="userAvatarUrl" v-else-if="!friend[0]" class="img" mode="widthFix"></open-data>
 
 				</dt>
 				<dd>
