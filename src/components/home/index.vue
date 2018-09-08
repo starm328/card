@@ -191,7 +191,8 @@ export default {
 	onShow() {
 		this.getcards()
 	},
-	onHide() {
+	onUnload() {
+		this.swiperCurrent = -2
 	},
 
 	methods: {
