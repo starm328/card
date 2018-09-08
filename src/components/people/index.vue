@@ -198,6 +198,7 @@ export default {
 				border-radius:5px;
 				overflow:hidden;
 				margin-right:10px;
+				max-height:120px;
 				.img{
 					width:100%;
 				}

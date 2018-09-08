@@ -3,13 +3,13 @@
 		<st-nodata v-if="quest.length == 0"></st-nodata>
 
 		<div class="list" v-else>
-			<dl v-for="(item,i) in quest" :key="i" @tap="longtap(item.card_id)" @longpress="longpress(item.id,i)"  @touchend="touchend" :class="[scale == i ? ' scale': '']" >
+			<dl v-for="(item,i) in quest" :key="i" @tap="longtap(item.card_id)" @longpress="longpress(item.id,i)"  @touchend="touchend(i)" :class="[scale == i ? ' scale': '']" >
 				<dt >
 					<img :src="item.card.img_url" class="img" mode="widthFix">
 				</dt>
 				<dd>
 					<h6>
-						{{item.card.name}}{{scale[i]}}
+						{{item.card.name}}
 					</h6>
 					<div class="company">
 						<p>{{item.card.company}}</p>
@@ -152,7 +152,7 @@ export default {
 				_this.scale = i
 		},
 		touchend(i) {
-			this.scale = i
+			this.scale = -1
 		},
 		longtap(cardid) {
 				var date = new Date().getTime()
@@ -230,6 +230,7 @@ export default {
 				border-radius:5px;
 				overflow:hidden;
 				margin-right:10px;
+				max-height:120px;
 				.img{
 					width:100%;
 				}

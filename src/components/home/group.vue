@@ -3,19 +3,9 @@
 		<div class="default" @click="group('collection')">
 			<h5>我的收藏({{list.length}})</h5>
 			<dl >
-				<dt>
-					<img :src="list[0].card.img_url" class="img" mode="widthFix" v-if="list[0]">
-					<open-data type="userAvatarUrl" v-else-if="!list[0]" class="img" mode="widthFix"></open-data>
-				</dt>
 				<dd>
-					<img :src="list[1].card.img_url" v-if="list[1]" class="img" mode="widthFix">
-					<view v-else-if="!list[1]" class="img" style="background:#eee;height:50%"></view>
-					<img :src="list[2].card.img_url" v-if="list[2]" class="img" mode="widthFix">
-					<view v-else-if="!list[2]" class="img" style="background:#eee;height:50%"></view>
-					<img :src="list[3].card.img_url" v-if="list[3]" class="img" mode="widthFix">
-					<view v-else-if="!list[3]" class="img" style="background:#eee;height:50%"></view>
-					<img :src="list[4].card.img_url" v-if="list[4]" class="img" mode="widthFix">
-					<view v-else-if="!list[4]" class="img" style="background:#eee;height:50%"></view>
+					<open-data type="userAvatarUrl"  class="img" mode="widthFix" ></open-data>
+					<!-- <img :src="item.card.img_url" v-for="(item,i) in list" class="img" mode="widthFix" :key="i"> -->
 				</dd>
 			</dl>
 			<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
@@ -24,21 +14,10 @@
 		<div class="default"  @click="group('default')">
 			<h5>默认分组({{friend.length}})</h5>
 			<dl>
-				<dt>
-					<img :src="friend[0].card.img_url" class="img" mode="widthFix" v-if="friend[0]">
-					<open-data type="userAvatarUrl" v-else-if="!friend[0]" class="img" mode="widthFix"></open-data>
-
-				</dt>
-				<dd>
-					<img :src="friend[1].card.img_url" v-if="friend[1]" class="img" mode="widthFix">
-					<view v-else-if="!friend[1]" class="img" style="background:#eee;height:50%"></view>
-					<img :src="friend[2].card.img_url" v-if="friend[2]" class="img" mode="widthFix">
-					<view v-else-if="!friend[2]" class="img" style="background:#eee;height:50%"></view>
-					<img :src="friend[3].card.img_url" v-if="friend[3]" class="img" mode="widthFix">
-					<view v-else-if="!friend[3]" class="img" style="background:#eee;height:50%"></view>
-					<img :src="friend[4].card.img_url" v-if="friend[4]" class="img" mode="widthFix">
-					<view v-else-if="!friend[4]" class="img" style="background:#eee;height:50%"></view>
-				</dd>
+				<open-data type="userAvatarUrl"  class="img" mode="widthFix" ></open-data>
+				<!-- <dd>
+					<img :src="item.card.img_url" v-for="(item,i) in friend" :key="i" class="img" mode="widthFix">
+				</dd> -->
 			</dl>
 			<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
 		</div>
@@ -53,8 +32,8 @@ export default {
 	name: 'group-component',
 	data () {
 		return {
-			list: '',
-			friend:''
+			list: [],
+			friend:[]
 		}
 	},
 	onShow() {
@@ -62,7 +41,7 @@ export default {
 		if(wx.getStorageSync('collection').length > 0 ) {
 			this.list = wx.getStorageSync('collection')
 		}else {
-			this.list = ''
+			this.list = []
 		}
 	},
 	onLoad() {
@@ -70,7 +49,7 @@ export default {
 		if(wx.getStorageSync('collection').length > 0 ) {
 			this.list = wx.getStorageSync('collection')
 		}else {
-			this.list = ''
+			this.list = []
 		}
 
 	},

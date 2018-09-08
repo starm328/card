@@ -1,10 +1,10 @@
 <template>
 	<div class="home-index-component">
 		<swiper :indicator-dots="indicatorDots"
-		:duration="duration" previous-margin="40px" next-margin="40px" @change="bindchange"  v-if="loding" :current="current">
+		:duration="duration" previous-margin="40px" next-margin="40px" @change="bindchange"  v-show="showcards" >
 
 			<block>
-				<swiper-item item-id="dd" >
+				<swiper-item item-id="dd" :class="[swiperCurrent == showcards.length -(showcards.length + 2)? 'active' : '']">
 					<div class="swiper-box swiper-content">
 						<div class="box-main">
 							<div class="clip box ">
@@ -15,27 +15,17 @@
 								<div class="content">
 									<p>共14310000位</p>
 									<dl @click="group()">
-										<dt>
-											<img :src="collection[0].card.img_url" class="img" mode="widthFix" v-if="collection[0]">
-											<open-data type="userAvatarUrl" v-else-if="!collection[0]" class="img" mode="widthFix"></open-data>
-										</dt>
-										<dd>
-											<img :src="collection[1].card.img_url" v-if="collection[1]" class="img" mode="widthFix">
-											<view v-else-if="!collection[1]" class="img" style="background:#eee;height:50%"></view>
-											<img :src="collection[2].card.img_url" v-if="collection[2]" class="img" mode="widthFix">
-											<view v-else-if="!collection[2]" class="img" style="background:#eee;height:50%"></view>
-											<img :src="collection[3].card.img_url" v-if="collection[3]" class="img" mode="widthFix">
-											<view v-else-if="!collection[3]" class="img" style="background:#eee;height:50%"></view>
-											<img :src="collection[4].card.img_url" v-if="collection[4]" class="img" mode="widthFix">
-											<view v-else-if="!collection[4]" class="img" style="background:#eee;height:50%"></view>
-										</dd>
+										<!-- {{collections.length}} -->
+										<!-- <dd v-show="collections.length > 0">
+											<img :src="item.card.img_url" v-for="(item,i) in collections" class="img" mode="widthFix" :key="i">
+										</dd> -->
 									</dl>
 								</div>
 								<div class="col">
 									<dl>
 										<dt>
 											<img src="https://i1.vpinpai.cn/card/peDbJEcHXBHPiaeBPY9Y7FtLbGyfns0CXJpOdaoZ.png" mode="widthFix" @click="group()">
-											<em style="width:10px;height:10px;background:red;border-radius:50%;" v-if="message > 0"></em>
+											<em style="width:10px;height:10px;background:red;border-radius:50%;" v-show="message > 0"></em>
 											<img src="https://i1.vpinpai.cn/card/hTNT7FNOx8TZFM2FygLRvZOI3jkuBNDLHtkdp7K4.png"  mode="widthFix" @click="user">
 										</dt>
 										<dd>
@@ -45,45 +35,13 @@
 									</dl>
 								</div>
 							</div>
-							<!-- <div class="box">
-								<h5>我的活动</h5>
-								<div class="li">
-									<p @click="navigateTo">
-										<i class="iconfont icon-nav_activity"></i>参与的活动
-									</p>
-									<p @click="navigateTo">
-										<i class="iconfont icon-huodong"></i>发布的活动
-									</p>
-								</div>
-
-							</div> -->
-							<!-- <div class="m-nav">
-								<ul>
-									<li @click="information">
-										<i class="iconfont icon-icon-test"></i>
-										<p>消息</p>
-									</li>
-									<li @click="clockbtn">
-										<i class="iconfont icon-kaoqindaqia"></i>
-										<p>打卡</p>
-									</li>
-									<li @click="RecordisShowbtn">
-										<i class="iconfont icon-riji"></i>
-										<p>日记</p>
-									</li>
-									<li  @click="taggpiao">
-										<i class="iconfont icon-kaipiaoguanli"></i>
-										<p>开票</p>
-									</li>
-								</ul>
-							</div> -->
 
 						</div>
 					</div>
 				</swiper-item>
 			</block>
 			<block>
-				<swiper-item item-id="dd"  >
+				<swiper-item item-id="dd" :class="[swiperCurrent == showcards.length -(showcards.length + 1)? 'active' : '']">
 					<div class="swiper-box swiper-content">
 						<div class="box-main">
 							<div class="clip box ">
@@ -122,8 +80,8 @@
 				</swiper-item>
 			</block>
 			<block v-for="(item,i) in showcards" :key="i">
-				<swiper-item item-id="dd" >
-					<div class="swiper-content" @click="card(item.id)">
+				<swiper-item item-id="dd" :class="[swiperCurrent == i ? 'active' : '']">
+					<div class="swiper-content" @click="card(item.id)" v-show="item">
 						<img :src="item.img_url" class="img" mode="aspectFill">
 						<h5>{{item.name}}</h5>
 						<p>{{item.company}}</p>
@@ -132,7 +90,7 @@
 				</swiper-item>
 			</block>
 			<block>
-				<swiper-item item-id="dd"  >
+				<swiper-item item-id="dd" :class="[showcards.length == swiperCurrent? 'active' : '']">
 					<div class="swiper-content" @click="newcard">
 							<div class="imgno">
 								<open-data type="userAvatarUrl" class="img"></open-data>
@@ -144,7 +102,7 @@
 				</swiper-item>
 			</block>
 			<block>
-				<swiper-item item-id="dd" >
+				<swiper-item item-id="dd" :class="[(showcards.length+1) == swiperCurrent? 'active' : '']">
 					<div class="swiper-content" @click="translate" style="background:#014f04">
 							<img src="https://i1.vpinpai.cn/card/H80k6UZKPHIgjR1rTYMl7Z6s0LIMrLvaxDmVpiOX.jpeg" style="width:100%"  mode="widthFix">
 					</div>
@@ -163,8 +121,8 @@
 			<p v-for="(item,i) in dots" :class="[(showcards.length+1) == swiperCurrent ? 'active' : '']" :key="i">
 			</p>
 		</div>
-		<div class="share-card" >
-			<p v-for="(item,i) in showcards" :key="i" v-if="swiperCurrent == i">
+		<div class="share-card" v-for="(item,i) in showcards" :key="i">
+			<p  v-show="swiperCurrent == i">
 				<i class="iconfont icon-navicon-dxfs" @click="shareS(i)"></i>
 				<span>发名片</span>
 			</p>
@@ -176,13 +134,13 @@
 				<p>{{showcards[share].company}}</p>
 				<span>{{showcards[share].position}}</span>
 			</div>
-			<div class="nave">
+			<div class="nave" v-if="showcards">
 				<h5>
 					<i class="iconfont icon-tianjia"  @click="shareH"></i>
 					<p>关闭</p>
 				</h5>
 				<ul>
-					<li>
+					<li >
 						<button open-type="share" :data-id="showcards[share].id" :data-name="showcards[share].name" :data-img="showcards[share].img_url"><i class="iconfont icon-huiyuan21"></i></button>
 						<p>发名片</p>
 					</li>
@@ -197,79 +155,14 @@
 				</ul>
 			</div>
 		</div>
-
-		<clock-dialog :isShow="isShow" @close="clockbtn" v-if="isShow"></clock-dialog>
-		<record-dialog :isShow="RecordisShow" @close="RecordisShowbtn" v-if="RecordisShow"></record-dialog>
-		<div class="dialog-main clock-dialog enterprise-dialog" :class="{clockshow:piaoShow}">
-			<div class="dialog-bg" @click="taggpiao"></div>
-			<div class="dialog-content clock-content">
-				<div class="title">开票/转账信息 <i @click="taggpiao" class="iconfont icon-guanbi"></i></div>
-				<div class="main">
-					<div class="stm-cell  edit-personal-list">
-						<div class="cell-warp">
-							<div class="cell-left edit-personal-tit">企业名称： </div>
-							<div class="cell-main edit-personal-main">
-								上海猫口袋信息科技有限公司
-							</div>
-						</div>
-					</div>
-					<div class="stm-cell  edit-personal-list">
-						<div class="cell-warp">
-							<div class="cell-left edit-personal-tit">税务登记号： </div>
-							<div class="cell-main edit-personal-main">
-								4324324234234
-							</div>
-						</div>
-					</div>
-					<div class="stm-cell  edit-personal-list">
-						<div class="cell-warp">
-							<div class="cell-left edit-personal-tit">单位地址： </div>
-							<div class="cell-main edit-personal-main">
-								上海市杨浦区带饭饭路29号
-							</div>
-						</div>
-					</div>
-					<div class="stm-cell  edit-personal-list">
-						<div class="cell-warp">
-							<div class="cell-left edit-personal-tit">电话： </div>
-							<div class="cell-main edit-personal-main">
-								021-55710889
-							</div>
-						</div>
-					</div>
-					<div class="stm-cell  edit-personal-list">
-						<div class="cell-warp">
-							<div class="cell-left edit-personal-tit">银行基本户账号： </div>
-							<div class="cell-main edit-personal-main">
-								34234234324324
-							</div>
-						</div>
-					</div>
-					<div class="stm-cell  edit-personal-list">
-						<div class="cell-warp">
-							<div class="cell-left edit-personal-tit">开户行： </div>
-							<div class="cell-main edit-personal-main">
-								中国建设银行上海徐汇分行
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 	</div>
 </template>
 
 <script>
 import Auth from '@/utils/Auth';
-import ClockDialog from '@/components/clock/index';
-import RecordDialog from '@/components/record/index';
 import configs from '@/utils/configs';
 export default {
 	name: 'home-index-component',
-	components:{
-		'clock-dialog': ClockDialog,
-		'record-dialog': RecordDialog
-	},
 	data () {
 		return {
 			showcards:[],
@@ -286,10 +179,10 @@ export default {
 			piaoShow:false,
 			auther:false,
 			loding:false,
-			collection:'',
+			collections:[],
 			message:0,
 			morecard:'',
-			// current:0
+			current:0
 		}
 	},
 	onLoad() {
@@ -324,19 +217,23 @@ export default {
 					wx.hideLoading ();
 					this.showcards = d.data.data
 					console.log(d)
-					this.loding = true
+
 
 				}
 				// 2XX, 3XX
 			})
 			.catch(err => {
+				wx.hideLoading ();
 				if(err.statusCode == 404){
-					wx.hideLoading ();
 					Auth.proxy.token = ''
 					wx.removeStorageSync('token')
 					// Auth.RefreshToken();
 				}
 				// 网络错误、或服务器返回 4XX、5XX
+			})
+
+			wx.showLoading({
+				title: '玩命加载中',
 			})
 			wx.pro.request({
 				url:`${configs.card.apiBaseUrl}api/user/showcollection/0`,
@@ -348,15 +245,16 @@ export default {
 			.then(d => {
 				if(d.statusCode == 200){
 					wx.hideLoading ();
-					this.collection = d.data
+					this.loding = true
+					this.collections = d.data
 					wx.setStorageSync('collection',d.data)
 
 				}
 				// 2XX, 3XX
 			})
 			.catch(err => {
+				wx.hideLoading ();
 				if(err.statusCode == 404){
-					wx.hideLoading ();
 					Auth.proxy.token = ''
 					wx.removeStorageSync('token')
 					// Auth.RefreshToken();
@@ -446,20 +344,20 @@ export default {
 			wx.navigateTo({
 			  url: '/pages/Card/Code/main'
 			})
-						wx.removeStorageSync('swiperCurrent')
+
 
 		},
 		gobanner(id){
 			wx.navigateTo({
 			  url: '/pages/Card/Banner/main?id='+id
 			})
-						wx.removeStorageSync('swiperCurrent')
+
 
 
 		},
 		bindchange(e){
-			console.log(e)
 			if(e.target.source == 'touch'){
+				console.log(e.target.current)
 				this.current = e.target.current
 				this.swiperCurrent = e.target.current - 2;
 			}
@@ -468,7 +366,7 @@ export default {
 			wx.navigateTo({
 				url: '/pages/Home/show/main?id='+e,
 			})
-			wx.removeStorageSync('swiperCurrent')
+
 
 		},
 		newcard(){
@@ -484,13 +382,7 @@ export default {
 				url: '/pages/Home/translate/main',
 			})
 		},
-		navigateTo() {
-			wx.navigateTo({
-			  url: '/pages/Activity/main'
-			})
-						wx.removeStorageSync('swiperCurrent')
 
-		},
 		getLogin() {
 			Auth.login();
 		},
@@ -498,26 +390,9 @@ export default {
 			wx.navigateTo({
 				url: '/pages/Enterprise/main',
 			})
-						wx.removeStorageSync('swiperCurrent')
 
 
-		},
-		clockbtn() {
-			this.isShow =  !this.isShow;
-		},
-		information() {
-			wx.navigateTo({
-				url: '/pages/Information/index/main',
-			})
-						wx.removeStorageSync('swiperCurrent')
 
-
-		},
-		RecordisShowbtn() {
-			this.RecordisShow = !this.RecordisShow
-		},
-		taggpiao() {
-			// this.piaoShow = !this.piaoShow
 		},
 	}
 }

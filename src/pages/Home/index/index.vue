@@ -1,29 +1,17 @@
 <template>
 	<div class="home-index">
-			<swiper previous-margin="40px" next-margin="40px" current="0" v-if="!auth.proxy.token">
-				<block>
-					<swiper-item item-id="dd" class="active">
-						<div class="swiper-content">
-								<div class="imgno">
-									<open-data type="userAvatarUrl" class="img"></open-data>
-								</div>
-								<button type="default" class="stm-mt10" open-type="getUserInfo" @getuserinfo="onGotUserInfo">授权登录</button>
-						</div>
-					</swiper-item>
-				</block>
-			</swiper>
-			<swiper previous-margin="40px" next-margin="40px" current="0" v-if="auth.proxy.token && !auth.proxy.token.is_new">
-				<block>
-					<swiper-item item-id="dd" class="active">
-						<div class="swiper-content">
-								<div class="imgno">
-									<open-data type="userAvatarUrl" class="img"></open-data>
-								</div>
-								<button type="default" class="stm-mt10" @click="gosign">注册</button>
-						</div>
-					</swiper-item>
-				</block>
-			</swiper>
+			<div class="swiper-content"  v-if="!auth.proxy.token">
+					<div class="imgno">
+						<open-data type="userAvatarUrl" class="img"></open-data>
+					</div>
+					<button type="default" class="stm-mt10" open-type="getUserInfo" @getuserinfo="onGotUserInfo">授权登录</button>
+			</div>
+			<div class="swiper-content" v-if="auth.proxy.token && !auth.proxy.token.is_new">
+					<div class="imgno">
+						<open-data type="userAvatarUrl" class="img"></open-data>
+					</div>
+					<button type="default" class="stm-mt10" @click="gosign">注册</button>
+			</div>
 			<div v-else-if="auth.proxy.token">
 				<stm-swiper></stm-swiper>
 			</div>
@@ -112,8 +100,8 @@ export default {
 		margin:0 auto;
 		height:100%;
 		border-radius:10px;
-		// transform:scale(0.8);
-		// transition: transform 0.5s;
+		transform:scale(0.8);
+		transition: transform 0.5s;
 		text-align:center;
 		overflow:hidden;
 		button{
@@ -179,7 +167,7 @@ export default {
 			margin-top:10px;
 		}
 		swiper-item{
-			// opacity: 0.5;
+			opacity: 0.5;
 
 
 			.swiper-box{
