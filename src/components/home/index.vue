@@ -4,7 +4,7 @@
 		:duration="duration" previous-margin="40px" next-margin="40px" @change="bindchange"  v-if="loding" :current="current">
 
 			<block>
-				<swiper-item item-id="dd" :class="[swiperCurrent == showcards.length -(showcards.length + 2)? 'active' : '']">
+				<swiper-item item-id="dd" >
 					<div class="swiper-box swiper-content">
 						<div class="box-main">
 							<div class="clip box ">
@@ -83,7 +83,7 @@
 				</swiper-item>
 			</block>
 			<block>
-				<swiper-item item-id="dd" :class="[swiperCurrent == showcards.length -(showcards.length + 1)? 'active' : '']">
+				<swiper-item item-id="dd"  >
 					<div class="swiper-box swiper-content">
 						<div class="box-main">
 							<div class="clip box ">
@@ -122,7 +122,7 @@
 				</swiper-item>
 			</block>
 			<block v-for="(item,i) in showcards" :key="i">
-				<swiper-item item-id="dd" :class="[swiperCurrent == i ? 'active' : '']">
+				<swiper-item item-id="dd" >
 					<div class="swiper-content" @click="card(item.id)">
 						<img :src="item.img_url" class="img" mode="aspectFill">
 						<h5>{{item.name}}</h5>
@@ -132,7 +132,7 @@
 				</swiper-item>
 			</block>
 			<block>
-				<swiper-item item-id="dd" :class="[showcards.length == swiperCurrent? 'active' : '']">
+				<swiper-item item-id="dd"  >
 					<div class="swiper-content" @click="newcard">
 							<div class="imgno">
 								<open-data type="userAvatarUrl" class="img"></open-data>
@@ -140,6 +140,13 @@
 
 							<i class="iconfont icon-tianjia"></i>
 							<h6>创建新名片</h6>
+					</div>
+				</swiper-item>
+			</block>
+			<block>
+				<swiper-item item-id="dd" >
+					<div class="swiper-content" @click="translate" style="background:#014f04">
+							<img src="https://i1.vpinpai.cn/card/H80k6UZKPHIgjR1rTYMl7Z6s0LIMrLvaxDmVpiOX.jpeg" style="width:100%"  mode="widthFix">
 					</div>
 				</swiper-item>
 			</block>
@@ -152,6 +159,8 @@
 			<p v-for="(item,i) in showcards" :class="[ swiperCurrent == i? 'active' : '']" :key="i">
 			</p>
 			<p v-for="(item,i) in dots" :class="[swiperCurrent == showcards.length? 'active' : '']" :key="i">
+			</p>
+			<p v-for="(item,i) in dots" :class="[(showcards.length+1) == swiperCurrent ? 'active' : '']" :key="i">
 			</p>
 		</div>
 		<div class="share-card" >
@@ -469,6 +478,11 @@ export default {
 				})
 			}
 
+		},
+		translate(){
+			wx.navigateTo({
+				url: '/pages/Home/translate/main',
+			})
 		},
 		navigateTo() {
 			wx.navigateTo({

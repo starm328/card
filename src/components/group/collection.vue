@@ -3,13 +3,13 @@
 		<st-nodata v-if="quest.length == 0"></st-nodata>
 
 		<div class="list" v-else>
-			<dl v-for="(item,i) in quest" :key="i" @tap="longtap(item.card_id)" @longpress="longpress(item.id,i)" :class="[scale ?' scale': '']" @touchend="touchend">
+			<dl v-for="(item,i) in quest" :key="i" @tap="longtap(item.card_id)" @longpress="longpress(item.id,i)" :class="[scale ?' scale': '']" @touchend="touchend(i)">
 				<dt>
 					<img :src="item.card.img_url" class="img" mode="widthFix">
 				</dt>
 				<dd>
 					<h6>
-						{{item.card.name}}
+						{{item.card.name}}{{scale}}
 					</h6>
 					<div class="company">
 						<p>{{item.card.company}}</p>
@@ -38,10 +38,10 @@ export default {
 			navgationHeight:'',
 			groupingShow:false,
 			quest:'',
-			page:0,
+			page:1,
 			onReachBottom:true,
-			scale:false
-
+			scale:[],
+			pageSize:10
 		}
 	},
 
@@ -152,10 +152,10 @@ export default {
 						}
 					}
 				})
-				_this.scale = true
+				console.log(_this.scale[i] = true)
 		},
 		touchend() {
-			this.scale = false
+			console.log(this.scale[i] = false)
 		},
 		longtap(cardid) {
 				var date = new Date().getTime()
@@ -169,7 +169,7 @@ export default {
 			})
 			var _this = this;
 			wx.pro.request({
-				url:`${configs.card.apiBaseUrl}api/user/showcollection/`+_this.page,
+				url:`${configs.card.apiBaseUrl}api/user/showcollection/0`,
 				method: 'GET',
 				header: {
 					token:Auth.proxy.token.access_token

@@ -108,12 +108,12 @@ export default {
 	position:relative;
 	.swiper-content{
 		background:#fff;
-		width:100%;
+		width:90%;
 		margin:0 auto;
 		height:100%;
 		border-radius:10px;
-		transform:scale(0.8);
-		transition: transform 0.5s;
+		// transform:scale(0.8);
+		// transition: transform 0.5s;
 		text-align:center;
 		overflow:hidden;
 		button{
@@ -179,7 +179,7 @@ export default {
 			margin-top:10px;
 		}
 		swiper-item{
-			opacity: 0.5;
+			// opacity: 0.5;
 
 
 			.swiper-box{

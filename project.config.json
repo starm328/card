@@ -9,8 +9,8 @@
 	},
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
-	"appid": "touristappid",
-	"projectname": "reward",
+	"appid": "wx429a3ebbc42986c8",
+	"projectname": "card",
 	"condition": {
 		"search": {
 			"current": -1,

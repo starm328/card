@@ -6,16 +6,19 @@
 			<li>最为活跃</li>
 			<li>最新发布</li>
 		</ul>
-		<dl v-for="(item,i) in list" @tap="longtap(item.id)" :key="i">
-			<dt>
-				<img :src="item.img_url"  class="img" mode="widthFix">
-			</dt>
-			<dd>
-				<h6>{{item.name}}</h6>
-				<p>{{item.company}}</p>
-			</dd>
-		</dl>
+		<div class="list">
+			<dl v-for="(item,i) in list" @tap="longtap(item.id)" :key="i">
+				<dt>
+					<img :src="item.img_url"  class="img" mode="widthFix">
+				</dt>
+				<dd>
+					<h6>{{item.name}}</h6>
+					<p>{{item.company}}</p>
+				</dd>
+			</dl>
+		</div>
 
+		<div class="datano" v-if="!onReachBottom">没有更多数据了</div>
 	</div>
 </template>
 
@@ -29,7 +32,9 @@ export default {
 		return {
 			navgationHeight:'',
 			list:'',
-			page:''
+			page:1,
+			onReachBottom:true,
+			pageSize:10
 		}
 	},
 	onLoad() {
@@ -61,7 +66,7 @@ export default {
 				title: '玩命加载中',
 			})
 			wx.pro.request({
-				url:`${configs.card.apiBaseUrl}api/card/index/`+this.page,
+				url:`${configs.card.apiBaseUrl}api/card/index/`+_this.page,
 				method: 'GET',
 				header: {
 					token:Auth.proxy.token.access_token
@@ -73,7 +78,7 @@ export default {
 					const _list = d.data;
 					_this.list = [..._this.list,..._list];
 					if(_list.length < _this.pageSize) {
-						this.onReachBottom =  false
+						_this.onReachBottom =  false
 						return
 					}
 					_this.page = _this.page + 1
@@ -139,7 +144,14 @@ export default {
 <style lang="less" scoped>
 @import '../../configs/style.less';
 .people-index{
-
+	.datano{
+		width:100%;
+		height:30px;
+		line-height:30px;
+		color:#999;
+		font-size:13px;
+		text-align:center;
+	}
 	ul{
 		input{
 			width:95%;
@@ -171,38 +183,46 @@ export default {
 		}
 
 	}
-	dl{
-		width:calc(33.3% - 16px);
-		border-radius:5px;
-		background:#fff;
-		margin:20px 8px 10px 8px;
-		float:left;
-		text-align:center;
-		padding:0 0 10px 0;
-		box-shadow:0px 2px 9px 3px rgba(000, 000, 000, 0.1);
-		dt{
-			width:100%;
+	.list{
+		dl{
+			width:calc(33.3% - 16px);
 			border-radius:5px;
-			overflow:hidden;
-			margin-right:10px;
-			.img{
+			background:#fff;
+			margin:20px 8px 10px 8px;
+			float:left;
+			text-align:center;
+			padding:0 0 10px 0;
+			box-shadow:0px 2px 9px 3px rgba(000, 000, 000, 0.1);
+			dt{
 				width:100%;
+				border-radius:5px;
+				overflow:hidden;
+				margin-right:10px;
+				.img{
+					width:100%;
+				}
+			}
+			dd{
+				h6{
+					font-size:@fontt16;
+					overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
+				}
+
+				p{
+					flex:1;
+					overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
+					font-size:@fontone;
+					color:@fontcolor;
+				}
+
 			}
 		}
-		dd{
-			h6{
-				font-size:@fontt16;
-				overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
-			}
-
-			p{
-				flex:1;
-				overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
-				font-size:@fontone;
-				color:@fontcolor;
-			}
-
+		&:after{
+			clear:both;
+			display:block;
+			content:''
 		}
 	}
+
 }
 </style>

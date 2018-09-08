@@ -169,6 +169,12 @@ export default {
 			proimgmore:true
 		}
 	},
+	watch:{
+		scrollTop() {
+			this.playvideo1 = false,
+			this.playvideo2 = false
+		}
+	},
 	onReady: function (e) {
 	    // 使用 wx.createAudioContext 获取 audio 上下文 context
 	    this.audioCtx = wx.createAudioContext('myAudio')
