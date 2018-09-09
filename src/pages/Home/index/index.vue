@@ -1,17 +1,22 @@
 <template>
 	<div class="home-index">
-			<div class="swiper-content"  v-if="!auth.proxy.token">
+		<div style="height:65vh;padding-top:40px;" v-if="!auth.proxy.token">
+			<div class="swiper-content"   >
 					<div class="imgno">
 						<open-data type="userAvatarUrl" class="img"></open-data>
 					</div>
 					<button type="default" class="stm-mt10" open-type="getUserInfo" @getuserinfo="onGotUserInfo">授权登录</button>
 			</div>
-			<div class="swiper-content" v-if="auth.proxy.token && !auth.proxy.token.is_new">
+		</div>
+		<div style="height:65vh;padding-top:40px;" v-if="auth.proxy.token && !auth.proxy.token.is_new">
+			<div class="swiper-content" >
 					<div class="imgno">
 						<open-data type="userAvatarUrl" class="img"></open-data>
 					</div>
 					<button type="default" class="stm-mt10" @click="gosign">注册</button>
 			</div>
+		</div>
+
 			<div v-else-if="auth.proxy.token">
 				<stm-swiper></stm-swiper>
 			</div>
@@ -272,19 +277,19 @@ export default {
 							margin-top:3px;
 							margin-bottom:10px;
 							padding:0 20px;
-							height:105;
-							overflow:hidden;
 							width:85%;
+							min-height:105px;
+							max-height:120px;
+							overflow:hidden;
 							dt{
 								flex:1;
-								height:105px;
-
+								height:100%;
 							}
 							dd{
 								flex:1;
 								margin-left:1px;
 								font-size:0;
-								height:105px;
+								height:100%;
 								.img{
 									width:calc(50% - 2px);
 									float:left;
@@ -292,6 +297,8 @@ export default {
 									display:block;
 									vertical-align: bottom;
 									margin-bottom:2px;
+									height:50%;
+									background:#eee;
 								}
 							}
 						}

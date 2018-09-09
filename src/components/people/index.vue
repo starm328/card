@@ -37,6 +37,7 @@ export default {
 			pageSize:10
 		}
 	},
+
 	onLoad() {
 			this.getdata()
 			let startBarHeight = 20
@@ -54,6 +55,9 @@ export default {
 			})
 
 	},
+	onUnload() {
+		this.onReachBottom =  true
+	},
 	components: {
 	},
 	onPullDownRefresh() {
@@ -61,6 +65,7 @@ export default {
 	},
 	onReachBottom() {
 		var _this = this;
+		console.log(_this.onReachBottom)
 		if(_this.onReachBottom){
 			wx.showLoading({
 				title: '玩命加载中',
@@ -76,11 +81,13 @@ export default {
 				if(d.statusCode == 200){
 					wx.hideLoading ();
 					const _list = d.data;
+					console.log(d,_this.page,'001')
 					_this.list = [..._this.list,..._list];
 					if(_list.length < _this.pageSize) {
 						_this.onReachBottom =  false
 						return
 					}
+
 					_this.page = _this.page + 1
 					// _this.records = d.data
 				}

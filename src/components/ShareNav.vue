@@ -1,6 +1,8 @@
 <template>
 	<div class="nav" :style="'background-color: rgba(255, 255, 255,' + scrolldata + ');height:'+navgationHeight + 'px'">
-		<i class="iconfont  icon-shangyiyehoutuifanhui-yuankuang" :style="'margin-top:'+fontmar +'px'" :class="fonticon" @click="back"></i>
+		<img :src="card" :style="'margin-top:'+fontmar +'px'" @click="user" v-if="!isback">
+		<i class="iconfont  icon-shangyiyehoutuifanhui-yuankuang" :style="'margin-top:'+fontmar +'px'" :class="fonticon" @click="back" v-else></i>
+
 	</div>
 </template>
 

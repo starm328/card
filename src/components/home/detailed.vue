@@ -46,7 +46,7 @@
 				<p class="dl-tit">
 					个性签名
 				</p>
-				<textarea placeholder="签名" name="desc" v-model="carddetailed.desc" v-if="!groupingShow"/>
+				<textarea placeholder="最多50字" name="desc" v-model="carddetailed.desc" v-if="!groupingShow" maxlength="50"/>
 			</dl>
 			<div style="width:96%;margin:0 auto 10px auto">
 				<button  type="primary" formType="submit" class="stm-main-button stm-m10-t">保存</button>

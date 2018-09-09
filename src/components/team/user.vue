@@ -253,10 +253,10 @@ export default {
 			position:absolute;
 			right:-40px;
 			top:50%;
-			background:#ff4c43;
+			background:#ffc500;
 			color:#fff;
 			font-size:@fontone;
-			padding:4px 50px 4px 10px;
+			padding:6px 50px 6px 10px;
 			border-radius:10px;
 
 		}

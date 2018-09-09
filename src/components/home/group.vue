@@ -3,10 +3,21 @@
 		<div class="default" @click="group('collection')">
 			<h5>我的收藏({{list.length}})</h5>
 			<dl >
-				<dd>
-					<open-data type="userAvatarUrl"  class="img" mode="widthFix" ></open-data>
-					<!-- <img :src="item.card.img_url" v-for="(item,i) in list" class="img" mode="widthFix" :key="i"> -->
+				<dt>
+					<img :src="list[0].card.img_url" class="img" mode="widthFix" v-if="list[0] && list[0].card">
+				</dt>
+				<dd >
+					<img :src="list[1].card.img_url" class="img" mode="widthFix" v-if="list[1] && list[1].card">
+					<view class="img" mode="widthFix" v-else-if="!list[1]"></view>
+					<img :src="list[2].card.img_url" class="img" mode="widthFix" v-if="list[2] && list[2].card">
+					<view class="img" mode="widthFix" v-else-if="!list[2]"></view>
+					<img :src="list[3].card.img_url" class="img" mode="widthFix" v-if="list[3] && list[3].card">
+					<view class="img" mode="widthFix" v-else-if="!list[3]"></view>
+					<img :src="list[4].card.img_url" class="img" mode="widthFix" v-if="list[4] && list[4].card">
+					<view class="img" mode="widthFix" v-else-if="!list[4]"></view>
 				</dd>
+
+
 			</dl>
 			<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
 		</div>
@@ -14,10 +25,20 @@
 		<div class="default"  @click="group('default')">
 			<h5>默认分组({{friend.length}})</h5>
 			<dl>
-				<open-data type="userAvatarUrl"  class="img" mode="widthFix" ></open-data>
-				<!-- <dd>
-					<img :src="item.card.img_url" v-for="(item,i) in friend" :key="i" class="img" mode="widthFix">
-				</dd> -->
+				<dt>
+					<img :src="friend[0].card.img_url" class="img" mode="widthFix" v-if="friend[0] && friend[0].card">
+				</dt>
+				<dd >
+					<img :src="friend[1].card.img_url" class="img" mode="widthFix" v-if="friend[1] && friend[1].card">
+					<view class="img" mode="widthFix" v-else-if="!friend[1]"></view>
+					<img :src="friend[2].card.img_url" class="img" mode="widthFix" v-if="friend[2] && friend[2].card">
+					<view class="img" mode="widthFix" v-else-if="!friend[2]"></view>
+					<img :src="friend[3].card.img_url" class="img" mode="widthFix" v-if="friend[3] && friend[3].card">
+					<view class="img" mode="widthFix" v-else-if="!friend[3]"></view>
+					<img :src="friend[4].card.img_url" class="img" mode="widthFix" v-if="friend[4] && friend[4].card">
+					<view class="img" mode="widthFix" v-else-if="!friend[4]"></view>
+				</dd>
+
 			</dl>
 			<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
 		</div>
@@ -132,6 +153,8 @@ export default {
 					display:block;
 					vertical-align: bottom;
 					margin-bottom:2px;
+					height:50%;
+					background:#eee;
 				}
 			}
 		}

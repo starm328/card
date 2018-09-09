@@ -1,7 +1,7 @@
 <template>
 	<div class="home-index-component">
 		<swiper :indicator-dots="indicatorDots"
-		:duration="duration" previous-margin="40px" next-margin="40px" @change="bindchange"  v-show="showcards" >
+		:duration="duration" previous-margin="40px" next-margin="40px" @change="bindchange"  v-show="showcards">
 
 			<block>
 				<swiper-item item-id="dd" :class="[swiperCurrent == showcards.length -(showcards.length + 2)? 'active' : '']">
@@ -16,9 +16,19 @@
 									<p>共14310000位</p>
 									<dl @click="group()">
 										<!-- {{collections.length}} -->
-										<!-- <dd v-show="collections.length > 0">
-											<img :src="item.card.img_url" v-for="(item,i) in collections" class="img" mode="widthFix" :key="i">
-										</dd> -->
+										<dt>
+											<img :src="collections[0].card.img_url" class="img" mode="widthFix" v-if="collections[0] && collections[0].card">
+										</dt>
+										<dd >
+											<img :src="collections[1].card.img_url" class="img" mode="widthFix" v-if="collections[1] && collections[1].card">
+											<view class="img" mode="widthFix" v-else-if="!collections[1]"></view>
+											<img :src="collections[2].card.img_url" class="img" mode="widthFix" v-if="collections[2] && collections[2].card">
+											<view class="img" mode="widthFix" v-else-if="!collections[2]"></view>
+											<img :src="collections[3].card.img_url" class="img" mode="widthFix" v-if="collections[3] && collections[3].card">
+											<view class="img" mode="widthFix" v-else-if="!collections[3]"></view>
+											<img :src="collections[4].card.img_url" class="img" mode="widthFix" v-if="collections[4] && collections[4].card">
+											<view class="img" mode="widthFix" v-else-if="!collections[4]"></view>
+										</dd>
 									</dl>
 								</div>
 								<div class="col">

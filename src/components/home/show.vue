@@ -16,16 +16,49 @@
 					<audio :src="cardData.detail.voice" id="myAudio"></audio>
 
 				</div>
-				<div class="me-phone">
-					<p>{{cardData.card.phone}}<i @click="tel(cardData.card.phone)" class="iconfont icon-dianhua"></i></p>
-					<p>{{cardData.card.trade}}</p>
-					<p>{{cardData.detail.email}}</p>
-					<p>{{cardData.detail.phone}}</p>
+
+				<div class="me-honour" style="margin:0" v-if="cardData.card.phoneconfig  == 2">
+					<h5>手机</h5>
+					<div>
+						<dl>
+							<dt>{{cardData.card.phone}}<i @click="tel(cardData.card.phone)" class="iconfont icon-dianhua"></i></dt>
+						</dl>
+					</div>
 				</div>
-				<div class="me-address">
-					<p>{{cardData.card.area}}{{cardData.detail.address}}</p>
-					<stm-navigation :cardData="cardData" v-if="cardData"></stm-navigation>
+				<div class="me-honour" style="margin:0">
+					<h5>行业</h5>
+					<div>
+						<dl>
+							<dt>{{cardData.card.trade}}</dt>
+						</dl>
+					</div>
 				</div>
+				<div class="me-honour" style="margin:0" v-if="cardData.card.email">
+					<h5>邮箱</h5>
+					<div>
+						<dl>
+							<dt>{{cardData.card.email}}</dt>
+						</dl>
+					</div>
+				</div>
+				<div class="me-honour" style="margin:0" v-if="cardData.detail.phone">
+					<h5>座机</h5>
+					<div>
+						<dl>
+							<dt>{{cardData.detail.phone}}</dt>
+						</dl>
+					</div>
+				</div>
+
+				<div class="me-honour">
+					<h5>地址</h5>
+					<div>
+						<dl>
+							<dt>{{cardData.card.area}}{{cardData.detail.address}}<stm-navigation :cardData="cardData" v-if="cardData"></stm-navigation></dt>
+						</dl>
+					</div>
+				</div>
+
 				<div class="me-honour" v-if="cardData.detail.desc !== ''">
 					<h5>个性签名</h5>
 					<div>
@@ -632,19 +665,19 @@ export default {
 					}
 				}
 				h5{
-					color:#fff;
+					color:#ffd497;
 					font-size:@fontfive;
 					font-weight:bold;
 					margin-bottom:10px;
 				}
 				p,span{
 					font-size:@fontthree;
-					color:rgb(171, 175, 186);
+					color:#706d71;
 				}
 			}
 			.me-phone{
 				padding:20px;
-				color:rgb(171, 175, 186);
+				color:#706d71;
 				p{
 					display:flex;
 					i{
@@ -664,7 +697,7 @@ export default {
 				padding:20px;
 				display:flex;
 				p{
-					color:rgb(171, 175, 186);
+					color:#706d71;
 					flex:0 70%;
 					font-size:@fonttwo;
 				}
@@ -676,22 +709,28 @@ export default {
 			}
 			.me-honour{
 				display:flex;
+				margin-bottom:20px;
 				h5{
-					margin:0 10px 20px 20px ;
-					color:#fff;
+					margin:0 10px 0 20px ;
+					color:#ffd497;
 					font-size:@fontthree;
 				}
 				div{
 					flex:1;
-					margin:0 20px 20px 10px;;
+					margin:0 20px 0 10px;;
 					dl{
-						color:#fff;
+						color:#fcd9a0;
 						font-size:@fontthree;
 						dt{
 							width:100%;
+							color:#706d71;
+							display:flex;
+							i{
+								margin-left:10px;
+							}
 						}
 						dd{
-							color:rgb(171, 175, 186);
+							color:#706d71;
 							font-size:@fonttwo;
 						}
 					}
@@ -798,7 +837,7 @@ export default {
 				h5{
 					flex:1;
 					text-align:left;
-					color:rgb(171, 175, 186);
+					color:#706d71;
 					font-size:@fontthree;
 					padding-left:10px;
 					position:relative;
@@ -819,7 +858,7 @@ export default {
 					display:flex;
 					text-align:right;
 					margin-top:4px;
-					color:rgb(171, 175, 186);
+					color:#706d71;
 					i{
 						flex:1;
 						text-align:right;
@@ -829,7 +868,7 @@ export default {
 			}
 			.summer{
 				font-size:@fonttwo;
-				color:rgb(171, 175, 186);
+				color:#706d71;
 				margin:20px 0;
 				h5{
 					font-size:@fontthree;
@@ -854,7 +893,7 @@ export default {
 			}
 			.activity{
 				margin-top:20px;
-				color:rgb(171, 175, 186);
+				color:#706d71;
 				p{
 					font-size:@fonttwo;
 				}

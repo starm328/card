@@ -51,11 +51,9 @@ export default {
 	methods: {
 		getshare(data){
 			this.sharedata =  data
-			console.log(data)
 		},
 		scroll (e) {
 			this.scrollTop= e.mp.detail.scrollTop
-			console.log(e.mp.detail.scrollTop)
 			if(e.mp.detail.scrollTop > 169) {
 				wx.setNavigationBarColor({
 					  frontColor:'#000000',

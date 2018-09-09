@@ -1,13 +1,12 @@
 <template>
 	<div class="information-exchange" :style="'padding-top:'+navgationHeight+'px'">
-		<st-nodata v-if="quest.length == 0"></st-nodata>
 
-		<div class="list" v-else>
-			<dl v-for="(item,i) in quest" :key="i" @tap="longtap(item.card_id)" @longpress="longpress(item.id,i)"  @touchend="touchend(i)" :class="[scale == i ? ' scale': '']" >
-				<dt >
+		<div class="list">
+			<dl v-for="(item,i) in quest" :key="i" @tap="longtap(item.card_id)" @longpress="longpress(item.id,i)"  @touchend="touchend(i)" :class="[scale == i ? ' scale': '']" v-show="item.card">
+				<dt v-if="item.card">
 					<img :src="item.card.img_url" class="img" mode="widthFix">
 				</dt>
-				<dd>
+				<dd v-if="item.card">
 					<h6>
 						{{item.card.name}}
 					</h6>
@@ -58,6 +57,9 @@ export default {
 			  }
 			})
 
+	},
+	onUnload() {
+		this.onReachBottom =  true
 	},
 	onPullDownRefresh() {
 		this.getdata()

@@ -65,7 +65,7 @@ export default {
 	data () {
 		return {
 			id:'',
-			conceal:1,
+			conceal:2,
 			shareconceal:1
 		}
 	},

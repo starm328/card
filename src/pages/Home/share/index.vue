@@ -16,15 +16,45 @@
 						<div class="play" @click="stopaudio" v-if="cardData.detail.voice && !stop"><i class="iconfont icon-xiaochengxu"></i></div>
 						<audio :src="cardData.detail.voice" id="myAudio"></audio>
 					</div>
-					<div class="me-phone" v-if="cardData.card.phoneconfig">
-						<p>{{cardData.card.phone}}<i @click="tel(cardData.card.phone)"  class="iconfont icon-dianhua"></i></p>
-						<p>{{cardData.card.trade}}</p>
-						<p>{{cardData.detail.email}}</p>
-						<p>{{cardData.detail.phone}}</p>
+					<div class="me-honour" style="margin:0" v-if="cardData.card.phoneconfig == 2">
+						<h5>手机</h5>
+						<div>
+							<dl>
+								<dt>{{cardData.card.phone}}<i @click="tel(cardData.card.phone)" class="iconfont icon-dianhua"></i></dt>
+							</dl>
+						</div>
 					</div>
-					<div class="me-address">
-						<p>{{cardData.card.area}}{{cardData.detail.address}}</p>
-						<stm-navigation :cardData="cardData" v-if="cardData"></stm-navigation>
+					<div class="me-honour" style="margin:0">
+						<h5>行业</h5>
+						<div>
+							<dl>
+								<dt>{{cardData.card.trade}}</dt>
+							</dl>
+						</div>
+					</div>
+					<div class="me-honour" style="margin:0" v-if="cardData.card.email">
+						<h5>邮箱</h5>
+						<div>
+							<dl>
+								<dt>{{cardData.card.email}}</dt>
+							</dl>
+						</div>
+					</div>
+					<div class="me-honour" style="margin:0" v-if="cardData.detail.phone">
+						<h5>座机</h5>
+						<div>
+							<dl>
+								<dt>{{cardData.detail.phone}}</dt>
+							</dl>
+						</div>
+					</div>
+					<div class="me-honour" >
+						<h5>地址</h5>
+						<div>
+							<dl>
+								<dt>{{cardData.card.area}}{{cardData.detail.address}}<stm-navigation :cardData="cardData" v-if="cardData"></stm-navigation></dt>
+							</dl>
+						</div>
 					</div>
 					<div class="me-honour" v-if="cardData.detail.desc !== ''">
 						<h5>个性签名</h5>
@@ -38,8 +68,8 @@
 						<h5>获得荣誉</h5>
 						<div>
 							<dl v-for="(item,i) in cardData.honour" :key="i">
-								<dd>{{item.organization}}</dd>
-								<dt>{{item.title}}</dt>
+								<dt>{{item.organization}}</dt>
+								<dd>{{item.title}}</dd>
 							</dl>
 						</div>
 					</div>
@@ -129,7 +159,7 @@
 <script>
 import configs from '@/utils/configs';
 import Navigation from '@/components/home/navigation';
-import Nav from '@/components/Navigation';
+import Nav from '@/components/ShareNav';
 import Loged from '@/components/loged';
 import Auth from '@/utils/Auth';
 const innerAudioContext = wx.createInnerAudioContext()
@@ -166,7 +196,8 @@ export default {
 			isAuth:false,
 			isback:false,
 			billmore:true,
-			proimgmore:true
+			proimgmore:true,
+			option:''
 		}
 	},
 	watch:{
@@ -180,8 +211,7 @@ export default {
 	    this.audioCtx = wx.createAudioContext('myAudio')
 	  },
 	onLoad(option) {
-		console.log(option)
-		console.log( decodeURIComponent(option.scene))
+		this.option = option
 		if(option.pid){
 			wx.setStorageSync('pid',option.pid)
 		}
@@ -193,58 +223,73 @@ export default {
 		})
 		var _this = this;
 		_this.id = option.id;
-		wx.pro.request({
-			url:`${configs.card.apiBaseUrl}api/index/showcard/`+option.id + '/'+ option.time +'/'+option.token,
-			method: 'GET',
-		})
-		.then(d => {
-			if(d.statusCode == 200){
-				wx.hideLoading ();
-				console.log(d.data)
-				_this.cardData = d.data
-				_this.product = d.data.products
-				_this.proimg = d.data.products[0].img.split(',')
-				_this.cardfirm = d.data.firm
-				_this.bill = d.data.firm[0].img.split(',')
-			}
-			// 2XX, 3XX
-		})
-		.catch(err => {
-			if(err.statusCode == 404){
-				wx.showModal({
-					title: '你不能查看他的名片',
-					icon: 'none',
-					duration: 2000,
-					success: function(res) {
-						if (res.confirm) {
-							wx.redirectTo({
-								url: '/pages/Home/index/main',
-							})
-						} else if (res.cancel) {
+		_this.getdata();
+
+	},
+	onShow() {
+		this.getdata();
+	},
+	onUnload() {
+		this.cardData = '',
+		this.product = '',
+		this.proimg = '',
+		this.cardfirm = '',
+		this.bill = ''
+	},
+	methods:{
+		getdata () {
+			var _this = this;
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/index/showcard/`+_this.option.id + '/'+ _this.option.time +'/'+_this.option.token,
+				method: 'GET',
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					wx.hideLoading ();
+					console.log(d.data)
+					_this.cardData = d.data
+					_this.product = d.data.products
+					_this.proimg = d.data.products[0].img.split(',')
+					_this.cardfirm = d.data.firm
+					_this.bill = d.data.firm[0].img.split(',')
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 404){
+					wx.showModal({
+						title: '你不能查看他的名片',
+						icon: 'none',
+						duration: 2000,
+						success: function(res) {
+							if (res.confirm) {
+								wx.redirectTo({
+									url: '/pages/Home/index/main',
+								})
+							} else if (res.cancel) {
+								wx.redirectTo({
+									url: '/pages/Home/index/main',
+								})
+							}
+						}
+
+					})
+
+				}else if(err.statusCode == 500){
+					wx.showModal({
+						title: '系统错误',
+						icon: 'none',
+						duration: 2000,
+						success:()=>{
 							wx.redirectTo({
 								url: '/pages/Home/index/main',
 							})
 						}
-					}
-
-				})
-
-			}else if(err.statusCode == 500){
-				wx.showModal({
-					title: '系统错误',
-					icon: 'none',
-					duration: 2000,
-					success:()=>{
-						wx.redirectTo({
-							url: '/pages/Home/index/main',
-						})
-					}
-				})
-			}
-			// 网络错误、或服务器返回 4XX、5XX
-		})
-	},
-	methods:{
+					})
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
+		},
 		lookmore(e){
 			if(e == 'bill'){
 				console.log('bill')
@@ -455,6 +500,10 @@ export default {
 			wx.addPhoneContact({
 				firstName: this.cardData.card.name,   //名字
 				mobilePhoneNumber: this.cardData.card.phone,    //手机号
+				addressState:this.cardData.card.area,
+				addressStreet:this.cardData.detail.address,
+				hostNumber:this.cardData.card.phone,
+				email:this.cardData.card.email,
 				success(){
 					wx.showToast({
 					  title: '储存成功',
@@ -610,6 +659,8 @@ export default {
 		position:relative;
 			z-index:3;
 		.card-show-information{
+			background:#242b35;
+
 			padding-bottom:30px;
 			box-shadow: inset 0px -4px 9px 0px rgba(000,000,000,0.6);
 			.me-information{
@@ -635,19 +686,19 @@ export default {
 					}
 				}
 				h5{
-					color:#fff;
+					color:#ffd497;
 					font-size:@fontfive;
 					font-weight:bold;
 					margin-bottom:10px;
 				}
 				p,span{
 					font-size:@fontthree;
-					color:rgb(171, 175, 186);
+					color:#706d71;
 				}
 			}
 			.me-phone{
 				padding:20px;
-				color:rgb(171, 175, 186);
+				color:#706d71;
 				p{
 					display:flex;
 					i{
@@ -667,34 +718,41 @@ export default {
 				padding:20px;
 				display:flex;
 				p{
-					color:rgb(171, 175, 186);
+					color:#706d71;
 					flex:0 70%;
 					font-size:@fonttwo;
 				}
 				i{
 					flex:1;
 					text-align:center;
-					color:rgb(171, 175, 186);
-					font-size:40px;
+
 				}
 			}
 			.me-honour{
 				display:flex;
+				margin-bottom:20px;
 				h5{
-					margin:0 20px 20px 20px ;
-					color:#fff;
+					margin:0 10px 0 20px ;
+					color:#ffd497;
 					font-size:@fontthree;
 				}
 				div{
 					flex:1;
-					margin:0 20px 10px 20px;;
+					margin:0 20px 0 10px;;
 					dl{
-
-						color:#fff;
+						color:#fcd9a0;
 						font-size:@fontthree;
-						dd{
+						dt{
 							width:100%;
-							color:rgb(171, 175, 186);
+							color:#706d71;
+							display:flex;
+							i{
+								margin-left:10px;
+							}
+						}
+						dd{
+							color:#706d71;
+							font-size:@fonttwo;
 						}
 					}
 				}
