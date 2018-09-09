@@ -89,7 +89,7 @@
 				<div class="card-tile">
 					他的超级名片
 				</div>
-				<div class="card-other" v-if="cardfirm && cardfirm.length > 0">
+				<div class="card-other" v-if="cardfirm && cardfirm[0]">
 					<div class="title">
 						<h5>公司介绍</h5>
 						<p @click="playvideo1 = !playvideo1"><i class="iconfont icon-bofang"></i><span>看视频</span></p>
@@ -185,11 +185,11 @@ export default {
 			Auth:Auth,
 			stop:true,
 			id:'',
-			product:'',
+			product:[],
 			proimg:'',
 			playvideo2:false,
 			playvideo1:false,
-			cardfirm:'',
+			cardfirm:[],
 			bill:'',
 			scrollTop:null,
 			mecard:'',
@@ -246,12 +246,11 @@ export default {
 			.then(d => {
 				if(d.statusCode == 200){
 					wx.hideLoading ();
-					console.log(d.data)
 					_this.cardData = d.data
 					_this.product = d.data.products
-					_this.proimg = d.data.products[0].img.split(',')
 					_this.cardfirm = d.data.firm
 					_this.bill = d.data.firm[0].img.split(',')
+					_this.proimg = d.data.products[0].img.split(',')
 				}
 				// 2XX, 3XX
 			})
@@ -504,6 +503,7 @@ export default {
 				addressStreet:this.cardData.detail.address,
 				hostNumber:this.cardData.card.phone,
 				email:this.cardData.card.email,
+				organization:this.cardData.card.company,
 				success(){
 					wx.showToast({
 					  title: '储存成功',
