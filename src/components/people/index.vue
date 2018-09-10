@@ -56,7 +56,8 @@ export default {
 
 	},
 	onUnload() {
-		this.onReachBottom =  true
+		this.onReachBottom =  true,
+		this.page = 1
 	},
 	components: {
 	},
@@ -80,6 +81,7 @@ export default {
 			.then(d => {
 				if(d.statusCode == 200){
 					wx.hideLoading ();
+
 					const _list = d.data;
 					console.log(d,_this.page,'001')
 					_this.list = [..._this.list,..._list];
@@ -122,6 +124,7 @@ export default {
 			.then(d => {
 				if(d.statusCode == 200){
 					this.list = d.data
+					wx.stopPullDownRefresh()
 				}
 				// 2XX, 3XX
 			})

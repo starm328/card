@@ -186,11 +186,11 @@ export default {
 			stop:true,
 			id:'',
 			product:[],
-			proimg:'',
+			proimg:[],
 			playvideo2:false,
 			playvideo1:false,
 			cardfirm:[],
-			bill:'',
+			bill:[],
 			scrollTop:null,
 			mecard:'',
 			isAuth:false,
@@ -234,7 +234,8 @@ export default {
 		this.product = '',
 		this.proimg = '',
 		this.cardfirm = '',
-		this.bill = ''
+		this.bill = '',
+		this.isback = false
 	},
 	methods:{
 		getdata () {
@@ -249,8 +250,13 @@ export default {
 					_this.cardData = d.data
 					_this.product = d.data.products
 					_this.cardfirm = d.data.firm
-					_this.bill = d.data.firm[0].img.split(',')
-					_this.proimg = d.data.products[0].img.split(',')
+					if(d.data.firm[0]){
+						_this.bill = d.data.firm[0].img.split(',')
+					}
+					if(d.data.products[0]){
+						_this.proimg = d.data.products[0].img.split(',')
+
+					}
 				}
 				// 2XX, 3XX
 			})

@@ -6,9 +6,8 @@
 				<dt v-if="item && item.mycard">
 					<img :src="item.mycard.img_url" class="img" mode="widthFix">
 				</dt>
-				<dd v-if="item.card">
-					<h6>
-						{{item.mycard.name}}
+				<dd v-if="item.mycard">
+					<h6 v-if="item.mycard.name">
 					</h6>
 					<div class="company">
 						<p>{{item.mycard.company}}</p>

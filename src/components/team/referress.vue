@@ -32,6 +32,12 @@ export default {
 			page:15,
 		}
 	},
+	onUnload() {
+		this.onReachBottom =  true,
+		this.page = 15,
+		this.pageSize = 15
+
+	},
 	onLoad() {
 			this.getdata()
 			let startBarHeight = 20
@@ -106,6 +112,8 @@ export default {
 					if(d.statusCode == 200){
 						wx.setStorageSync('Authtoken',d.data.token)
 						_this.getreferress(d.data.token)
+						wx.stopPullDownRefresh()
+
 					}
 					// 2XX, 3XX
 				})

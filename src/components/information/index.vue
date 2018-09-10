@@ -1,17 +1,6 @@
 <template>
 	<div class="information-index" :style="'padding-top:'+navgationHeight+'px'">
-		<!-- <dl>
-			<dt class="visit">
-				<div class="icon">
-					<i class="iconfont icon-icon-test"></i>
-					<span>27</span>
-				</div>
-			</dt>
-			<dd>
-				<h6>被访提醒</h6>
-				<p>某某访问了你的名片</p>
-			</dd>
-		</dl> -->
+
 		<dl @click="exchange">
 			<dt class="exchange">
 				<div class="icon">
@@ -21,7 +10,7 @@
 			</dt>
 			<dd>
 				<h6>名片交换</h6>
-				<p><em>系统</em>请留意你的名片交换消息</p>
+				<p>请留意你的名片交换消息</p>
 			</dd>
 		</dl>
 		<button open-type="contact">
@@ -34,6 +23,39 @@
 			<dd>
 				<h6>官方客服</h6>
 				<p><em>系统</em>联系在线客服</p>
+			</dd>
+		</dl>
+		<dl  @click="system">
+			<dt class="visit">
+				<div class="icon">
+					<i class="iconfont  icon-xiaolaba"></i>
+				</div>
+			</dt>
+			<dd>
+				<h6>系统消息</h6>
+				<p><em>系统</em></p>
+			</dd>
+		</dl>
+		<dl  @click="collection">
+			<dt class="collection">
+				<div class="icon">
+					<i class="iconfont  icon-renqi"></i>
+				</div>
+			</dt>
+			<dd>
+				<h6>收藏消息</h6>
+				<p><em>系统</em></p>
+			</dd>
+		</dl>
+		<dl  @click="apply">
+			<dt class="visit">
+				<div class="icon">
+					<i class="iconfont icon-icon-test"></i>
+				</div>
+			</dt>
+			<dd>
+				<h6>名片交换申请</h6>
+				<p><em>系统</em>您的申请是否能被对方同意</p>
 			</dd>
 		</dl>
 		</button>
@@ -91,6 +113,21 @@ export default {
 			wx.navigateTo({
 				url: '/pages/Information/exchange/main',
 			})
+		},
+		system() {
+			wx.navigateTo({
+				url: '/pages/Information/system/main',
+			})
+		},
+		collection() {
+			wx.navigateTo({
+				url: '/pages/Information/collection/main',
+			})
+		},
+		apply() {
+			wx.navigateTo({
+				url: '/pages/Information/apply/main',
+			})
 		}
 	}
 }
@@ -143,6 +180,9 @@ export default {
 			}
 			&.service{
 				background:#f56d5b
+			}
+			&.collection{
+				background:rgb(255,165,0)
 			}
 		}
 		dd{

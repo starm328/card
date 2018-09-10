@@ -20,7 +20,7 @@
 		<div class="text" :key="i" v-if="userid == 97">
 				<p>1、拥有Vip特权外，赠送1~3折商城运营资格  </p>
 				<p>2、获得同等价值产品</p>
-				3、直接分享收益的30%及裂变红包收益的10%
+				<p>3、直接分享收益的30%及裂变红包收益的10%</p>
 		</div>
 		<div class="text" :key="i" v-else-if="userid == 96">
 				<p>1、随意定制5张不同身份的超级自媒体名片 .蹭送2个私人定制带个人名片二维码的手机壳 </p>
@@ -31,7 +31,7 @@
 		</div>
 		<div class="text" :key="i" v-else-if="userid == 95">
 				<p>1、免费注册就可以随意定制5张不同身份的超级自媒体名片 </p>
-				2、共享平台千万商脉圈
+				<p>2、共享平台千万商脉圈</p>
 		</div>
 	</div>
 </template>
@@ -89,6 +89,12 @@ export default {
 		font-size:14px;
 		p{
 			margin-bottom:5px;
+			background-color:#fff;
+			padding:20px 10px;
+			font-size:16px;
+			color:#fff;
+			border-radius:5px;
+			background:  -webkit-linear-gradient(left,#ff4c43, #fc8752);
 		}
 	}
 	.user-top {

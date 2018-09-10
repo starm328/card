@@ -40,7 +40,7 @@
 										</dt>
 										<dd>
 											<img src="https://i1.vpinpai.cn/card/lWCo8MjxvWQfr5qtbK0F67unxf1e1xipVXJai6Wb.png"  mode="widthFix" @click="group('collection')">
-											<img src="https://i1.vpinpai.cn/card/d3EMU8rCMINydBZAYr54P8evtJBlqdHpqbunCtUN.png"  mode="widthFix">
+											<img src="https://i1.vpinpai.cn/card/eoL9ZaMgET7uAApbBAuFDvy2dUpBzDKDc8utLMaX.png"  mode="widthFix" @click="newcard">
 										</dd>
 									</dl>
 								</div>

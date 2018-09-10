@@ -33,6 +33,10 @@ export default {
 			  }
 			})
 	},
+	onUnload() {
+		this.isback = false
+
+	},
 	computed: {
 		scrolldata() {
 			return this.scrollTop / 400 > 0.9  ? 1 : this.scrollTop / 400

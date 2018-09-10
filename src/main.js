@@ -38,9 +38,14 @@ export default {
 		'pages/Home/authentication/enterprise/form/main',
 		'pages/Home/authentication/bankcard/main',
 		'pages/Home/authentication/bankcard/form/main',
+		//消息
 		'pages/Information/index/main',
 		'pages/Information/exchange/main',
-		'pages/Information/exchange/main',
+		'pages/Information/system/main',
+		'pages/Information/collection/main',
+		'pages/Information/apply/main',
+
+
 		'pages/index/main',
 		'pages/Card/main',
 		'pages/Card/Clip/main',
