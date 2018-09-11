@@ -1,7 +1,7 @@
 <template>
 	<div class="group-component">
 		<div class="default" @click="group('collection')">
-			<h5>我的收藏({{list.length}})</h5>
+			<h5>我的收藏</h5>
 			<dl >
 				<dt>
 					<img :src="list[0].card.img_url" class="img" mode="widthFix" v-if="list[0] && list[0].card">
@@ -23,7 +23,7 @@
 		</div>
 
 		<div class="default"  @click="group('default')">
-			<h5>默认分组({{friend.length}})</h5>
+			<h5>默认分组</h5>
 			<dl>
 				<dt>
 					<img :src="friend[0].card.img_url" class="img" mode="widthFix" v-if="friend[0] && friend[0].card">

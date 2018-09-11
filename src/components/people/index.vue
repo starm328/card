@@ -2,9 +2,9 @@
 	<div class="people-index" :style="'padding-top:'+navgationHeight+'px;background:#eee;min-height:100vh'">
 		<ul>
 			<input type="" name="" placeholder="搜索">
-			<li class="active">最具人气</li>
-			<li>最为活跃</li>
-			<li>最新发布</li>
+			<li :class="[type == 1 ? 'active':'']" @click="Gtype(1)">最具人气</li>
+			<li :class="[type == 2 ? 'active':'']" @click="Gtype(2)">最为活跃</li>
+			<li :class="[type == 3 ? 'active':'']" @click="Gtype(3)">最新发布</li>
 		</ul>
 		<div class="list">
 			<dl v-for="(item,i) in list" @tap="longtap(item.id)" :key="i">
@@ -34,7 +34,8 @@ export default {
 			list:'',
 			page:1,
 			onReachBottom:true,
-			pageSize:10
+			pageSize:10,
+			type:1,
 		}
 	},
 
@@ -58,11 +59,15 @@ export default {
 	onUnload() {
 		this.onReachBottom =  true,
 		this.page = 1
+		this.pageSize = 10
+		this.type = 1
 	},
 	components: {
 	},
 	onPullDownRefresh() {
-		this.getdata()
+		this.getdata();
+		this.page = 1
+		this.pageSize = 10
 	},
 	onReachBottom() {
 		var _this = this;
@@ -72,7 +77,7 @@ export default {
 				title: '玩命加载中',
 			})
 			wx.pro.request({
-				url:`${configs.card.apiBaseUrl}api/card/index/`+_this.page,
+				url:`${configs.card.apiBaseUrl}api/card/index/`+_this.page + '?type=' + _this.type,
 				method: 'GET',
 				header: {
 					token:Auth.proxy.token.access_token
@@ -113,9 +118,15 @@ export default {
 
 	},
 	methods: {
+		Gtype(e){
+			this.type = e
+			this.getdata()
+			this.page = 1
+		},
 		getdata() {
+			var _this = this
 			wx.pro.request({
-				url:`${configs.card.apiBaseUrl}api/card/index/0`,
+				url:`${configs.card.apiBaseUrl}api/card/index/0?type=`+_this.type,
 				method: 'GET',
 				header: {
 					token:Auth.proxy.token.access_token

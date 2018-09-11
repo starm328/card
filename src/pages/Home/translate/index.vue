@@ -102,8 +102,9 @@ export default {
 
 <style lang="less" scoped>
 .cart-home-translate{
+	background:#4a4f62;
 	img{
-		vertical-align:top;
+		vertical-align:bottom;
 	}
 }
 </style>

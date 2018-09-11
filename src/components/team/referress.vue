@@ -10,7 +10,7 @@
 				</div>
 			</dt>
 			<dd>
-				<h6>{{item.label}}</h6>
+				<h6>{{item.label}}<span v-if="commissions && commissions[i]">{{commissions[i].label}}</span></h6>
 				<p>ID:{{item.id}}</p>
 			</dd>
 		</dl>
@@ -30,12 +30,14 @@ export default {
 			onReachBottom:true,
 			pageSize:15,
 			page:15,
+			commissions:[]
 		}
 	},
 	onUnload() {
 		this.onReachBottom =  true,
 		this.page = 15,
-		this.pageSize = 15
+		this.pageSize = 15,
+		this.commissions = []
 
 	},
 	onLoad() {
@@ -56,6 +58,9 @@ export default {
 	},
 	onPullDownRefresh() {
 		this.getdata()
+		this.page = 15
+		this.pageSize = 15
+		this.commissions = []
 	},
 	onReachBottom() {
 		var _this = this;
@@ -75,12 +80,21 @@ export default {
 					wx.hideLoading ();
 					const _list = d.data;
 					_this.referress = [..._this.referress,..._list];
+					var commission = wx.getStorageSync('commission')
+					var com = []
+					_list.forEach(exploitee=>{
+						var data= commission.filter(function(item){
+							return item.id == exploitee.role;
+						})
+						com = com.concat(data)
+					})
+					_this.commissions = _this.commissions.concat(com)
 					if(_list.length < _this.pageSize) {
 						this.onReachBottom =  false
 						return
 					}
 					_this.page = _this.page + 15
-					// _this.records = d.data
+					// _this.records = _list
 				}
 				// 2XX, 3XX
 			})
@@ -131,6 +145,7 @@ export default {
 
 
 
+
 		},
 
 		// 直属下级数量
@@ -150,6 +165,17 @@ export default {
 				if(d.statusCode == 200){
 					wx.hideLoading ();
 					_this.referress =  d.data
+					var commission = wx.getStorageSync('commission')
+					var com = []
+					d.data.forEach(exploitee=>{
+						var data= commission.filter(function(item){
+							return item.id == exploitee.role;
+						})
+						console.log(data)
+						com = com.concat(data)
+					})
+					_this.commissions = _this.commissions.concat(com)
+					console.log(_this.commissions)
 				}
 				// 2XX, 3XX
 			})
@@ -230,6 +256,7 @@ export default {
 			}
 		}
 		dd{
+			flex:1;
 			h6{
 				font-size:@fontt16;
 				span{

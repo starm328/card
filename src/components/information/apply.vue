@@ -24,6 +24,7 @@ export default {
 	},
 	onPullDownRefresh() {
 		this.getdata()
+		this.page = 1
 	},
 	onUnload() {
 		this.onReachBottom =  true,

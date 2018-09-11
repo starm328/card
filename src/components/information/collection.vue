@@ -24,10 +24,13 @@ export default {
 	},
 	onPullDownRefresh() {
 		this.getdata()
+		this.page = 1
+		this.pageSize = 10
 	},
 	onUnload() {
 		this.onReachBottom =  true,
 		this.page = 1
+		this.pageSize = 10
 	},
 	onLoad() {
 			this.getdata()

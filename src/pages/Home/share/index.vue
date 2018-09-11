@@ -162,6 +162,8 @@ import Navigation from '@/components/home/navigation';
 import Nav from '@/components/ShareNav';
 import Loged from '@/components/loged';
 import Auth from '@/utils/Auth';
+var util = require('@/utils/md5.js')
+
 const innerAudioContext = wx.createInnerAudioContext()
 export default {
 	name: 'home-card-show',
@@ -206,6 +208,18 @@ export default {
 			this.playvideo2 = false
 		}
 	},
+
+	onShareAppMessage() {
+			var id = this.cardData.card.id
+			var date = new Date().getTime()
+			console.log('/pages/Home/share/main?id='+ id +'&time=' + date+'&token='+util.hexMD5(id + '_' + date) + '&pid=' +wx.getStorageSync('token').user_id)
+			return {
+				title:  this.cardData.card.name + '邀请你一起创建名片',
+				path: '/pages/Home/share/main?id='+ id +'&time=' + date+'&token='+util.hexMD5(id + '_' + date) + '&pid=' + wx.getStorageSync('token').user_id,
+				imageUrl:this.cardData.card.img_url,
+			}
+	},
+
 	onReady: function (e) {
 	    // 使用 wx.createAudioContext 获取 audio 上下文 context
 	    this.audioCtx = wx.createAudioContext('myAudio')
@@ -224,6 +238,7 @@ export default {
 		var _this = this;
 		_this.id = option.id;
 		_this.getdata();
+
 
 	},
 	onShow() {
@@ -256,6 +271,9 @@ export default {
 					if(d.data.products[0]){
 						_this.proimg = d.data.products[0].img.split(',')
 
+					}
+					if(d.data.auth.shareconceal == 1) {
+						wx.hideShareMenu()
 					}
 				}
 				// 2XX, 3XX
@@ -504,11 +522,11 @@ export default {
 		Preservation(){
 			wx.addPhoneContact({
 				firstName: this.cardData.card.name,   //名字
-				mobilePhoneNumber: this.cardData.card.phone,    //手机号
+				mobilePhoneNumber: this.cardData.card.phoneconfig == 2 ? this.cardData.card.phone : '',    //手机号
 				addressState:this.cardData.card.area,
 				addressStreet:this.cardData.detail.address,
-				hostNumber:this.cardData.card.phone,
-				email:this.cardData.card.email,
+				hostNumber:this.cardData.card.phone ? this.cardData.card.phone :'',
+				email:this.cardData.card.email ? this.cardData.card.email : '',
 				organization:this.cardData.card.company,
 				success(){
 					wx.showToast({

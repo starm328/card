@@ -63,6 +63,8 @@ export default {
 	},
 	onPullDownRefresh() {
 		this.getdata()
+		this.page = 1
+		this.pageSize = 10
 	},
 	onReachBottom() {
 		var _this = this;
@@ -178,7 +180,7 @@ export default {
 			.then(d => {
 				if(d.statusCode == 200){
 					wx.hideLoading ();
-
+					wx.stopPullDownRefresh()
 					_this.quest = d.data
 					console.log(_this.quest)
 				}
@@ -216,7 +218,11 @@ export default {
 		text-align:center;
 	}
 	.list{
-
+		&:after{
+			clear:both;
+			display:block;
+			content:'';
+		}
 		dl{
 			width:calc(33.3% - 16px);
 			border-radius:5px;

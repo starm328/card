@@ -65,6 +65,8 @@ export default {
 	},
 	onPullDownRefresh() {
 		this.getdata()
+		this.page = 1
+		this.pageSize = 10
 	},
 	onReachBottom() {
 		var _this = this;
@@ -133,8 +135,6 @@ export default {
 										duration: 2000
 									})
 									_this.quest.splice(i,1)
-									var  collection = _this.quest.splice(i,1)
-									wx.setStorageSync('collection',collection)
 								}
 								// 2XX, 3XX
 							})
@@ -181,7 +181,7 @@ export default {
 			.then(d => {
 				if(d.statusCode == 200){
 					wx.hideLoading ();
-
+					wx.stopPullDownRefresh()
 					_this.quest = d.data
 					console.log(_this.quest)
 				}

@@ -101,7 +101,7 @@ export default {
 	position:relative;
 	.swiper-content{
 		background:#fff;
-		width:90%;
+		width:100%;
 		margin:0 auto;
 		height:100%;
 		border-radius:10px;
