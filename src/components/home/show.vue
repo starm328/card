@@ -3,6 +3,7 @@
 
 		<div class="top-img" >
 			<img :src="cardData.card.img_url" class="img" mode="aspectFill">
+			<div class="edit-card" @click="basic"><i class="iconfont icon-msnui-edit"></i>编辑名片</div>
 		</div>
 		<div class="card-show-none"></div>
 		<div class="card-show-main">
@@ -11,9 +12,9 @@
 					<h5>{{cardData.card.name}}</h5>
 					<p>{{cardData.card.company}}</p>
 					<span>{{cardData.card.position}}</span>
-					<div class="play" @click="playaudio" v-if="cardData.detail.voice && stop"><i class="iconfont icon-bofang"></i></div>
-					<div class="play" @click="stopaudio" v-if="cardData.detail.voice && !stop"><i class="iconfont icon-xiaochengxu"></i></div>
-					<audio :src="cardData.detail.voice" id="myAudio"></audio>
+					<div class="play" @click="playaudio" v-if="cardData.detail.voice && stop"><i class="iconfont icon-bofang"></i>{{aduration}}</div>
+					<div class="play" @click="stopaudio" v-if="cardData.detail.voice && !stop"><i class="iconfont icon-xiaochengxu"></i>{{aduration}}</div>
+					<audio :src="cardData.detail.voice" id="myAudio" @ended="ended"></audio>
 
 				</div>
 
@@ -100,17 +101,20 @@
 				<p><i class="iconfont  icon-renqi"></i>人气(1)</p>
 				<p><i class="iconfont icon-shou"></i>靠谱(1)</p>
 			</div>
+			<div class="card-nav-wBtn" @click="share" style="margin-bottom:20px">
+				分享
+			</div>
 			<div class="card-tile">
 				我的超级名片
 			</div>
-			<div class="card-other" v-if="cardfirm && cardfirm.length > 0">
+			<div class="card-other" >
 				<div class="title">
-					<h5>公司介绍</h5>
+					<h5>公司介绍<span class="edit-company" @click="enterprise"><i class="iconfont icon-msnui-edit"></i>编辑公司</span></h5>
 					<p @click="playvideo1 = !playvideo1"><i class="iconfont icon-bofang"></i><span>看视频</span></p>
 				</div>
-				<video :src="cardfirm[0].video"   controls v-if="playvideo1"></video>
+				<video :src="cardfirm[0].video"   controls v-if="playvideo1 && cardfirm && cardfirm.length > 0"></video>
 
-				<div class="summer">
+				<div class="summer" v-if="cardfirm && cardfirm.length > 0">
 					{{cardfirm[0].desc}}
 				</div>
 				<div class="showimg" :style="[billmore? 'height:300px;overflow:hidden':'height:auto']">
@@ -128,13 +132,13 @@
 
 				</swiper> -->
 			</div>
-			<div class="card-other" v-if="product && product.length > 0">
+			<div class="card-other" >
 				<div class="title">
-					<h5>产品介绍</h5>
+					<h5>产品介绍<span class="edit-company" @click="meproduct"><i class="iconfont icon-msnui-edit"></i>编辑产品</span></h5>
 					<p @click="playvideo2 = !playvideo2"><i class="iconfont icon-bofang"></i><span>看视频</span></p>
 				</div>
-				<video :src="product[0].video"   controls v-if="playvideo2"></video>
-				<div class="summer">
+				<video :src="product[0].video"   controls v-if="playvideo2 && product && product.length > 0"></video>
+				<div class="summer" v-if="product && product.length > 0">
 					<h5>{{product[0].title}}</h5>
 					{{product[0].desc}}
 				</div>
@@ -153,31 +157,7 @@
 					</block>
 				</swiper> -->
 			</div>
-<!--
-			<div class="card-other">
-				<div class="title">
-					<h5>最新活动</h5>
-				</div>
-				<div class="activity">
-					<h6>某某活动</h6>
-					<p>互动状态：激活/关闭</p>
-					<p>活动时间：2018-12-12 下午1：30</p>
-					<p>活动地点：上海上马路2323号</p>
-					<p>活动人数：343人</p>
-					<p>已报人数：23人</p>
-					<p>活动简介：</p>
-					<span>上海猫口袋信息科技有限公司专注于互联网服务，从
-					始至终秉承为客户打造真正有价值的互联网平台的服
-					务理念，通过专业、专注、专研的职业素养为企业提
-					供高品质的个性服务，帮助各类企业策划并完成互联
-					网战略规划。
-					</span>
-					<div class="card-nav-wBtn" style="margin-top:10px;">
-						活动详情
-					</div>
-				</div>
-				<div style="height:45px"></div>
-			</div> -->
+
 			<div style="height:45px"></div>
 		</div>
 
@@ -185,7 +165,7 @@
 			<p @click="showSkin"><i class="iconfont icon-caidan"></i></p>
 			<ul>
 				<!-- <li @click="activity">我的活动(0)</li> -->
-				<li @click="meproduct">我的产品(0)</li>
+				<!-- <li @click="meproduct">我的产品(0)</li> -->
 			</ul>
 			<span v-if="cardData.auth.shareconceal == 2"><button open-type="share" :data-id="cardData.card.id" :data-name="cardData.card.name" :data-img="cardData.card.img_url"><i class="iconfont icon-fenxiang"></i></button></span>
 			<span v-else><button @click="share"><i class="iconfont icon-fenxiang"></i></button></span>
@@ -193,17 +173,9 @@
 
 		<div class="skin-warp" :class="[isShow? 'show':'hidden']">
 			<ul>
-				<li @click="basic">
-					<i class="iconfont icon-msnui-edit"></i>
-					<p>编辑名片</p>
-				</li>
 				<li @click="senior">
 					<i class="iconfont icon-msnui-edit"></i>
 					<p>编辑高级</p>
-				</li>
-				<li @click="enterprise">
-					<i class="iconfont icon-msnui-edit"></i>
-					<p>编辑公司</p>
 				</li>
 				<li @click="delcard">
 					<i class="iconfont icon-shanchu"></i>
@@ -251,7 +223,8 @@ export default {
 			bill:'',
 			proimg:'',
 			billmore:true,
-			proimgmore:true
+			proimgmore:true,
+			aduration:0
 		}
 	},
 	onReady: function (e) {
@@ -260,16 +233,38 @@ export default {
 	  },
 	onLoad(option) {
 		console.log(option)
-
 		this.id = option.id
 		this.getdata()
+
 
 	},
 	onShow () {
 		this.getdata()
 	},
 	onHide() {
-		this.isShow = false
+		this.isShow = false,
+		this.stop =  false
+	},
+	onUnload() {
+		this.bottomNav=false,
+		this.isShow=false,
+		this.indicatorDots= true,
+		this.autoplay= true,
+		this.interval= 3000,
+		this.duration= 1000,
+		this.playvideo=0,
+		this.id='',
+		this.cardData='',
+		this.stop=true,
+		this.product='',
+		this.playvideo2=false,
+		this.playvideo1=false,
+		this.cardfirm='',
+		this.bill='',
+		this.proimg='',
+		this.billmore=true,
+		this.proimgmore=true,
+		this.aduration=0
 	},
 	methods:{
 		lookmore(e){
@@ -303,6 +298,16 @@ export default {
 						console.log(d.data)
 						_this.cardData = d.data
 						_this.$emit('getshare',d.data.card)
+						var bgM = wx.createInnerAudioContext();
+						bgM.src = d.data.detail.voice;
+						console.log(bgM.duration);//0
+						bgM.onCanplay(()=>{
+						   console.log(bgM.duration)//0
+						})
+						setTimeout(()=>{
+							_this.aduration = bgM.duration
+						  console.log(bgM.duration)//2.795102
+						},1000)
 					}
 					// 2XX, 3XX
 				})
@@ -524,6 +529,10 @@ export default {
 			_this.stop = true
 
 		},
+		ended() {
+			var _this = this;
+			_this.stop = true
+		},
 		previewImage(img,i) {
 			wx.previewImage({
 				current: img[i], // 当前显示图片的http链接
@@ -594,6 +603,18 @@ export default {
 			width:100%;
 			height:350px;
 		}
+		.edit-card{
+			position:absolute;
+			display:flex;
+			z-index:3;
+			top:300px;
+			background:#4f5b6d;
+			border-radius:30px;
+			color:#fff;
+			right:5px;
+			padding:8px 10px;
+			font-size:@fonttwo;
+		}
 	}
 	.bottom-nav{
 		position:fixed;
@@ -607,10 +628,12 @@ export default {
 		p,span{
 			flex:0 55px;
 			text-align:center;
+
 			button{
 				margin:0;
 				padding:0;
 				background:none;
+				line-height:45px;
 				&:after{
 					display:none;
 				}
@@ -841,6 +864,8 @@ export default {
 					font-size:@fontthree;
 					padding-left:10px;
 					position:relative;
+					display:flex;
+					line-height:25px;
 					&:after{
 						position:absolute;
 						content:'';
@@ -851,10 +876,18 @@ export default {
 						background:rgb(171, 175, 186);
 						width:2px;
 					}
+					.edit-company{
+						display:flex;
+						background:#4f5b6d;
+						border-radius:30px;
+						color:#fff;
+						padding:3px 10px;
+						margin-left:10px;
+						font-size:@fonttwo;
+					}
 				}
 				p{
 					font-size:@fonttwo;
-					flex:1;
 					display:flex;
 					text-align:right;
 					margin-top:4px;

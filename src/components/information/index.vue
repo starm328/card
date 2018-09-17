@@ -25,6 +25,8 @@
 				<p><em>系统</em>联系在线客服</p>
 			</dd>
 		</dl>
+		</button>
+
 		<dl  @click="system">
 			<dt class="visit">
 				<div class="icon">
@@ -58,7 +60,6 @@
 				<p><em>系统</em>您的申请是否能被对方同意</p>
 			</dd>
 		</dl>
-		</button>
 
 		<!-- <dl>
 			<dt class="img">

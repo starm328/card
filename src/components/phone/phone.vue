@@ -283,6 +283,13 @@ export default {
 						duration: 2000,
 					})
 					// Auth.RefreshToken();
+				}else{
+					wx.showToast({
+						mask: true,
+						title: '发送失败，重新发送',
+						icon: 'none',
+						duration: 2000,
+					})
 				}
 				// 网络错误、或服务器返回 4XX、5XX
 			})

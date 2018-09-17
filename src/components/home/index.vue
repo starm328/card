@@ -1,7 +1,8 @@
 <template>
 	<div class="home-index-component">
+		{{current}}
 		<swiper :indicator-dots="indicatorDots"
-		:duration="duration" previous-margin="40px" next-margin="40px" @change="bindchange"  v-show="showcards">
+		:duration="duration" previous-margin="40px" next-margin="40px" @change="bindchange"  v-show="showcards" :style="'padding-top:'+(navgationHeight)+'px'" :current="current">
 
 			<block>
 				<swiper-item item-id="dd" :class="[swiperCurrent == showcards.length -(showcards.length + 2)? 'active' : '']">
@@ -13,7 +14,7 @@
 									<span>更大的世界<br/>从此无界限</span>
 								</div>
 								<div class="content">
-									<p>共14310000位</p>
+									<p>共14315419位</p>
 									<dl @click="group()">
 										<!-- {{collections.length}} -->
 										<dt>
@@ -192,11 +193,24 @@ export default {
 			collections:[],
 			message:0,
 			morecard:'',
-			current:0
+			current:0,
+			navgationHeight:''
+
 		}
 	},
 	onLoad() {
 		this.getcards()
+		let startBarHeight = 20
+		let navgationHeight = 44
+		let that = this
+		wx.getSystemInfo({
+		  success: function (res) {
+			if (res.model == 'iPhone X'){
+			  startBarHeight = 44
+			}
+			that.navgationHeight= navgationHeight+startBarHeight
+		  }
+		})
 	},
 	onShow() {
 		this.getcards()
@@ -458,6 +472,8 @@ export default {
 			dd{
 				h6{
 					font-size:@fontt16;
+					display:block;
+					padding:5px 0;
 				}
 				.company{
 					margin:2px 0;

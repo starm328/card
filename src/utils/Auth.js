@@ -37,6 +37,7 @@ class AuthManager
 	}
 
 	login (e){
+		console.log(e)
 		wx.showLoading({
 			mask: true,
 			title: '加载中',
@@ -56,7 +57,8 @@ class AuthManager
 						})
 						.then(d => {
 							if(d.statusCode == 200){
-								console.log(d)
+								wx.setStorageSync('unionid',d.data.data.unionid)
+								console.log(d,11)
 								wx.pro.request({
 									url:  `${configs.card.apiBaseUrl}api/login/uinfo`,
 									method: 'POST',
@@ -68,7 +70,6 @@ class AuthManager
 								})
 								.then(d => {
 									if(d.statusCode == 200){
-										console.log(d)
 										wx.hideLoading();
 										_this.proxy.loaded =true
 										_this.proxy.logined =true

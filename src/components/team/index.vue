@@ -2,7 +2,7 @@
 	<div class="team-component">
 		<div class="dearest">
 			<div class="referrer">
-				<img src="" v-if="referrer.head_picture">
+				<img :src="referrer.head_picture" v-if="referrer && referrer.head_picture">
 				<span v-else><i class="iconfont icon-huiyuan21" ></i></span>
 				<p>推荐人：{{referrer.label}}</p>
 			</div>
@@ -256,7 +256,6 @@ export default {
 	}
 	.enterprise-nav-list{
 		background:#fff;
-		padding:12px 0;
 		position:relative;
 		.enterprise-tit{
 			font-size:@fonttwo;

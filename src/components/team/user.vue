@@ -1,46 +1,64 @@
 <template>
 	<div class="user-index">
-		<div class="user-top">
-			<div class="user-img img1" v-for="(item,i) in user" :key="i" :style="'background:url('+item.icon['128x128']+') no-repeat center bottom;background-size:100%'">
-				<div class="img">
-					<open-data type="userAvatarUrl"></open-data>
-				</div>
-			</div>
-			<p v-for="(item,i) in user" :key="i">{{item.label}}</p>
-			<div class="tequan" v-if="user[0]" @click="privilege">{{user[0].label}}特权</div>
-		</div>
-		<div class="enterprise-nav" >
-			<div class="stm-cell  enterprise-nav-list" v-if="user[0] && user[0].id !==97">
-				<div class="cell-warp" @click="translate">
-					<div class="cell-left enterprise-tit">选择升级</div>
-					<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
-				</div>
-			</div>
 
-			 <div class="stm-cell  enterprise-nav-list">
-				<div class="cell-warp" @click="JoinedTeam">
-					<div class="cell-left enterprise-tit">团队管理</div>
-					<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
+		<div>
+			<div class="user-top">
+				<div class="user-img img1" v-for="(item,i) in user" :key="i" :style="'background:url('+item.icon['128x128']+') no-repeat center bottom;background-size:100%'">
+					<div class="img">
+						<open-data type="userAvatarUrl"></open-data>
+					</div>
 				</div>
+				<p v-for="(item,i) in user" :key="i">{{item.label}}</p>
+				<div class="tequan" v-if="user[0]" @click="privilege">{{user[0].label}}特权</div>
 			</div>
-			<div class="stm-cell  enterprise-nav-list">
-				<div class="cell-warp" @click="information">
-					<div class="cell-left enterprise-tit">消息<span v-if="message > 0">{{message}}</span></div>
-					<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
+			<div class="enterprise-nav" >
+				<div class="stm-cell  enterprise-nav-list" v-if="user[0] && user[0].id !==97">
+					<div class="cell-warp" @click="translate">
+						<div class="cell-left enterprise-tit">选择升级</div>
+						<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
+					</div>
 				</div>
-			</div>
-			<div class="stm-cell  enterprise-nav-list">
-				<div class="cell-warp" @click="about">
-					<div class="cell-left enterprise-tit">关于一生名片</div>
-					<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
-				</div>
-			</div>
 				<div class="stm-cell  enterprise-nav-list">
-				<div class="cell-warp" @click="agreement">
-					<div class="cell-left enterprise-tit">一生名片服务及用户协议</div>
-					<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
+					<div class="cell-warp" @click="JoinedTeam">
+						<div class="cell-left enterprise-tit">团队管理</div>
+						<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
+					</div>
+				</div>
+				<div class="stm-cell  enterprise-nav-list">
+					<div class="cell-warp" @click="invitation">
+						<div class="cell-left enterprise-tit">邀请有奖</div>
+						<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
+					</div>
+				</div>
+				<div class="stm-cell  enterprise-nav-list">
+					<div class="cell-warp" @click="information">
+						<div class="cell-left enterprise-tit">消息<span v-if="message > 0">{{message}}</span></div>
+						<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
+					</div>
+				</div>
+				<div class="stm-cell  enterprise-nav-list">
+					<div class="cell-warp" @click="about">
+						<div class="cell-left enterprise-tit">关于一生名片</div>
+						<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
+					</div>
+				</div>
+				<div class="stm-cell  enterprise-nav-list">
+					<div class="cell-warp" @click="agreement">
+						<div class="cell-left enterprise-tit">一生名片服务及用户协议</div>
+						<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
+					</div>
+				</div>
+				<div class="stm-cell  enterprise-nav-list" v-if="!unionid">
+					<div class="cell-warp" @click="ewm = true">
+						<div class="cell-left enterprise-tit">关注公众号</div>
+						<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
+					</div>
 				</div>
 			</div>
+		</div>
+		<div class="ewm" v-show="ewm" catchtouchmove="preventTouchMove">
+			<div class="bg" @click="ewm = false"></div>
+			<img src="https://i1.vpinpai.cn/card/oQ8trPBJfdLdIS0kZoRacTUwucH3rUEn4Oqtx0ar.jpeg" mode="widthFix" @click="previewImage" >
 		</div>
 	</div>
 </template>
@@ -55,7 +73,9 @@ export default {
 	data () {
 		return {
 			user:'',
-			message:0
+			message:0,
+			unionid:wx.getStorageSync('unionid')?wx.getStorageSync('unionid'):'',
+			ewm:false
 		}
 	},
 	onLoad() {
@@ -75,6 +95,13 @@ export default {
 		}
 	},
 	methods:{
+
+		previewImage() {
+			wx.previewImage({
+				current: 'https://i1.vpinpai.cn/card/oQ8trPBJfdLdIS0kZoRacTUwucH3rUEn4Oqtx0ar.jpeg', // 当前显示图片的http链接
+				urls: ['https://i1.vpinpai.cn/card/oQ8trPBJfdLdIS0kZoRacTUwucH3rUEn4Oqtx0ar.jpeg'] // 需要预览的图片http链接列表
+			})
+		},
 		getdata() {
 			var _this = this
 			if(wx.getStorageSync('Authtoken')){
@@ -183,6 +210,11 @@ export default {
 			  url: '/pages/Team/main'
 			})
 		},
+		invitation(){
+			wx.navigateTo({
+			  url: '/pages/invitation/main'
+			})
+		},
 		translate(){
 			wx.navigateTo({
 				url: '/pages/Home/translate/main',
@@ -217,6 +249,27 @@ export default {
 @import '../../configs/style.less';
 @import '../../configs/cell.less';
 .user-index{
+	.ewm{
+		.bg{
+			position:fixed;
+			top:0;
+			width:100%;
+			height:100%;
+			background:rgba(000,000,000,0.5);
+			z-index:2;
+
+		}
+		img{
+			position:fixed;
+			display:block;
+			top:50%;
+			margin-top:-90px;
+			left:50%;
+			width:180px;
+			margin-left:-90px;
+			z-index:3;
+		}
+	}
 	.enterprise-nav{
 		.enterprise-nav-list{
 			background:#fff;

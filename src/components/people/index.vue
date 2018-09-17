@@ -122,6 +122,7 @@ export default {
 			this.type = e
 			this.getdata()
 			this.page = 1
+			this.onReachBottom =  true
 		},
 		getdata() {
 			var _this = this
@@ -218,7 +219,6 @@ export default {
 				width:100%;
 				border-radius:5px;
 				overflow:hidden;
-				margin-right:10px;
 				max-height:120px;
 				.img{
 					width:100%;
@@ -227,14 +227,19 @@ export default {
 			dd{
 				h6{
 					font-size:@fontt16;
+					margin-bottom:4px;
+					height:20px;
+					line-height:18px;
 					overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
 				}
 
 				p{
 					flex:1;
-					overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
 					font-size:@fontone;
 					color:@fontcolor;
+					height:20px;
+					line-height:18px;
+					overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
 				}
 
 			}

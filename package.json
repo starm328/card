@@ -1,7 +1,7 @@
 {
-  "name": "reward",
+  "name": "yscard",
   "version": "1.0.0",
-  "description": "文章打赏",
+  "description": "一生名片",
   "author": "starm <starmbest@qq.com>",
   "private": true,
   "scripts": {

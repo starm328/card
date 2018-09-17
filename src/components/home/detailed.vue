@@ -25,7 +25,7 @@
 			<dl class="dl-li">
 				<dd>
 					<input type="text" name="voice" v-model="voicemp3" style="display:none;">
-					<p v-if="voicemp3" @click="playaudio" class="play">播放</p>
+					<p v-if="voicemp3" @click="playaudio" class="play"><i class="iconfont icon-xiaolaba"></i>播放 {{aduration}}</p>
 					<audio :src="voicemp3" id="myAudio"></audio>
 					<div class="weui-grid__label"  @longpress="handleRecordStart" @touchmove="handleTouchMove" @touchend="handleRecordStop">{{record.text}}</div>
 				</dd>
@@ -88,8 +88,7 @@ export default {
 			carddetailed:'',
 			stopp:true,
 			groupingShow:false,
-
-
+			aduration:0,
 			record: {
 				text: "长按录音",
 				type: "record",
@@ -130,6 +129,16 @@ export default {
 						_this.tempFilePath = d.data.detail.voice
 						_this.voicemp3 = d.data.detail.voice
 						_this.honor = d.data.honour
+						var bgM = innerAudioContext;
+						innerAudioContext.src = d.data.detail.voice;
+						console.log(bgM.duration);//0
+						bgM.onCanplay(()=>{
+						   console.log(bgM.duration)//0
+						})
+						setTimeout(()=>{
+							_this.aduration = bgM.duration
+						  console.log(bgM.duration)//2.795102
+						},1000)
 					}
 				}
 				// 2XX, 3XX
@@ -227,6 +236,15 @@ export default {
 							}else if(res.statusCode == 200){
 								console.log(JSON.parse(res.data).data)
 								_this.voicemp3 = JSON.parse(res.data).data
+								var bgM = innerAudioContext;
+								innerAudioContext.src = JSON.parse(res.data).data;
+								console.log(bgM.duration,1);//0
+								bgM.onCanplay(()=>{
+								   console.log(bgM.duration,2)//0
+								})
+								setTimeout(()=>{
+									_this.aduration = bgM.duration
+								},1000)
 							}
 						},
 						fail: function (res) {
@@ -518,6 +536,7 @@ export default {
 			.play{
 				flex:1;
 				text-align:center;
+				display:flex;
 			}
 			.weui-grid__label{
 				flex:1;

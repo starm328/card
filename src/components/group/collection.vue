@@ -248,6 +248,10 @@ export default {
 			dd{
 				h6{
 					font-size:@fontt16;
+					margin-bottom:4px;
+					height:20px;
+					line-height:18px;
+					overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
 				}
 				.company{
 					margin:2px 0;
@@ -255,9 +259,11 @@ export default {
 					display:flex;
 					p{
 						flex:1;
-						overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
 						font-size:@fontone;
 						color:@fontcolor;
+						height:20px;
+						line-height:18px;
+						overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
 					}
 					.img{
 						width:20px;

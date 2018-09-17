@@ -1,6 +1,6 @@
 <template>
 	<div class="home-index">
-		<div style="height:65vh;padding-top:40px;" v-if="!auth.proxy.token">
+		<div style="height:75vh;padding-top:40px;" v-if="!auth.proxy.token">
 			<div class="swiper-content"   >
 					<div class="imgno">
 						<open-data type="userAvatarUrl" class="img"></open-data>
@@ -8,7 +8,7 @@
 					<button type="default" class="stm-mt10" open-type="getUserInfo" @getuserinfo="onGotUserInfo">授权登录</button>
 			</div>
 		</div>
-		<div style="height:65vh;padding-top:40px;" v-if="auth.proxy.token && !auth.proxy.token.is_new">
+		<div style="height:75vh;padding-top:40px;" v-if="auth.proxy.token && !auth.proxy.token.is_new">
 			<div class="swiper-content" >
 					<div class="imgno">
 						<open-data type="userAvatarUrl" class="img"></open-data>
@@ -45,7 +45,8 @@ export default {
 		return {
 			auth:Auth,
 			sign:false,
-			share:''
+			share:'',
+			navgationHeight:''
 		}
 	},
 	onLoad(option) {
@@ -166,15 +167,12 @@ export default {
 		}
 	}
 	swiper{
-		padding-top:80px;
-		height:65vh;
+		height:450px;
 		.wx-swiper-dot{
 			margin-top:10px;
 		}
 		swiper-item{
 			opacity: 0.5;
-
-
 			.swiper-box{
 				.box-main{
 					transform:scale(0.8);
@@ -307,11 +305,9 @@ export default {
 			}
 			&.active{
 				opacity:1;
-				height:60vh;
 				.swiper-content,.box-main{
 					width:100%;
-					height:100%;
-					transform:scale(1);
+					transform:scale(0.9);
 					transition: transform 0.5s;
 				}
 			}

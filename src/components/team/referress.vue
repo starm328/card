@@ -1,19 +1,22 @@
 <template>
 	<div class="referress-component" :style="'padding-top:'+navgationHeight+'px'">
-		<dl v-for="(item,i) in referress" :key="i">
-			<dt class="img" v-if="item.head_picture" >
-				<img :src="item.head_picture" mode="widthFix" style="width:100%">
-			</dt>
-			<dt class="visit" v-else>
-				<div class="icon">
-					<i class="iconfont icon-huiyuan21"></i>
-				</div>
-			</dt>
-			<dd>
-				<h6>{{item.label}}<span v-if="commissions && commissions[i]">{{commissions[i].label}}</span></h6>
-				<p>ID:{{item.id}}</p>
-			</dd>
-		</dl>
+		<st-nodata v-if="referress.length == 0"></st-nodata>
+		<div v-else>
+			<dl v-for="(item,i) in referress" :key="i">
+				<dt class="img" v-if="item.head_picture" >
+					<img :src="item.head_picture" mode="widthFix" style="width:100%">
+				</dt>
+				<dt class="visit" v-else>
+					<div class="icon">
+						<i class="iconfont icon-huiyuan21"></i>
+					</div>
+				</dt>
+				<dd>
+					<h6>{{item.label}}<span v-if="commissions && commissions[i]">{{commissions[i].label}}</span></h6>
+					<p>ID:{{item.id}}</p>
+				</dd>
+			</dl>
+		</div>
 		<div class="datano" v-if="!onReachBottom">没有更多数据了</div>
 	</div>
 </template>
@@ -21,8 +24,13 @@
 <script>
 import Auth from '@/utils/Auth';
 import configs from '@/utils/configs';
+import Nodata from '@/components/nodata';
+
 export default {
 	name: 'referress-component',
+	components: {
+		'st-nodata': Nodata,
+	},
 	data () {
 		return {
 			navgationHeight:'',
@@ -126,7 +134,7 @@ export default {
 					if(d.statusCode == 200){
 						wx.setStorageSync('Authtoken',d.data.token)
 						_this.getreferress(d.data.token)
-						wx.stopPullDownRefresh()
+
 
 					}
 					// 2XX, 3XX
@@ -164,6 +172,7 @@ export default {
 			.then(d => {
 				if(d.statusCode == 200){
 					wx.hideLoading ();
+					wx.stopPullDownRefresh()
 					_this.referress =  d.data
 					var commission = wx.getStorageSync('commission')
 					var com = []
