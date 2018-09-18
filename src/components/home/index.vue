@@ -35,13 +35,13 @@
 								<div class="col">
 									<dl>
 										<dt>
-											<img src="https://i1.vpinpai.cn/card/peDbJEcHXBHPiaeBPY9Y7FtLbGyfns0CXJpOdaoZ.png" mode="widthFix" @click="group()">
+											<img src="https://i1.vpinpai.cn/card/YVVRqr7AAPqwSe6FOodSKRih8uaT4NRxHa8K4UvM.png" mode="widthFix" @click="group()">
 											<em style="width:10px;height:10px;background:red;border-radius:50%;" v-show="message > 0"></em>
-											<img src="https://i1.vpinpai.cn/card/hTNT7FNOx8TZFM2FygLRvZOI3jkuBNDLHtkdp7K4.png"  mode="widthFix" @click="user">
+											<img src="https://i1.vpinpai.cn/card/TgSECYrPyla4q2572a5E6yHBHXP8hBkXhH4ytGS8.png"  mode="widthFix" @click="user">
 										</dt>
 										<dd>
-											<img src="https://i1.vpinpai.cn/card/lWCo8MjxvWQfr5qtbK0F67unxf1e1xipVXJai6Wb.png"  mode="widthFix" @click="group('collection')">
-											<img src="https://i1.vpinpai.cn/card/eoL9ZaMgET7uAApbBAuFDvy2dUpBzDKDc8utLMaX.png"  mode="widthFix" @click="newcard">
+											<img src="https://i1.vpinpai.cn/card/eXs1Yx4gE0BnMtEegazATELVzIgdzo9mpdS2gw6j.png"  mode="widthFix" @click="group('collection')">
+											<img src="https://i1.vpinpai.cn/card/5H9x1bVutz3vR5jOohbtJf1Hfl47lnMrhuHy1lws.png"  mode="widthFix" @click="newcard">
 										</dd>
 									</dl>
 								</div>

@@ -58,7 +58,7 @@
 		</div>
 		<div class="ewm" v-show="ewm" catchtouchmove="preventTouchMove">
 			<div class="bg" @click="ewm = false"></div>
-			<img src="https://i1.vpinpai.cn/card/oQ8trPBJfdLdIS0kZoRacTUwucH3rUEn4Oqtx0ar.jpeg" mode="widthFix" @click="previewImage" >
+			<img src="https://i1.vpinpai.cn/card/nah2BfW2ho1HRIZtQkYTFrdHUxHC6yjlRtxdtM8e.png" mode="widthFix" @click="previewImage" >
 		</div>
 	</div>
 </template>
