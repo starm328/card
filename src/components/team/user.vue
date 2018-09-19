@@ -31,12 +31,6 @@
 					</div>
 				</div>
 				<div class="stm-cell  enterprise-nav-list">
-					<div class="cell-warp" @click="information">
-						<div class="cell-left enterprise-tit">消息<span v-if="message > 0">{{message}}</span></div>
-						<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
-					</div>
-				</div>
-				<div class="stm-cell  enterprise-nav-list">
 					<div class="cell-warp" @click="about">
 						<div class="cell-left enterprise-tit">关于一生名片</div>
 						<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
@@ -73,26 +67,16 @@ export default {
 	data () {
 		return {
 			user:'',
-			message:0,
 			unionid:wx.getStorageSync('unionid')?wx.getStorageSync('unionid'):'',
 			ewm:false
 		}
 	},
 	onLoad() {
 			this.getdata()
-			if(wx.getStorageSync('showrequest') > 0 ) {
-				this.message = wx.getStorageSync('showrequest')
-			}else {
-				this.message = 0
-			}
+
 	},
 	onShow() {
-		if(wx.getStorageSync('showrequest') > 0 ) {
-			this.message = wx.getStorageSync('showrequest')
-		}else {
-			this.message = 0
 
-		}
 	},
 	methods:{
 
@@ -220,11 +204,7 @@ export default {
 				url: '/pages/Home/translate/main',
 			})
 		},
-		information(){
-			wx.navigateTo({
-				url: '/pages/Information/index/main',
-			})
-		},
+
 		about(){
 			wx.navigateTo({
 				url: '/pages/about/main',

@@ -44,8 +44,11 @@ export default {
 		'pages/Information/system/main',
 		'pages/Information/collection/main',
 		'pages/Information/apply/main',
-
-
+		'pages/Information/bonus/main',
+		'pages/Information/member/main',
+		'pages/Information/popularity/main',
+		'pages/Information/reliable/main',
+		'pages/Information/upgrade/main',
 		'pages/index/main',
 		'pages/Card/main',
 		'pages/Card/Clip/main',
@@ -82,35 +85,5 @@ export default {
 			navigationBarTextStyle: '#fff',
 			navigationStyle:'custom'
 		},
-		// tabBar:{
-		// 	borderStyle: 'white',
-		// 	selectedColor:'#fa6b5b',
-		// 	// list:[
-		// 	// 	// {
-		// 	// 	// 	text:'我的名片',
-		// 	// 	// 	pagePath:'pages/index/main',
-		// 	// 	// 	iconPath:'static/images/mp.png',
-		// 	// 	// 	selectedIconPath:'static/images/mp-active.png'
-		// 	// 	// },
-		// 	// 	// {
-		// 	// 	// 	text:'名片夾',
-		// 	// 	// 	pagePath:'pages/Card/Clip/main',
-		// 	// 	// 	iconPath:'static/images/mpj.png',
-		// 	// 	// 	selectedIconPath:'static/images/mpj-active.png'
-		// 	// 	// },
-		// 	// 	// {
-		// 	// 	// 	text:'我的活动',
-		// 	// 	// 	pagePath:'pages/Activity/main',
-		// 	// 	// 	iconPath:'static/images/hd.png',
-		// 	// 	// 	selectedIconPath:'static/images/hd-active.png'
-		// 	// 	// },
-		// 	// 	// {
-		// 	// 	// 	text:'更多',
-		// 	// 	// 	pagePath:'pages/Enterprise/main',
-		// 	// 	// 	iconPath:'static/images/more.png',
-		// 	// 	// 	selectedIconPath:'static/images/more-active.png'
-		// 	// 	// }
-		// 	// ]
-		// }
 	}
 }

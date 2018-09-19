@@ -72,8 +72,8 @@
 					<h5>获得荣誉</h5>
 					<div>
 						<dl v-for="(item,i) in cardData.honour" :key="i">
-							<dt>{{item.title}}</dt>
-							<dd>{{item.organization}}</dd>
+							<dt>{{item.organization}}</dt>
+							<dd>{{item.title}}</dd>
 						</dl>
 					</div>
 				</div>
@@ -101,9 +101,12 @@
 				<p><i class="iconfont  icon-renqi"></i>人气(1)</p>
 				<p><i class="iconfont icon-shou"></i>靠谱(1)</p>
 			</div>
-			<div class="card-nav-wBtn" @click="share" style="margin-bottom:20px">
+			<button open-type="share" :data-id="cardData.card.id" :data-name="cardData.card.name" :data-img="cardData.card.img_url"  class="card-nav-wBtn"  v-if="cardData.auth.shareconceal == 2" style="margin-bottom:20px;height:45px;line-height:45px;padding:0;">分享</button>
+			<div class="card-nav-wBtn" @click="share" style="margin-bottom:20px" v-else>
 				分享
 			</div>
+
+
 			<div class="card-tile">
 				我的超级名片
 			</div>

@@ -36,7 +36,7 @@
 									<dl>
 										<dt>
 											<img src="https://i1.vpinpai.cn/card/YVVRqr7AAPqwSe6FOodSKRih8uaT4NRxHa8K4UvM.png" mode="widthFix" @click="group()">
-											<em style="width:10px;height:10px;background:red;border-radius:50%;" v-show="message > 0"></em>
+
 											<img src="https://i1.vpinpai.cn/card/TgSECYrPyla4q2572a5E6yHBHXP8hBkXhH4ytGS8.png"  mode="widthFix" @click="user">
 										</dt>
 										<dd>
@@ -136,6 +136,12 @@
 			<p  v-show="swiperCurrent == i">
 				<i class="iconfont icon-navicon-dxfs" @click="shareS(i)"></i>
 				<span>发名片</span>
+			</p>
+		</div>
+		<div class="share-card">
+			<p  v-show="swiperCurrent == -2" @click="information">
+				<i class="iconfont icon-icon-test"></i>
+				<span style="position:relative">消息<em style="width:10px;height:10px;background:red;border-radius:50%;position:absolute;right:-10px;top:-35px;" v-if="message > 0"></em></span>
 			</p>
 		</div>
 		<div class="share-card-main" v-if="share !== ''">
@@ -418,6 +424,11 @@ export default {
 
 
 
+		},
+		information(){
+			wx.navigateTo({
+				url: '/pages/Information/index/main',
+			})
 		},
 	}
 }

@@ -1,5 +1,16 @@
 <template>
 	<div class="referress-component" :style="'padding-top:'+navgationHeight+'px'">
+		<div class="nav" :style="'height:'+navgationHeight + 'px'">
+			<i class="iconfont  icon-shangyiyehoutuifanhui-yuankuang" :style="'margin-top:'+fontmar +'px'" :class="fonticon" @click="back"></i>
+			<div class="text" :style="'top:'+fontmar +'px'">
+				<picker @change="bindPickerChange" :value="index" :range="commissionde">
+					<view class="picker">
+						{{commissionde[index]}}<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
+					</view>
+				</picker>
+			</div>
+
+		</div>
 		<st-nodata v-if="referress.length == 0"></st-nodata>
 		<div v-else>
 			<dl v-for="(item,i) in referress" :key="i">
@@ -38,14 +49,20 @@ export default {
 			onReachBottom:true,
 			pageSize:15,
 			page:15,
-			commissions:[]
+			commissions:[],
+			commissiond:wx.getStorageSync('commission')?wx.getStorageSync('commission'):'',
+			navgationHeight:'',
+			index:0,
+			role:''
 		}
 	},
 	onUnload() {
 		this.onReachBottom =  true,
 		this.page = 15,
 		this.pageSize = 15,
-		this.commissions = []
+		this.commissions = [],
+		this.index=0,
+		this.role=''
 
 	},
 	onLoad() {
@@ -64,6 +81,18 @@ export default {
 			  }
 			})
 	},
+	computed: {
+		fontmar() {
+			return this.navgationHeight - 37
+		},
+		commissionde() {
+			var b = []
+			for (var i = 0; i<this.commissiond.length; i++) {
+				b.push(this.commissiond[i].label)
+			}
+			return b
+		}
+	},
 	onPullDownRefresh() {
 		this.getdata()
 		this.page = 15
@@ -77,7 +106,7 @@ export default {
 				title: '玩命加载中',
 			})
 			wx.pro.request({
-				url:`${configs.shop.apiBaseUrl}relations/0/referrees?take=`+_this.pageSize + '&skip=' + _this.page,
+				url:`${configs.shop.apiBaseUrl}relations/0/referrees?take=${_this.pageSize}&skip=${_this.page}${ _this.role !== ''? ('&filters[roleIn][0]=' + _this.role) :''}`,
 				method: 'GET',
 				header: {
 					token:wx.getStorageSync('Authtoken')
@@ -117,6 +146,27 @@ export default {
 		}
 	},
 	methods: {
+		bindPickerChange(e) {
+			console.log(this.commissionde)
+			if(e.mp.detail.value == '0'){
+				this.role = 95
+				this.index = 0
+				this.getdata()
+			}else if(e.mp.detail.value == "1"){
+				this.role = 96
+				this.index = 1
+				this.getdata()
+			}else{
+				this.role = 97
+				this.index = 2
+				this.getdata()
+			}
+		},
+		back(){
+			wx.navigateBack({
+			  delta: 1
+			})
+		},
 		getdata() {
 			var _this = this
 			if(wx.getStorageSync('Authtoken')){
@@ -163,7 +213,7 @@ export default {
 			})
 			var _this = this;
 			wx.pro.request({
-				url:`${configs.shop.apiBaseUrl}relations/0/referrees?take=15`,
+				url:`${configs.shop.apiBaseUrl}relations/0/referrees?take=15${_this.role !== ''? ('&filters[roleIn][0]=' + _this.role) :''}`,
 				method: 'GET',
 				header:{
 					token:token
@@ -210,6 +260,35 @@ export default {
 <style lang="less" scoped>
 @import '../../configs/style.less';
 .referress-component{
+	.nav{
+		width:100%;
+		position:fixed;
+		top:0;
+		left:0;
+		z-index:99;
+		background:#fa6b5b;
+		i{
+			margin-left:20px;
+			color:#fff;
+			font-size:30px;
+			position:relative;
+			&.active{
+				color:#ccc;
+			}
+		}
+		.text{
+			position:absolute;
+			left:40%;
+			text-align:center;
+			color:#fff;
+			.picker i{
+				display:inline-block;
+				transform:rotate(90deg);
+				font-size:15px;
+			}
+		}
+
+	}
 	.datano{
 		width:100%;
 		height:30px;

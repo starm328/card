@@ -60,6 +60,61 @@
 				<p><em>系统</em>您的申请是否能被对方同意</p>
 			</dd>
 		</dl>
+		<dl @click="member">
+			<dt class="visit">
+				<div class="icon">
+					<i class="iconfont icon-huiyuan21"></i>
+				</div>
+			</dt>
+			<dd>
+				<h6>会员加入消息</h6>
+				<p><em>系统</em></p>
+			</dd>
+		</dl>
+		<dl @click="upgrade">
+			<dt class="visit">
+				<div class="icon">
+					<i class="iconfont icon-renzhengyonghu"></i>
+				</div>
+			</dt>
+			<dd>
+				<h6>升级消息</h6>
+				<p><em>系统</em></p>
+			</dd>
+		</dl>
+		<dl @click="bonus">
+			<dt class="visit">
+				<div class="icon">
+					<i class="iconfont icon-wodezijin"></i>
+				</div>
+			</dt>
+			<dd>
+				<h6>奖金消息</h6>
+				<p><em>系统</em></p>
+			</dd>
+		</dl>
+		<dl @click="oppularity">
+			<dt class="visit">
+				<div class="icon">
+					<i class="iconfont icon-renqi"></i>
+				</div>
+			</dt>
+			<dd>
+				<h6>人气消息</h6>
+				<p><em>系统</em></p>
+			</dd>
+		</dl>
+		<dl @click="reliable">
+			<dt class="visit">
+				<div class="icon">
+					<i class="iconfont  icon-shou"></i>
+				</div>
+			</dt>
+			<dd>
+				<h6>靠谱消息</h6>
+				<p><em>系统</em></p>
+			</dd>
+		</dl>
 
 		<!-- <dl>
 			<dt class="img">
@@ -128,6 +183,31 @@ export default {
 		apply() {
 			wx.navigateTo({
 				url: '/pages/Information/apply/main',
+			})
+		},
+		member() {
+			wx.navigateTo({
+				url: '/pages/Information/member/main',
+			})
+		},
+		upgrade() {
+			wx.navigateTo({
+				url: '/pages/Information/upgrade/main',
+			})
+		},
+		bonus() {
+			wx.navigateTo({
+				url: '/pages/Information/bonus/main',
+			})
+		},
+		oppularity() {
+			wx.navigateTo({
+				url: '/pages/Information/popularity/main',
+			})
+		},
+		reliable() {
+			wx.navigateTo({
+				url: '/pages/Information/reliable/main',
 			})
 		}
 	}

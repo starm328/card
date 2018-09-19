@@ -1,6 +1,5 @@
 <template>
 	<div class="referress-component"  style="background:#eee;min-height:100vh">
-		<stm-nav></stm-nav>
 		<cart-loged>
 			<stm-referress></stm-referress>
 		</cart-loged>
@@ -10,7 +9,6 @@
 <script>
 import Loged from '@/components/loged';
 import Hometeamreferress from '@/components/team/referress';
-import Nav from '@/components/Nav';
 export default {
 	name: 'referress-component',
 	data () {
@@ -21,7 +19,6 @@ export default {
 	components: {
 		'cart-loged': Loged,
 		'stm-referress': Hometeamreferress,
-		'stm-nav':Nav,
 	},
 	onLoad() {
 		wx.setNavigationBarTitle({
