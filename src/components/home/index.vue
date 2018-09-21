@@ -15,7 +15,7 @@
 								</div>
 								<div class="fx-img">
 									<p class="a" @click="ysmp"></p>
-									<p class="a" @click="videw"></p>
+									<p class="a" @click="video"></p>
 									<p class="a" @click="guize"></p>
 									<p class="a" @click="jieda"></p>
 									<p class="a" @click="meng"></p>
@@ -68,6 +68,9 @@
 								<div class="title" style="padding:10rpx 20rpx;">
 									<p>人脉圈</p>
 									<span>用心做自己<br/>每一次交换都是商机</span>
+								</div>
+								<div class="content">
+								<p>共14315419位</p>
 								</div>
 								<div class="people">
 									<dl v-if="morecard[0]">
@@ -435,8 +438,10 @@ export default {
 			})
 
 		},
-		videw() {
-
+		video() {
+			wx.navigateTo({
+				url: '/pages/about/video/main',
+			})
 		},
 		guize() {
 			wx.navigateTo({
@@ -444,10 +449,14 @@ export default {
 			})
 		},
 		jieda() {
-
+			wx.navigateTo({
+				url: '/pages/about/jieda/main',
+			})
 		},
 		meng() {
-
+			wx.navigateTo({
+				url: '/pages/about/meng/main',
+			})
 		},
 		join() {
 
