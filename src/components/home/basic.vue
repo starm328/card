@@ -99,6 +99,30 @@
 					</picker>
 				</dd>
 			</dl>
+			<p class="dl-tit">
+				非必填资料
+			</p>
+			<dl class="dl-li">
+				<dd class="btn" @click="detailed">
+					<i class="iconfont icon-jibenziliao one"></i>
+					<p>详细资料</p>
+					<i class="iconfont icon-arrow-right-copy-copy-copy right"></i>
+				</dd>
+			</dl>
+			<dl class="dl-li">
+				<dd class="btn" @click="jurisdiction">
+					<i class="iconfont icon-icon_set_up two"></i>
+					<p>权限设置</p>
+					<i class="iconfont icon-arrow-right-copy-copy-copy right"></i>
+				</dd>
+			</dl>
+			<dl class="dl-li">
+				<dd class="btn" @click="billing">
+					<i class="iconfont icon-renzhengyonghu three"></i>
+					<p>开票信息</p>
+					<i class="iconfont icon-arrow-right-copy-copy-copy right"></i>
+				</dd>
+			</dl>
 			<div style="width:96%;margin:0px auto;padding-bottom:20px;">
 				<button type="primary" formType="submit" class="stm-main-button stm-m10-t">保存</button>
 			</div>
@@ -160,7 +184,8 @@ export default {
 		}
 	},
 	onUnload() {
-		this.cropper = false
+		this.cropper = false,
+		this.cardid =''
 	},
 	onLoad(option) {
 		wx.setNavigationBarTitle({
@@ -358,9 +383,21 @@ export default {
 									delta: 1
 								})
 							}else{
-								// 如果是新建，则跳转到高级表单
-								wx.redirectTo({
-									url:_this.pageid ? '/pages/Home/senior/main?id='+_this.pageid :'/pages/Home/senior/main?id='+_this.cardid,
+								wx.showModal({
+									title: '是否继续完善资料',
+									icon: 'none',
+									cancelText:'查看名片',
+									duration: 2000,
+									success: function(res) {
+										if (res.confirm) {
+
+										} else if (res.cancel) {
+											wx.redirectTo({
+												url: '/pages/Home/show/main?id='+d.data,
+											})
+										}
+									}
+
 								})
 							}
 						}
@@ -407,7 +444,23 @@ export default {
 				}
 				// 网络错误、或服务器返回 4XX、5XX
 			})
-		}
+		},
+		jurisdiction() {
+			wx.navigateTo({
+				url:'/pages/Home/jurisdiction/main?id='+this.cardid,
+			})
+		},
+		billing() {
+			wx.navigateTo({
+				url: '/pages/Home/billing/main?id='+this.cardid ,
+			})
+		},
+
+		detailed(){
+			wx.navigateTo({
+				url:'/pages/Home/detailed/main?id='+this.cardid ,
+			})
+		},
 	}
 }
 </script>

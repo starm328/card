@@ -13,10 +13,19 @@
 									<p>发现</p>
 									<span>更大的世界<br/>从此无界限</span>
 								</div>
-								<div class="content">
+								<div class="fx-img">
+									<p class="a" @click="ysmp"></p>
+									<p class="a" @click="videw"></p>
+									<p class="a" @click="guize"></p>
+									<p class="a" @click="jieda"></p>
+									<p class="a" @click="meng"></p>
+									<p class="a" @click="newcard"></p>
+									<p class="a" @click="translate"></p>
+									<img src="https://i1.vpinpai.cn/card/s3cDbCdKyIwkMGhFW5s4MtAvSKW9XHsH1ICXLzh7.jpeg" mode="widthFix">
+								</div>
+								<!-- <div class="content">
 									<p>共14315419位</p>
 									<dl @click="group()">
-										<!-- {{collections.length}} -->
 										<dt>
 											<img :src="collections[0].card.img_url" class="img" mode="widthFix" v-if="collections[0] && collections[0].card">
 										</dt>
@@ -31,8 +40,8 @@
 											<view class="img" mode="widthFix" v-else-if="!collections[4]"></view>
 										</dd>
 									</dl>
-								</div>
-								<div class="col">
+								</div> -->
+							<!-- 	<div class="col">
 									<dl>
 										<dt>
 											<img src="https://i1.vpinpai.cn/card/YVVRqr7AAPqwSe6FOodSKRih8uaT4NRxHa8K4UvM.png" mode="widthFix" @click="group()">
@@ -44,7 +53,7 @@
 											<img src="https://i1.vpinpai.cn/card/5H9x1bVutz3vR5jOohbtJf1Hfl47lnMrhuHy1lws.png"  mode="widthFix" @click="newcard">
 										</dd>
 									</dl>
-								</div>
+								</div> -->
 							</div>
 
 						</div>
@@ -138,10 +147,22 @@
 				<span>发名片</span>
 			</p>
 		</div>
-		<div class="share-card">
-			<p  v-show="swiperCurrent == -2" @click="information">
+		<div class="share-card" v-if="swiperCurrent == -2" >
+			<p  @click="information">
 				<i class="iconfont icon-icon-test"></i>
 				<span style="position:relative">消息<em style="width:10px;height:10px;background:red;border-radius:50%;position:absolute;right:-10px;top:-35px;" v-if="message > 0"></em></span>
+			</p>
+			<p  @click="group()">
+				<i class="iconfont icon-ziliaoguanli"></i>
+				<span style="position:relative">好友<em style="width:10px;height:10px;background:red;border-radius:50%;position:absolute;right:-10px;top:-35px;" v-if="message > 0"></em></span>
+			</p>
+			<p  @click="gopeople">
+				<i class="iconfont icon-hangyexiehui"></i>
+				<span style="position:relative">人脉<em style="width:10px;height:10px;background:red;border-radius:50%;position:absolute;right:-10px;top:-35px;" v-if="message > 0"></em></span>
+			</p>
+			<p  @click="user">
+				<i class="iconfont icon-huiyuan21"></i>
+				<span style="position:relative">个人中心<em style="width:10px;height:10px;background:red;border-radius:50%;position:absolute;right:-10px;top:-35px;" v-if="message > 0"></em></span>
 			</p>
 		</div>
 		<div class="share-card-main" v-if="share !== ''">
@@ -408,6 +429,29 @@ export default {
 			}
 
 		},
+		ysmp() {
+			wx.navigateTo({
+				url: '/pages/about/enter/main',
+			})
+
+		},
+		videw() {
+
+		},
+		guize() {
+			wx.navigateTo({
+				url: '/pages/about/guize/main',
+			})
+		},
+		jieda() {
+
+		},
+		meng() {
+
+		},
+		join() {
+
+		},
 		translate(){
 			wx.navigateTo({
 				url: '/pages/Home/translate/main',
@@ -520,6 +564,56 @@ export default {
 		color:#fff;
 		font-size:15px;
 		line-height:45px;
+	}
+	.fx-img{
+		height:0;
+		overflow:hidden;
+		padding-bottom:120%;
+		position:relative;
+		img{
+			width:100%;
+		}
+		p{
+			position:absolute;
+			width:30%;
+			height:30%;
+			display:block;
+			&:nth-child(1){
+				top:0;
+				left:0;
+			}
+			&:nth-child(2){
+				top:0;
+				right:0;
+			}
+			&:nth-child(3){
+				top:34%;
+				left:0
+
+			}
+			&:nth-child(4){
+				top:34%;
+				right:0
+
+			}
+			&:nth-child(5){
+				top:68%;
+				left:0
+
+			}
+			&:nth-child(6){
+				top:68%;
+				right:0
+
+			}
+			&:nth-child(7){
+				top:0%;
+				height:100%;
+				width:40px;
+				left:40%;
+
+			}
+		}
 	}
 
 }

@@ -69,6 +69,9 @@ export default {
 			shareconceal:1
 		}
 	},
+	onUnload() {
+		this.id =''
+	},
 	methods: {
 		radio(e) {
 			this.conceal = e.mp.detail.value
@@ -98,16 +101,25 @@ export default {
 				.then(d => {
 					if(d.statusCode == 200){
 						wx.hideLoading ();
-						wx.showToast({
-							title: '保存成功',
-							icon: 'success',
+						wx.showModal({
+							title: '是否继续完善资料',
+							icon: 'none',
+							cancelText:'查看名片',
 							duration: 2000,
-							success:()=>{
-								wx.navigateBack({
-									delta: 1
-								})
+							success: function(res) {
+								if (res.confirm) {
+									wx.navigateBack({
+										delta: 1
+									})
+								} else if (res.cancel) {
+									wx.redirectTo({
+										url: '/pages/Home/show/main?id='+_this.id,
+									})
+								}
 							}
+
 						})
+
 						_this.cardid = d.data
 					}
 					// 2XX, 3XX

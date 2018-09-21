@@ -75,6 +75,7 @@ export default {
 		onGotUserInfo(e) {
 			if(e.target.errMsg == 'getUserInfo:ok'){
 				Auth.login(e.target)
+				wx.setStorageSync('WxUser',e.target.userInfo.nickName)
 			}else {
 
 			}
@@ -391,7 +392,10 @@ export default {
 		bottom:20px;
 		text-align:center;
 		width:100%;
+		display:flex;
 		p{
+			flex:1;
+			text-align:center;
 			i{
 				display:block;
 				font-size:35px;

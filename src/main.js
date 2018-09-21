@@ -44,6 +44,7 @@ export default {
 		'pages/Information/system/main',
 		'pages/Information/collection/main',
 		'pages/Information/apply/main',
+		'pages/Information/chat/main',
 		'pages/Information/bonus/main',
 		'pages/Information/member/main',
 		'pages/Information/popularity/main',
@@ -75,6 +76,8 @@ export default {
 		'pages/people/main',
 		// 关于一生名片
 		'pages/about/main',
+		'pages/about/enter/main',
+		'pages/about/guize/main',
 		'pages/agreement/main'
 
 		],

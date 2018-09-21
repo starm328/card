@@ -105,7 +105,10 @@
 			<div class="card-nav-wBtn" @click="share" style="margin-bottom:20px" v-else>
 				分享
 			</div>
-
+			<div class="card-nav-btn">
+				<p @click="share">分享</p>
+				<p @click="chats">留言</p>
+			</div>
 
 			<div class="card-tile">
 				我的超级名片
@@ -495,6 +498,11 @@ export default {
 		senior() {
 			wx.navigateTo({
 			  url: '/pages/Home/senior/main?id='+this.id
+			})
+		},
+		chats() {
+			wx.navigateTo({
+				url: '/pages/Information/chat/main?id='+ this.id,
 			})
 		},
 		Preservation(){
