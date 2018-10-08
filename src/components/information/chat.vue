@@ -39,6 +39,7 @@ export default {
 	},
 	onUnload() {
 		this.sharecontent = []
+		this.chat= ''
 	},
 	onLoad(option) {
 			this.id  = option.id

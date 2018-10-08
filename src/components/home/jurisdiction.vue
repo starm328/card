@@ -37,7 +37,7 @@
 				<label>
 					<dd>
 						<p>是否可转发</p>
-						<switch color="#fa6b5b" @change="switCH"/>
+						<switch color="#fa6b5b" @change="switCH" checked/>
 					</dd>
 				</label>
 			</dl>
@@ -66,7 +66,7 @@ export default {
 		return {
 			id:'',
 			conceal:2,
-			shareconceal:1
+			shareconceal:2
 		}
 	},
 	onUnload() {

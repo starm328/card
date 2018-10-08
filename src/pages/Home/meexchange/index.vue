@@ -82,7 +82,8 @@
 				<div class="card-nav-btn">
 					<p @click="Preservation">保存到通讯录</p>
 					<p @click="collection">收藏</p>
-					<p>聊天</p>
+					<p @click="grouping">交换</p>
+					<p @click="chats">聊天</p>
 				</div>
 
 				<div class="card-tile">
@@ -121,9 +122,37 @@
 					<p class="more" v-else-if="proimg.length > 1 && !proimgmore" @click="lookmore('proimg')">展示部分<i class="iconfont icon-arrow-right-copy-copy-copy" style="transform:rotate(270deg);"></i></p>
 
 				</div>
+				<div class="card-nav-wBtn" style="margin-top:10px;" @click="zhizuo" v-if="!Auth.proxy.token">
+						制作我的名片
+					</div>
 				<div style="height:45px"></div>
+
 			</div>
+
 		</scroll-view>
+		<div class="grouping"  v-if="groupingShow">
+			<div class="bg" @click="groupingShow = false"></div>
+			<div class="main">
+				<div class="title">选择名片交换</div>
+				<scroll-view scroll-x style=" white-space: nowrap;">
+						<dl v-for="(item,i) in  mecard" :key="i" @click="cardrequest(item.id)">
+							<dt>
+								<img :src="item.img_url" class="img" mode="widthFix">
+							</dt>
+							<dd>
+								<h5>{{item.name}}</h5>
+								<p>{{item.company}}</p>
+								<span>{{item.position}}</span>
+
+							</dd>
+						</dl>
+				</scroll-view>
+			</div>
+		</div>
+		<div  v-if="!Auth.proxy.token && isAuth" style="position:fixed;top:0;left:0;width:100%;height:100vh;z-index:99;">
+			<div style="position:absolute;width:100%;height:100vh;background:rgba(000,000,000,0.5)" @click="isAuth = false"></div>
+			<cart-loged ></cart-loged>
+		</div>
 	</div>
 </template>
 
@@ -170,7 +199,7 @@ export default {
 			isback:false,
 			billmore:true,
 			proimgmore:true,
-			option:''
+			option:'',
 		}
 	},
 	watch:{
@@ -224,6 +253,11 @@ export default {
 		this.isback = false
 	},
 	methods:{
+		chats() {
+			wx.navigateTo({
+				url: '/pages/Information/chat/main?id='+ this.id,
+			})
+		},
 		getdata () {
 			var _this = this;
 			wx.pro.request({
@@ -270,7 +304,7 @@ export default {
 					})
 
 				}else if(err.statusCode == 500){
-					wx.showModal({
+					wx.showToast({
 						title: '系统错误',
 						icon: 'none',
 						duration: 2000,
@@ -317,6 +351,12 @@ export default {
 						Auth.proxy.token = ''
 						wx.removeStorageSync('token')
 						// Auth.RefreshToken();
+					}else if(err.statusCode == 500){
+						wx.showToast({
+							title: '系统错误',
+							icon: 'none',
+							duration: 2000,
+						})
 					}
 					// 网络错误、或服务器返回 4XX、5XX
 				})
@@ -325,6 +365,7 @@ export default {
 			}
 
 		},
+
 		scroll (e) {
 			this.scrollTop= e.mp.detail.scrollTop
 			if(e.mp.detail.scrollTop > 169) {
@@ -496,7 +537,7 @@ export default {
 		Preservation(){
 			wx.addPhoneContact({
 				firstName: this.cardData.card.name,   //名字
-				mobilePhoneNumber: this.cardData.card.phone ? this.cardData.card.phone : '',    //手机号
+				mobilePhoneNumber: this.cardData.card.phoneconfig == 2 ? this.cardData.card.phone : '',    //手机号
 				addressState:this.cardData.card.area,
 				addressStreet:this.cardData.detail.address,
 				hostNumber:this.cardData.detail.phone ? this.cardData.detail.phone :'',
@@ -571,6 +612,7 @@ export default {
 
 <style lang="less" scoped>
 @import '../../../configs/style.less';
+@import '../../../configs/main.less';
 
 .home-card-show{
 	background:#242b35;

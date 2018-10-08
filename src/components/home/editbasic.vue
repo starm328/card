@@ -304,13 +304,29 @@ export default {
 			var _this = this;
 		   _this.$refs.cropper.getCropperImage()
 			.then((src) => {
+				// wx.pro.request({
+				// 	url: `${configs.card.apiBaseUrl}api/user/upload`,
+				// 	method: 'POST',
+				// 	header: {
+				// 		token:Auth.proxy.token.access_token
+				// 	}
+				// })
+				// .then(d => {
+				// 	if(d.statusCode == 200){
+				// 		wx.hideLoading ();
+				// 		_this.cardbasic = d.data
+				// 		console.log(_this.cardbasic)
+				// 	}
+				// 	console.log(d)
+				// 	// 2XX, 3XX
+				// })
+				// .fail(e=>{
+				// 	console.log(e)
+				// })
 				wx.uploadFile({
 					url: `${configs.card.apiBaseUrl}api/user/upload`,
 					filePath: src,
 					name: 'url',
-					formData: {
-						'imgIndex': 'src'
-					},
 					header: {
 						token: Auth.proxy.token.access_token,
 						"Content-Type": "multipart/form-data"

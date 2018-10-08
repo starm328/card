@@ -101,13 +101,12 @@
 				<p><i class="iconfont  icon-renqi"></i>人气(1)</p>
 				<p><i class="iconfont icon-shou"></i>靠谱(1)</p>
 			</div>
-			<button open-type="share" :data-id="cardData.card.id" :data-name="cardData.card.name" :data-img="cardData.card.img_url"  class="card-nav-wBtn"  v-if="cardData.auth.shareconceal == 2" style="margin-bottom:20px;height:45px;line-height:45px;padding:0;">分享</button>
-			<div class="card-nav-wBtn" @click="share" style="margin-bottom:20px" v-else>
-				分享
-			</div>
+
+
 			<div class="card-nav-btn">
-				<p @click="share">分享</p>
-				<p @click="chats">留言</p>
+				<p style="padding:0">
+				<button open-type="share" :data-id="cardData.card.id" :data-name="cardData.card.name" :data-img="cardData.card.img_url"  class="card-nav-wBtn"  style="padding:0;background:none;">分享</button></p>
+				<p @click="chats">我的留言</p>
 			</div>
 
 			<div class="card-tile">
@@ -173,8 +172,7 @@
 				<!-- <li @click="activity">我的活动(0)</li> -->
 				<!-- <li @click="meproduct">我的产品(0)</li> -->
 			</ul>
-			<span v-if="cardData.auth.shareconceal == 2"><button open-type="share" :data-id="cardData.card.id" :data-name="cardData.card.name" :data-img="cardData.card.img_url"><i class="iconfont icon-fenxiang"></i></button></span>
-			<span v-else><button @click="share"><i class="iconfont icon-fenxiang"></i></button></span>
+			<span><button open-type="share" :data-id="cardData.card.id" :data-name="cardData.card.name" :data-img="cardData.card.img_url"><i class="iconfont icon-fenxiang"></i></button></span>
 		</div>
 
 		<div class="skin-warp" :class="[isShow? 'show':'hidden']">
