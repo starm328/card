@@ -40,6 +40,7 @@ export default {
 		'pages/Home/authentication/bankcard/form/main',
 		//消息
 		'pages/Information/index/main',
+		'pages/Information/list/main',
 		'pages/Information/exchange/main',
 		'pages/Information/system/main',
 		'pages/Information/collection/main',

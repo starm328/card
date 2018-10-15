@@ -1,51 +1,79 @@
 <template>
 	<div class="information-index" :style="'padding-top:'+navgationHeight+'px'">
-
-		<dl @click="exchange">
-			<dt class="exchange">
+		<dl  @click="collection">
+			<dt class="collection">
 				<div class="icon">
-					<i class="iconfont icon-jiaohuan"></i>
-					<span v-if="message > 0">{{message}}</span>
+					<i class="iconfont  icon-renqi"></i>
 				</div>
 			</dt>
 			<dd>
-				<h6>名片交换</h6>
-				<p>请留意你的名片交换消息</p>
-			</dd>
-		</dl>
-		<!-- <dl  @click="chat">
-			<dt class="visit">
-				<div class="icon">
-					<i class="iconfont  icon-xiaolaba"></i>
-				</div>
-			</dt>
-			<dd>
-				<h6>留言</h6>
+				<h6>收藏消息</h6>
 				<p><em>系统</em></p>
 			</dd>
-		</dl> -->
-		<button open-type="contact">
-		<dl>
-			<dt class="service">
-				<div class="icon">
-					<i class="iconfont icon-riji"></i>
-				</div>
-			</dt>
-			<dd>
-				<h6>官方客服</h6>
-				<p><em>系统</em>联系在线客服</p>
-			</dd>
 		</dl>
-		</button>
-
-		<dl  @click="system">
+		<dl  @click="apply">
 			<dt class="visit">
 				<div class="icon">
-					<i class="iconfont  icon-xiaolaba"></i>
+					<i class="iconfont icon-icon-test"></i>
 				</div>
 			</dt>
 			<dd>
-				<h6>系统消息</h6>
+				<h6>名片交换申请</h6>
+				<p><em>系统</em>您的申请是否能被对方同意</p>
+			</dd>
+		</dl>
+		<dl @click="member">
+			<dt class="visit">
+				<div class="icon">
+					<i class="iconfont icon-huiyuan21"></i>
+				</div>
+			</dt>
+			<dd>
+				<h6>会员加入消息</h6>
+				<p><em>系统</em></p>
+			</dd>
+		</dl>
+		<dl @click="upgrade">
+			<dt class="visit">
+				<div class="icon">
+					<i class="iconfont icon-renzhengyonghu"></i>
+				</div>
+			</dt>
+			<dd>
+				<h6>升级消息</h6>
+				<p><em>系统</em></p>
+			</dd>
+		</dl>
+		<dl @click="bonus">
+			<dt class="visit">
+				<div class="icon">
+					<i class="iconfont icon-wodezijin"></i>
+				</div>
+			</dt>
+			<dd>
+				<h6>奖金消息</h6>
+				<p><em>系统</em></p>
+			</dd>
+		</dl>
+		<dl @click="oppularity">
+			<dt class="visit">
+				<div class="icon">
+					<i class="iconfont icon-renqi"></i>
+				</div>
+			</dt>
+			<dd>
+				<h6>人气消息</h6>
+				<p><em>系统</em></p>
+			</dd>
+		</dl>
+		<dl @click="reliable">
+			<dt class="visit">
+				<div class="icon">
+					<i class="iconfont  icon-shou"></i>
+				</div>
+			</dt>
+			<dd>
+				<h6>靠谱消息</h6>
 				<p><em>系统</em></p>
 			</dd>
 		</dl>
@@ -88,21 +116,41 @@ export default {
 		}
 	},
 	methods: {
-		exchange() {
+		collection() {
 			wx.navigateTo({
-				url: '/pages/Information/exchange/main',
+				url: '/pages/Information/collection/main',
 			})
 		},
-		chat() {
+		apply() {
 			wx.navigateTo({
-				url: '/pages/Information/chat/main',
+				url: '/pages/Information/apply/main',
 			})
 		},
-		system() {
+		member() {
 			wx.navigateTo({
-				url: '/pages/Information/list/main',
+				url: '/pages/Information/member/main',
 			})
 		},
+		upgrade() {
+			wx.navigateTo({
+				url: '/pages/Information/upgrade/main',
+			})
+		},
+		bonus() {
+			wx.navigateTo({
+				url: '/pages/Information/bonus/main',
+			})
+		},
+		oppularity() {
+			wx.navigateTo({
+				url: '/pages/Information/popularity/main',
+			})
+		},
+		reliable() {
+			wx.navigateTo({
+				url: '/pages/Information/reliable/main',
+			})
+		}
 	}
 }
 </script>

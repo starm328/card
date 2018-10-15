@@ -35,7 +35,7 @@ export default {
 			var date = new Date().getTime()
 			console.log('/pages/Home/share/main?id='+ getshare.id +'&time=' + date+'&token='+util.hexMD5(getshare.id + '_' + date) + '&pid=' +wx.getStorageSync('token').user_id)
 			return {
-				title: getshare.name + '邀请你一起创建名片',
+				title:'嗨，我是 '+ getshare.name + '这是我名片！把你名片发我哦！ ',
 				path: '/pages/Home/share/main?id='+ getshare.id +'&time=' + date+'&token='+util.hexMD5(getshare.id + '_' + date) + '&pid=' +wx.getStorageSync('token').user_id,
 				imageUrl:getshare.img,
 			}

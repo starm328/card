@@ -68,8 +68,8 @@
 						<h5>获得荣誉</h5>
 						<div>
 							<dl v-for="(item,i) in cardData.honour" :key="i">
-								<dt>{{item.organization}}</dt>
 								<dd>{{item.title}}</dd>
+								<dt>{{item.organization}}</dt>
 							</dl>
 						</div>
 					</div>

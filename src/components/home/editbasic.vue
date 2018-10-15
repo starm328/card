@@ -12,8 +12,8 @@
 			<div class="cropper-buttons">
 				<div
 					class="upload"
-					@tap="uploadTap">
-					选择图片
+					@click="cropper = false">
+					取消
 				</div>
 				<div
 					class="getCropperImage"
@@ -97,6 +97,30 @@
 						<view class="picker">
 						</view>
 					</picker>
+				</dd>
+			</dl>
+			<p class="dl-tit">
+				非必填资料
+			</p>
+			<dl class="dl-li">
+				<dd class="btn" @click="detailed">
+					<i class="iconfont icon-jibenziliao one"></i>
+					<p>详细资料</p>
+					<i class="iconfont icon-arrow-right-copy-copy-copy right"></i>
+				</dd>
+			</dl>
+			<dl class="dl-li">
+				<dd class="btn" @click="jurisdiction">
+					<i class="iconfont icon-icon_set_up two"></i>
+					<p>权限设置</p>
+					<i class="iconfont icon-arrow-right-copy-copy-copy right"></i>
+				</dd>
+			</dl>
+			<dl class="dl-li">
+				<dd class="btn" @click="billing">
+					<i class="iconfont icon-renzhengyonghu three"></i>
+					<p>开票信息</p>
+					<i class="iconfont icon-arrow-right-copy-copy-copy right"></i>
 				</dd>
 			</dl>
 			<div style="width:96%;margin:0px auto;padding-bottom:20px;">
@@ -304,25 +328,6 @@ export default {
 			var _this = this;
 		   _this.$refs.cropper.getCropperImage()
 			.then((src) => {
-				// wx.pro.request({
-				// 	url: `${configs.card.apiBaseUrl}api/user/upload`,
-				// 	method: 'POST',
-				// 	header: {
-				// 		token:Auth.proxy.token.access_token
-				// 	}
-				// })
-				// .then(d => {
-				// 	if(d.statusCode == 200){
-				// 		wx.hideLoading ();
-				// 		_this.cardbasic = d.data
-				// 		console.log(_this.cardbasic)
-				// 	}
-				// 	console.log(d)
-				// 	// 2XX, 3XX
-				// })
-				// .fail(e=>{
-				// 	console.log(e)
-				// })
 				wx.uploadFile({
 					url: `${configs.card.apiBaseUrl}api/user/upload`,
 					filePath: src,
@@ -361,6 +366,8 @@ export default {
 								showCancel: false,
 
 							})
+						}else if(res.statusCode == 400){
+							_this.agentimg(src)
 						}
 					},
 					fail: function (res) {
@@ -379,10 +386,73 @@ export default {
 			  console.error('获取图片失败')
 			})
 		},
+		agentimg(src){
+			wx.uploadFile({
+				url: `${configs.card.apiBaseUrl}api/user/upload`,
+				filePath: src,
+				name: 'url',
+				header: {
+					token: Auth.proxy.token.access_token,
+					"Content-Type": "multipart/form-data"
+				},
+				success: function (res) {
+					//服务器返回格式: { "Catalog": "testFolder", "FileName": "1.jpg", "Url": "https://test.com/1.jpg" }
+					if(res.statusCode == 404){
+						wx.showModal({
+							title: '错误提示',
+							content: '登录失效，重新上传',
+							showCancel: false,
+							success: function (res) {
+								if(Auth.proxy.token.access_token){
+									Auth.refresh(Auth.proxy.token.access_token);
+									_this.getCropperImage();
+								}
+							}
+						})
+
+					}else if(res.statusCode == 200){
+						wx.showToast({
+							title: '上传成功',
+							icon: 'success',
+							duration: 2000
+						})
+						_this.img_url = JSON.parse(res.data).data
+						_this.cropper = false
+					}else if(res.statusCode == 500){
+						wx.showModal({
+							title: '错误提示',
+							content: '系统错误',
+							showCancel: false,
+
+						})
+					}else if(res.statusCode == 400){
+						_this.agentimg(src)
+					}
+				},
+				fail: function (res) {
+				}
+			});
+		},
 		chooseimg() {
 			var _this =this
 			_this.uploadTap()
 
+		},
+		jurisdiction() {
+			wx.navigateTo({
+				url:'/pages/Home/jurisdiction/main?id='+this.pageid,
+			})
+		},
+		billing() {
+			wx.navigateTo({
+				url: '/pages/Home/billing/main?id='+this.pageid ,
+			})
+		},
+
+		detailed(){
+			wx.navigateTo({
+				url:'/pages/Home/detailed/main?id='+this.pageid ,
+			})
 		},
 		formSubmit(e) {
 			var _this = this;

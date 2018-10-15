@@ -37,7 +37,7 @@ class AuthManager
 	}
 
 	login (e){
-		console.log(e)
+		console.log(e.userInfo)
 		wx.showLoading({
 			mask: true,
 			title: '加载中',
@@ -49,77 +49,50 @@ class AuthManager
 		}else{
 			wx.login({
 				success: function(res) {
-					if (res.code) {
-						//发起网络请求
-						wx.pro.request({
-							url:  `${configs.card.apiBaseUrl}api/login/index/${res.code}/2`,
-							method: 'GET',
-						})
-						.then(d => {
-							if(d.statusCode == 200){
-								wx.setStorageSync('unionid',d.data.data.unionid)
-								console.log(d,11)
-								wx.pro.request({
-									url:  `${configs.card.apiBaseUrl}api/login/uinfo`,
-									method: 'POST',
-									data: {
-										openid:d.data.data.openid,
-										iv:e.iv,
-										data:e.encryptedData
-									}
-								})
-								.then(d => {
-									if(d.statusCode == 200){
-										wx.hideLoading();
-										_this.proxy.loaded =true
-										_this.proxy.logined =true
-										_this.proxy.token = d.data.data
-										console.log(_this.proxy.token)
-										wx.setStorageSync('token',d.data.data)
-									}
-									// 2XX, 3XX
-								})
-								.catch(err => {
-									console.log(err)
-									if(err.statusCode == 401){
-										wx.hideLoading();
-										wx.showToast({
-											mask: true,
-											title: '授权过期，重新登录',
-											icon: 'none',
-											duration: 2000
-										})
-									}
+					wx.pro.request({
+						url:  `${configs.card.apiBaseUrl}api/login/login/${res.code}/2`,
+						method: 'POST',
+						data: {
+							iv:e.iv,
+							data:e.encryptedData,
+							userInfo:e.userInfo
+						}
+					})
+					.then(d => {
+						if(d.statusCode == 200){
+							wx.hideLoading();
+							_this.proxy.loaded =true
+							_this.proxy.logined =true
+							_this.proxy.token = d.data.data
+							console.log(_this.proxy.token)
+							wx.setStorageSync('token',d.data.data)
+						}
+						// 2XX, 3XX
+					})
+					.catch(err => {
+						wx.hideLoading();
+						console.log(err)
+						if(err.statusCode == 401){
+							wx.hideLoading();
+							wx.showToast({
+								mask: true,
+								title: '授权过期，重新登录',
+								icon: 'none',
+								duration: 2000
+							})
+						}else{
+							wx.hideLoading();
+							wx.showToast({
+								mask: true,
+								title: '登录失败重新登录',
+								icon: 'none',
+								duration: 2000
+							})
+						}
 
-									// 网络错误、或服务器返回 4XX、5XX
-								})
+						// 网络错误、或服务器返回 4XX、5XX
+					})
 
-							}
-							// 2XX, 3XX
-						})
-						.catch(err => {
-							if(err.statusCode == 404){
-								wx.hideLoading();
-								wx.showToast({
-									mask: true,
-									title: '404',
-									icon: 'none',
-									duration: 2000
-								})
-							}else if(err.statusCode == 500){
-								wx.hideLoading();
-								wx.showToast({
-									mask: true,
-									title: '系统崩溃',
-									icon: 'none',
-									duration: 2000
-								})
-							}
-							// 网络错误、或服务器返回 4XX、5XX
-						})
-					} else {
-
-					}
 				}
 			})
 		}

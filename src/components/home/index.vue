@@ -6,10 +6,53 @@
 
 			<block>
 				<swiper-item item-id="dd" :class="[swiperCurrent == showcards.length -(showcards.length + 2)? 'active' : '']">
-					<div class="swiper-box swiper-content">
-						<div class="box-main">
-							<div class="clip box ">
-								<div class="title">
+					<div class="swiper-box swiper-content" style="background:#1c1d1e;">
+						<div class="box-main" style="transform:scale(1);height:100%;">
+							<div class="clip box " style="margin:0;padding:0;background:#1c1d1e;">
+								<div class="translate">
+									<dl>
+										<dt>我们</dt>
+										<dd>用心，才有一百万个可能<br/>向前走，不要继续等...</dd>
+									</dl>
+									<p  @click="translate">升级会员</p>
+								</div>
+								<div class="new-nav">
+									<ul>
+										<li @click="ysmp">
+											<img src="https://i1.vpinpai.cn/card/FFo3QQixFs3Fv2zgfnBC6y84HsZEnC415T2xqOYF.png"  mode="widthFix" >
+											<p>关于一生名片</p>
+										</li>
+										<li @click="video">
+											<img src="https://i1.vpinpai.cn/card/mS7GTlmC1fZdITHgBkXNhgmTnkBhQcVoCF5n3EkA.png"  mode="widthFix" >
+											<p>名片操作视频</p>
+										</li>
+										<li @click="guize">
+											<img src="https://i1.vpinpai.cn/card/XR4HVEETBEKIySTpULIBAbk2mVe2OKlxGCZj6T85.png"  mode="widthFix" >
+											<p>会员权益</p>
+										</li>
+										<li @click="jieda">
+											<img src="https://i1.vpinpai.cn/card/e7tc92wwPavlBvkB9Qt4jXo2pY3FD3JMl7ZAoBox.png"  mode="widthFix" >
+											<p>疑问解答</p>
+										</li>
+										<li @click="meng">
+											<img src="https://i1.vpinpai.cn/card/rEzDKwaFE4bdM8rfslujVPd6cAK1KREECZuOgeSY.png"  mode="widthFix" >
+											<p>一生联盟</p>
+										</li>
+										<li>
+											<img src="https://i1.vpinpai.cn/card/3gDWr8PwR7w5S5X6VpmSYrjUETEfSbqoO78lPOoF.png"  mode="widthFix" >
+											<p>每日签到</p>
+										</li>
+										<li>
+											<img src="https://i1.vpinpai.cn/card/aqVZDfMromPx07Vb3NaVYkOYqjvLEGweC1CN1mh3.png"  mode="widthFix" >
+											<p>我的故事</p>
+										</li>
+										<li @click="newcard">
+											<img src="https://i1.vpinpai.cn/card/dA4NPI3IgUFWhYKhAsuovYTV6pbrVbNZV6dC1aQt.png"  mode="widthFix" >
+											<p>免费创建名片</p>
+										</li>
+									</ul>
+								</div>
+							<!-- 	<div class="title">
 									<p>发现</p>
 									<span>更大的世界<br/>从此无界限</span>
 								</div>
@@ -22,7 +65,7 @@
 									<p class="a" @click="newcard"></p>
 									<p class="a" @click="translate"></p>
 									<img src="https://i1.vpinpai.cn/card/s3cDbCdKyIwkMGhFW5s4MtAvSKW9XHsH1ICXLzh7.jpeg" mode="widthFix">
-								</div>
+								</div> -->
 								<!-- <div class="content">
 									<p>共14315419位</p>
 									<dl @click="group()">
@@ -152,20 +195,20 @@
 		</div>
 		<div class="share-card" v-if="swiperCurrent == -2" >
 			<p  @click="information">
-				<i class="iconfont icon-icon-test"></i>
-				<span style="position:relative">消息<em style="width:10px;height:10px;background:red;border-radius:50%;position:absolute;right:-10px;top:-35px;" v-if="message > 0"></em></span>
+				<i class="iconfont icon-icon-test" style="color:#ffdb60"></i>
+				<span style="position:relative;color:#ffdb60" >消息<em style="width:10px;height:10px;background:red;color:#ffdb60;border-radius:50%;position:absolute;right:-10px;top:-35px;" v-if="message > 0"></em></span>
 			</p>
 			<p  @click="group()">
-				<i class="iconfont icon-ziliaoguanli"></i>
-				<span style="position:relative">好友<em style="width:10px;height:10px;background:red;border-radius:50%;position:absolute;right:-10px;top:-35px;" v-if="message > 0"></em></span>
+				<i class="iconfont icon-ziliaoguanli" style="color:#ffdb60"></i>
+				<span style="position:relative;color:#ffdb60" >好友</span>
 			</p>
 			<p  @click="gopeople">
-				<i class="iconfont icon-hangyexiehui"></i>
-				<span style="position:relative">人脉<em style="width:10px;height:10px;background:red;border-radius:50%;position:absolute;right:-10px;top:-35px;" v-if="message > 0"></em></span>
+				<i class="iconfont icon-hangyexiehui" style="color:#ffdb60"></i>
+				<span style="position:relative;color:#ffdb60" >人脉</span>
 			</p>
 			<p  @click="user">
-				<i class="iconfont icon-huiyuan21"></i>
-				<span style="position:relative">个人中心<em style="width:10px;height:10px;background:red;border-radius:50%;position:absolute;right:-10px;top:-35px;" v-if="message > 0"></em></span>
+				<i class="iconfont icon-huiyuan21" style="color:#ffdb60"></i>
+				<span style="position:relative;color:#ffdb60" s>个人中心</span>
 			</p>
 		</div>
 		<div class="share-card-main" v-if="share !== ''">
@@ -622,6 +665,76 @@ export default {
 				left:40%;
 
 			}
+		}
+	}
+	.box-main {
+		.box{
+			img{
+				vertical-align:top;
+
+			}
+		}
+	}
+	.new-nav{
+			width:90%;
+			margin:0 auto 0 auto;
+			ul{
+				li{
+					width:calc(50% - 5px);
+					float:left;
+					background:#1f2228;
+					margin-bottom:8px;
+					text-align:center;
+					img{
+						width:15%;
+						display:block;
+						margin:10px auto;
+					}
+					&:nth-child(odd){
+						margin-right:8px;
+					}
+				}
+			}
+	}
+	.translate{
+		width:100%;
+		position:relative;
+		background:#ffdb60;
+		padding:20px 0 30px 0;
+		margin-bottom:30px;
+		&:after{
+			clear:both;
+			display:block;
+			content:'';
+		}
+		dl{
+			dt{
+				font-size:30px;
+				font-weight:bold;
+				color:#1c1d1e;
+				float:left;
+				margin-left:20px;
+			}
+			dd{
+				float:right;
+				font-size:15px;
+				color:#1c1d1e;
+				margin-right:20px;
+			}
+		}
+		p{
+			position:absolute;
+			width:50%;
+			bottom:-25px;
+			left:50%;
+			margin-left:-25%;
+			background:#1f2228;
+			border:1px solid #ffdb60;
+			color:#ffdb60;
+			font-size:20px;
+			font-weight:bold;
+			border-radius:40px;
+			padding:5px 0;
 		}
 	}
 

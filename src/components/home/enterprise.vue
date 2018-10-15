@@ -7,7 +7,7 @@
 					<div class="cell-left enterprise-template-product-tit">企业介绍：</div>
 					<div class="cell-main enterprise-template-product-main">
 						<input type="hidden" name="desc" style="width:0;min-height:0;height:0;" v-model="desc">
-						<textarea placeholder="不能低于50字" name="desc"  v-model="desc" maxlength="-1" v-if="!cropper" @input="bindWordLimit"></textarea>
+						<textarea placeholder="输入企业介绍" name="desc"  v-model="desc" maxlength="-1" v-if="!cropper" @input="bindWordLimit"></textarea>
 						<text style="color:#999;width:100%;font-size:13px;text-align:right">{{currentNoteLen|0}}个字</text>
 
 					</div>
@@ -188,13 +188,7 @@ export default {
 		},
 		formSubmit(e) {
 				var _this = this;
-				if(_this.currentNoteLen < 50){
-					wx.showToast({
-						title: '请完善产品介绍',
-						icon: 'none',
-						duration: 2000,
-					})
-				}else if(_this.imgs.length < 2){
+				if(_this.imgs.length < 2){
 					wx.showToast({
 						title: '请完善产品图片',
 						icon: 'none',
@@ -326,22 +320,107 @@ export default {
 									showCancel: false,
 
 								})
+							}else if(res.statusCode == 400){
+								_this.agenupdatabanner(src)
 							}
 						},
 						fail: function (res) {
 							console.log(res)
 							wx.showModal({
-							  title: '错误提示',
-							  content: '上传图片失败',
-							  showCancel: false,
-							  success: function (res) { }
+								title: '错误提示',
+								content: '上传图片失败',
+								showCancel: false,
+								success: function (res) { }
 							})
 						}
 					});
 				}
 			  })
 		},
+		agenupdataimg(ag) {
+			var _this = this
+			wx.uploadFile({
+				url: `${configs.card.apiBaseUrl}api/user/upload`,
+				filePath: ag,
+				name: 'url',
+				header: {
+					token: Auth.proxy.token.access_token,
+					"Content-Type": "multipart/form-data"
+				},
+				success: function (res) {
+					//服务器返回格式: { "Catalog": "testFolder", "FileName": "1.jpg", "Url": "https://test.com/1.jpg" }
+					if(res.statusCode == 404){
+						wx.showModal({
+							title: '错误提示',
+							content: '登录失效，重新上传',
+							showCancel: false,
+							success: function (res) {
+								if(Auth.proxy.token.access_token){
+									Auth.refresh(Auth.proxy.token.access_token);
+								}
+							}
+						})
+					}else if(res.statusCode == 200){
+						_this.imgs.push(JSON.parse(res.data).data)
+						console.log(_this.img)
+						wx.hideToast();
+						_this.cropper = false
+					}else if(res.statusCode == 500){
+						wx.showModal({
+							title: '错误提示',
+							content: '系统错误',
+							showCancel: false,
 
+						})
+					}
+				},
+				fail: function (res) {
+
+				}
+			});
+		},
+		agenupdatabanner(ag) {
+			var _this = this
+			wx.uploadFile({
+				url: `${configs.card.apiBaseUrl}api/user/upload`,
+				filePath: ag,
+				name: 'url',
+				header: {
+					token: Auth.proxy.token.access_token,
+					"Content-Type": "multipart/form-data"
+				},
+				success: function (res) {
+					//服务器返回格式: { "Catalog": "testFolder", "FileName": "1.jpg", "Url": "https://test.com/1.jpg" }
+					if(res.statusCode == 404){
+						wx.showModal({
+							title: '错误提示',
+							content: '登录失效，重新上传',
+							showCancel: false,
+							success: function (res) {
+								if(Auth.proxy.token.access_token){
+									Auth.refresh(Auth.proxy.token.access_token);
+									_this.getCropperImage();
+								}
+							}
+						})
+					}else if(res.statusCode == 200){
+						_this.img_url.push(JSON.parse(res.data).data)
+						console.log(_this.img)
+						_this.cropper = false
+					}else if(res.statusCode == 500){
+						wx.showModal({
+							title: '错误提示',
+							content: '系统错误',
+							showCancel: false,
+
+						})
+					}
+				},
+				fail: function (res) {
+
+				}
+			});
+		},
 		editchooseimg(e) {
 			var _this = this
 			wx.showModal({
@@ -496,6 +575,8 @@ export default {
 									showCancel: false,
 
 								})
+							}else if(res.statusCode == 400){
+								_this.agenupdataimg(src)
 							}
 						},
 						fail: function (res) {

@@ -7,7 +7,7 @@
 		"minified": true,
 		"newFeature": true
 	},
-	"miniprogramRoot": "./dist/",
+	"miniprogramRoot": "dist/",
 	"compileType": "miniprogram",
 	"appid": "wx429a3ebbc42986c8",
 	"projectname": "card",
@@ -32,10 +32,10 @@
 			"current": 0,
 			"list": [
 				{
-					"id": -1,
+					"id": 0,
 					"name": "share",
 					"pathName": "pages/Home/share/main",
-					"query": "id=71&time=1536390419006&token=84236317807b2c9bcd829e64749dc09b&pid=31"
+					"query": "id=516&time=1539581572759&token=0b27bf33a16e8790e9ad1d3eb038f906&pid=31"
 				}
 			]
 		}

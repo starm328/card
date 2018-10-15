@@ -3,7 +3,7 @@
 
 		<div class="top-img" >
 			<img :src="cardData.card.img_url" class="img" mode="aspectFill">
-			<div class="edit-card" @click="basic"><i class="iconfont icon-msnui-edit"></i>编辑名片</div>
+			<div class="edit-card" @click="showSkin"><i class="iconfont icon-msnui-edit"></i>编辑名片</div>
 		</div>
 		<div class="card-show-none"></div>
 		<div class="card-show-main">
@@ -34,11 +34,11 @@
 						</dl>
 					</div>
 				</div>
-				<div class="me-honour" style="margin:0" v-if="cardData.card.email">
+				<div class="me-honour" style="margin:0" v-if="cardData.detail.email">
 					<h5>邮箱</h5>
 					<div>
 						<dl>
-							<dt>{{cardData.card.email}}</dt>
+							<dt>{{cardData.detail.email}}</dt>
 						</dl>
 					</div>
 				</div>
@@ -72,8 +72,8 @@
 					<h5>获得荣誉</h5>
 					<div>
 						<dl v-for="(item,i) in cardData.honour" :key="i">
-							<dt>{{item.organization}}</dt>
 							<dd>{{item.title}}</dd>
+							<dt>{{item.organization}}</dt>
 						</dl>
 					</div>
 				</div>
@@ -98,8 +98,8 @@
 			<div class="card-nav-li">
 				<p @click="gocode"><i class="iconfont icon-xiaochengxu"></i>名片码</p>
 				<p  @click="gobanner"><i class="iconfont icon-guanggaowei"></i>名片海报</p>
-				<p><i class="iconfont  icon-renqi"></i>人气(1)</p>
-				<p><i class="iconfont icon-shou"></i>靠谱(1)</p>
+				<p><i class="iconfont  icon-renqi"></i>人气({{cardData.card.praise}})</p>
+				<p><i class="iconfont icon-shou"></i>靠谱({{cardData.card.reliable}})</p>
 			</div>
 
 
@@ -114,7 +114,7 @@
 			</div>
 			<div class="card-other" >
 				<div class="title">
-					<h5>公司介绍<span class="edit-company" @click="enterprise"><i class="iconfont icon-msnui-edit"></i>编辑公司</span></h5>
+					<h5>公司介绍 </h5>
 					<p @click="playvideo1 = !playvideo1"><i class="iconfont icon-bofang"></i><span>看视频</span></p>
 				</div>
 				<video :src="cardfirm[0].video"   controls v-if="playvideo1 && cardfirm && cardfirm.length > 0"></video>
@@ -139,7 +139,7 @@
 			</div>
 			<div class="card-other" >
 				<div class="title">
-					<h5>产品介绍<span class="edit-company" @click="meproduct"><i class="iconfont icon-msnui-edit"></i>编辑产品</span></h5>
+					<h5>产品介绍 </h5>
 					<p @click="playvideo2 = !playvideo2"><i class="iconfont icon-bofang"></i><span>看视频</span></p>
 				</div>
 				<video :src="product[0].video"   controls v-if="playvideo2 && product && product.length > 0"></video>
@@ -177,9 +177,21 @@
 
 		<div class="skin-warp" :class="[isShow? 'show':'hidden']">
 			<ul>
+				<li @click="basic">
+					<i class="iconfont icon-msnui-edit"></i>
+					<p>编辑名片</p>
+				</li>
 				<li @click="senior">
 					<i class="iconfont icon-msnui-edit"></i>
 					<p>编辑高级</p>
+				</li>
+				<li @click="enterprise">
+					<i class="iconfont icon-msnui-edit"></i>
+					<p>编辑公司</p>
+				</li>
+				<li @click="meproduct">
+					<i class="iconfont icon-msnui-edit"></i>
+					<p>编辑产品</p>
 				</li>
 				<li @click="delcard">
 					<i class="iconfont icon-shanchu"></i>
@@ -403,59 +415,69 @@ export default {
 		},
 
 		delcard() {
-			var _this = this;
-			wx.pro.request({
-				url:`${configs.card.apiBaseUrl}api/user/delcard/`+this.id,
-				method: 'GET',
-				header: {
-					token:Auth.proxy.token.access_token
-				}
-			})
-			.then(d => {
-				if(d.statusCode == 200){
-					wx.hideLoading ();
-					wx.showToast({
-						title: '已删除',
-						icon: 'none',
-						duration: 2000,
-						success:() => {
-							wx.redirectTo({
-							  url: '/pages/Home/index/main'
-							})
-						}
-					})
-				}else{
-					wx.showToast({
-						title: '删除失败',
-						icon: 'none',
-						duration: 2000,
-					})
-				}
-				// 2XX, 3XX
-			})
-			.catch(err => {
-				if(err.statusCode == 404){
-					wx.hideLoading ();
-					if(Auth.proxy.token.access_token){
-						Auth.refresh(Auth.proxy.token.access_token);
-						this.cardrequest();
-					}
-				}else if(err.statusCode == 500){
-					wx.showModal({
-						title: '错误提示',
-						content: '系统错误',
-						showCancel: false,
+			wx.showModal({
+				title:'提示',
+				content:'是否删除',
+				success:(res) => {
+					if(res.confirm){
+						var _this = this;
+						wx.pro.request({
+							url:`${configs.card.apiBaseUrl}api/user/delcard/`+this.id,
+							method: 'GET',
+							header: {
+								token:Auth.proxy.token.access_token
+							}
+						})
+						.then(d => {
+							if(d.statusCode == 200){
+								wx.hideLoading ();
+								wx.showToast({
+									title: '已删除',
+									icon: 'none',
+									duration: 2000,
+									success:() => {
+										wx.redirectTo({
+										  url: '/pages/Home/index/main'
+										})
+									}
+								})
+							}else{
+								wx.showToast({
+									title: '删除失败',
+									icon: 'none',
+									duration: 2000,
+								})
+							}
+							// 2XX, 3XX
+						})
+						.catch(err => {
+							if(err.statusCode == 404){
+								wx.hideLoading ();
+								if(Auth.proxy.token.access_token){
+									Auth.refresh(Auth.proxy.token.access_token);
+									this.cardrequest();
+								}
+							}else if(err.statusCode == 500){
+								wx.showModal({
+									title: '错误提示',
+									content: '系统错误',
+									showCancel: false,
 
-					})
+								})
+							}
+							// 网络错误、或服务器返回 4XX、5XX
+						})
+					}
 				}
-				// 网络错误、或服务器返回 4XX、5XX
 			})
+
 		},
 		video(n){
 			this.playvideo = n
 		},
 		showSkin() {
 			this.isShow = !this.isShow
+			this.scroll = 55
 		},
 		tel(num){
 			wx.makePhoneCall({
@@ -582,8 +604,8 @@ export default {
 			padding-top:10px;
 			display:flex;
 			li{
-				margin:0 20px;
 				text-align:center;
+				flex:1;
 				p{
 					font-size:@fontone;
 					text-align:center;

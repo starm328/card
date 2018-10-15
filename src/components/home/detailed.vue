@@ -102,7 +102,8 @@ export default {
 		}
 	},
 	onUnload() {
-		this.id =''
+		this.id ='',
+		this.voicemp3 = ''
 	},
 	onReady: function (e) {
 		// 使用 wx.createAudioContext 获取 audio 上下文 context
@@ -128,10 +129,10 @@ export default {
 				if(d.statusCode == 200){
 					wx.hideLoading ();
 					_this.carddetailed = d.data.detail
+					_this.honor = d.data.honour
 					if(d.data.detail.voice){
 						_this.tempFilePath = d.data.detail.voice
 						_this.voicemp3 = d.data.detail.voice
-						_this.honor = d.data.honour
 						var bgM = innerAudioContext;
 						innerAudioContext.src = d.data.detail.voice;
 						console.log(bgM.duration);//0
@@ -225,22 +226,22 @@ export default {
 							token: Auth.proxy.token.access_token,
 							"Content-Type": "multipart/form-data"
 						},
-						success: function (res) {
+						success: function (d) {
 							console.log(res)
 							//服务器返回格式: { "Catalog": "testFolder", "FileName": "1.jpg", "Url": "https://test.com/1.jpg" }
 							if(res.statusCode == 404){
 								wx.showToast({
 									title: '登录失效，重新上传',
 									icon: 'none',
-									success: function (res) {
+									success: function (d) {
 										Auth.refresh(Auth.proxy.token.access_token)
 									}
 								})
-							}else if(res.statusCode == 200){
-								console.log(JSON.parse(res.data).data)
-								_this.voicemp3 = JSON.parse(res.data).data
+							}else if(d.statusCode == 200){
+								console.log(JSON.parse(d.data).data)
+								_this.voicemp3 = JSON.parse(d.data).data
 								var bgM = innerAudioContext;
-								innerAudioContext.src = JSON.parse(res.data).data;
+								innerAudioContext.src = JSON.parse(d.data).data;
 								console.log(bgM.duration,1);//0
 								bgM.onCanplay(()=>{
 								   console.log(bgM.duration,2)//0
@@ -248,6 +249,9 @@ export default {
 								setTimeout(()=>{
 									_this.aduration = bgM.duration
 								},1000)
+							}else if(d.statusCode == 400){
+								// 手机400失败重新调用接口上传   这里一部分手机上的奇葩问题
+								_this.agenupdata(res.tempFilePath)
 							}
 						},
 						fail: function (res) {
@@ -260,6 +264,49 @@ export default {
 				}
 
 			  }
+			});
+		},
+		agenupdata(mp) {
+			var _this = this
+			wx.uploadFile({
+				url: `${configs.card.apiBaseUrl}api/user/upload`,
+				filePath: mp,
+				name: 'url',
+				header: {
+					token: Auth.proxy.token.access_token,
+					"Content-Type": "multipart/form-data"
+				},
+				success: function (res) {
+					console.log(res)
+					//服务器返回格式: { "Catalog": "testFolder", "FileName": "1.jpg", "Url": "https://test.com/1.jpg" }
+					if(res.statusCode == 404){
+						wx.showToast({
+							title: '登录失效，重新上传',
+							icon: 'none',
+							success: function (res) {
+								Auth.refresh(Auth.proxy.token.access_token)
+							}
+						})
+					}else if(res.statusCode == 200){
+						console.log(JSON.parse(res.data).data)
+						_this.voicemp3 = JSON.parse(res.data).data
+						var bgM = innerAudioContext;
+						innerAudioContext.src = JSON.parse(res.data).data;
+						console.log(bgM.duration,1);//0
+						bgM.onCanplay(()=>{
+						   console.log(bgM.duration,2)//0
+						})
+						setTimeout(()=>{
+							_this.aduration = bgM.duration
+						},1000)
+					}
+				},
+				fail: function (res) {
+					wx.showToast({
+						title: '录音失败，重新录音',
+						icon: 'none',
+					})
+				}
 			});
 		},
 		handleTouchMove(e) {
@@ -433,23 +480,8 @@ export default {
 					if(d.statusCode == 200){
 						console.log(e)
 						wx.hideLoading ();
-						wx.showModal({
-							title: '是否继续完善资料',
-							icon: 'none',
-							cancelText:'查看名片',
-							duration: 2000,
-							success: function(res) {
-								if (res.confirm) {
-									wx.navigateBack({
-										delta: 1
-									})
-								} else if (res.cancel) {
-									wx.redirectTo({
-										url: '/pages/Home/show/main?id='+_this.id,
-									})
-								}
-							}
-
+						wx.redirectTo({
+							url: '/pages/Home/show/main?id='+_this.id,
 						})
 					}
 					// 2XX, 3XX

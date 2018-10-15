@@ -56,16 +56,43 @@ export default {
 			wx.setStorageSync('pid',option.scene)
 
 		}
+		const updateManager = wx.getUpdateManager()
+		updateManager.onCheckForUpdate(function (res) {
+			// 请求完新版本信息的回调
+			console.log(res.hasUpdate)
+		})
+
+		updateManager.onUpdateReady(function () {
+			wx.showModal({
+				title: '更新提示',
+				content: '新版本已经准备好，是否重启应用？',
+				success: function (res) {
+					if (res.confirm) {
+						// 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
+						updateManager.applyUpdate()
+					}
+				}
+			})
+		})
+
+		updateManager.onUpdateFailed(function () {
+			// 新的版本下载失败
+			wx.showModal({
+				title: '更新提示',
+				content: '新版本下载失败',
+				showCancel:false
+			})
+		})
 		wx.hideShareMenu()
 	},
-
 	onShareAppMessage(res) {
 		if (res.from === 'button') {
 			var getshare = res.target.dataset
+			console.log(getshare)
 			var date = new Date().getTime()
 			console.log('/pages/Home/share/main?id='+ getshare.id +'&time=' + date+'&token='+util.hexMD5(getshare.id + '_' + date) + '&pid=' +wx.getStorageSync('token').user_id)
 			return {
-				title: getshare.name + '邀请你一起创建名片',
+				title: '嗨，我是 '+ getshare.name + '，这是我名片！把你名片发我哦！',
 				path: '/pages/Home/share/main?id='+ getshare.id +'&time=' + date+'&token='+util.hexMD5(getshare.id + '_' + date) + '&pid=' +wx.getStorageSync('token').user_id,
 				imageUrl:getshare.img,
 			}

@@ -14,7 +14,7 @@
 					<div class="cell-left enterprise-template-product-tit">产品介绍：</div>
 					<div class="cell-main enterprise-template-product-main">
 						<input type="hidden" name="" style="width:0;min-height:0;height:0;" v-model="protext">
-						<textarea placeholder="不能低于50字" name="desc" v-model="protext" maxlength="-1" v-if="!cropper" @input="bindWordLimit"></textarea>
+						<textarea placeholder="输入产品介绍" name="desc" v-model="protext" maxlength="-1" v-if="!cropper" @input="bindWordLimit"></textarea>
 						<text style="color:#999;width:100%;font-size:13px;text-align:right">{{currentNoteLen|0}}个字</text>
 					</div>
 				</div>
@@ -173,13 +173,7 @@ export default {
 
 		formSubmit(e) {
 				var _this = this;
-				if(_this.currentNoteLen < 50){
-					wx.showToast({
-						title: '请完善产品介绍',
-						icon: 'none',
-						duration: 2000,
-					})
-				}else if(_this.img_url.length < 2){
+				if(_this.img_url.length < 2){
 					wx.showToast({
 						title: '请完善产品图片',
 						icon: 'none',

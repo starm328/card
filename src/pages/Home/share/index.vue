@@ -68,16 +68,16 @@
 						<h5>获得荣誉</h5>
 						<div>
 							<dl v-for="(item,i) in cardData.honour" :key="i">
-								<dt>{{item.organization}}</dt>
 								<dd>{{item.title}}</dd>
+								<dt>{{item.organization}}</dt>
 							</dl>
 						</div>
 					</div>
 
 				</div>
 				<div class="card-nav-li">
-					<p><i class="iconfont  icon-renqi"></i>人气(1)</p>
-					<p><i class="iconfont icon-shou"></i>靠谱(1)</p>
+					<p @click="praise"><i class="iconfont  icon-renqi"  :class="[haspraise? 'haspraise' :'']"></i>人气({{cardData.card.praise}})</p>
+					<p @click="reliable"><i class="iconfont icon-shou" :class="[hasreliable? 'hasreliable' :'']"></i>靠谱({{cardData.card.reliable}})</p>
 				</div>
 				<div class="card-nav-btn">
 					<p @click="Preservation">保存到通讯录</p>
@@ -122,9 +122,31 @@
 					<p class="more" v-else-if="proimg.length > 1 && !proimgmore" @click="lookmore('proimg')">展示部分<i class="iconfont icon-arrow-right-copy-copy-copy" style="transform:rotate(270deg);"></i></p>
 
 				</div>
-				<div class="card-nav-wBtn" style="margin-top:10px;" @click="zhizuo" v-if="!Auth.proxy.token">
-						制作我的名片
+				<div v-if="!Auth.proxy.token">
+					<div class="edit-card-text">
+						<p>一生名片</p>
+						<p>诚邀您一起保护地球，绿色社交</p>
+						<span>保护大自然降低资源损耗</span><br/>
+						<span>拒绝纸质名片</span>
 					</div>
+					<div class="card-nav-wBtn" style="margin-top:10px;" @click="zhizuo" >
+						免费制作我的名片
+					</div>
+				</div>
+				<div class="position-btn" v-if="!Auth.proxy.token">
+					<ul>
+						<li @click="isAuth = true">注册</li>
+						<li @click="ysmp">关于</li>
+						<li><button open-type="share">转发</button></li>
+					</ul>
+				</div>
+				<div class="position-btn" v-if="Auth.proxy.token">
+					<ul>
+						<li @click="back">返回</li>
+						<li @click="information">消息</li>
+						<li><button open-type="share">转发</button></li>
+					</ul>
+				</div>
 				<div style="height:45px"></div>
 
 			</div>
@@ -200,6 +222,9 @@ export default {
 			billmore:true,
 			proimgmore:true,
 			option:'',
+			haspraise:false,
+			hasreliable:false
+
 		}
 	},
 	watch:{
@@ -214,7 +239,7 @@ export default {
 			var date = new Date().getTime()
 			console.log('/pages/Home/share/main?id='+ id +'&time=' + date+'&token='+util.hexMD5(id + '_' + date) + '&pid=' +wx.getStorageSync('token').user_id)
 			return {
-				title:  this.cardData.card.name + '邀请你一起创建名片',
+				title:  '嗨，我是 '+ this.cardData.card.name + '，这是我名片！把你名片发我哦！',
 				path: '/pages/Home/share/main?id='+ id +'&time=' + date+'&token='+util.hexMD5(id + '_' + date) + '&pid=' + wx.getStorageSync('token').user_id,
 				imageUrl:this.cardData.card.img_url,
 			}
@@ -250,9 +275,27 @@ export default {
 		this.proimg = '',
 		this.cardfirm = '',
 		this.bill = '',
-		this.isback = false
+		this.isback = false,
+		this.haspraise = false,
+		this.hasreliable = false
 	},
 	methods:{
+		ysmp() {
+			wx.navigateTo({
+				url: '/pages/about/enter/main',
+			})
+
+		},
+		information(){
+			wx.navigateTo({
+				url: '/pages/Information/index/main',
+			})
+		},
+		back(){
+			wx.navigateTo({
+				url: '/pages/Home/index/main',
+			})
+		},
 		chats() {
 			wx.navigateTo({
 				url: '/pages/Information/chat/main?id='+ this.id,
@@ -594,6 +637,92 @@ export default {
 			_this.stop = true
 
 		},
+		praise() {
+
+				wx.pro.request({
+					url:`${configs.card.apiBaseUrl}api/card/praise/`+ this.id + '/' + (this.haspraise? 2 :1),
+					method: 'GET',
+					header: {
+						token:Auth.proxy.token.access_token
+					}
+				})
+				.then(d => {
+					if(d.statusCode == 200){
+						if(!this.haspraise){
+								this.cardData.card.praise = this.cardData.card.praise + 1
+						}else {
+							if(this.cardData.card.praise > 0){
+								this.cardData.card.praise = this.cardData.card.praise - 1
+							}
+						}
+						this.haspraise = !this.haspraise
+					}
+					// 2XX, 3XX
+				})
+				.catch(err => {
+					if(err.statusCode == 404){
+						if(Auth.proxy.token.access_token){
+							Auth.refresh(Auth.proxy.token.access_token);
+						}
+					}else if(err.statusCode == 500){
+						wx.showToast({
+							title: '系统错误',
+							icon: 'none',
+							duration: 3000,
+						})
+					}else if(err.statusCode == 403){
+						wx.showToast({
+							title: '请勿重复点击',
+							icon: 'none',
+							duration: 3000,
+						})
+					}
+					// 网络错误、或服务器返回 4XX、5XX
+				})
+		},
+		reliable() {
+
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/card/reliable/`+ this.id + '/' + (this.hasreliable? 2 :1),
+				method: 'GET',
+				header: {
+					token:Auth.proxy.token.access_token
+				}
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					if(!this.hasreliable){
+						this.cardData.card.reliable = this.cardData.card.reliable + 1
+					}else {
+						if(this.cardData.card.reliable > 0){
+							this.cardData.card.reliable = this.cardData.card.reliable - 1
+						}
+					}
+					this.hasreliable = !this.hasreliable
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 404){
+					if(Auth.proxy.token.access_token){
+						Auth.refresh(Auth.proxy.token.access_token);
+					}
+				}else if(err.statusCode == 500){
+					wx.showToast({
+						title: '系统错误',
+						icon: 'none',
+						duration: 3000,
+					})
+				}else if(err.statusCode == 403){
+					wx.showToast({
+						title: '请勿重复点击',
+						icon: 'none',
+						duration: 3000,
+					})
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
+		}
 	},
 	onPageScroll(Object){
 		if(Object.scrollTop >200){
@@ -971,6 +1100,54 @@ export default {
 			padding:10px 0;
 			margin:0 20px;
 		}
+		.edit-card-text{
+			margin:0 20px;
+			p{
+				color:#fff;
+				font-size:18px;
+				&:nth-child(2){
+					padding-bottom:20px;
+				}
+			}
+			span{
+				color:rgb(82, 93, 109);
+				font-size:15px;
+			}
+		}
+		.position-btn{
+			position:fixed;
+			bottom:20px;
+			right:20px;
+			ul{
+				li{
+					width:50px;
+					height:50px;
+					line-height:50px;
+					text-align:center;
+					border-radius:50%;
+					color:#fff;
+					font-size:14px;
+					margin-bottom:20px;
+					background:#000;
+					button{
+						background:none;
+						color:#fff;
+						&:after{
+							display:none;
+						}
+					}
+					&:nth-child(1){
+						background:#5b9bd5;
+					}
+					&:nth-child(2){
+						background:#ed7d31;
+					}
+					&:nth-child(3){
+						background:#84be48;
+					}
+				}
+			}
+		}
 	}
 	.grouping{
 		.bg{
@@ -1059,6 +1236,12 @@ export default {
 		line-height:30px;
 		text-align:center;
 		color:#fff;
+	}
+	.hasreliable{
+		color:@maincolor
+	}
+	.haspraise{
+		color:@maincolor
 	}
 }
 </style>

@@ -10,10 +10,9 @@
 			@beforeLoad="cropperLoad"
 			></mpvue-cropper>
 			<div class="cropper-buttons">
-				<div
-					class="upload"
-					@tap="uploadTap">
-					选择图片
+				<div class="upload" @click="cropper = false"
+					>
+					取消
 				</div>
 				<div
 					class="getCropperImage"
@@ -292,6 +291,10 @@ export default {
 			var _this = this;
 		   _this.$refs.cropper.getCropperImage()
 			.then((src) => {
+				wx.showLoading({
+					title: '提交中',
+					// mask:true,
+				})
 				wx.uploadFile({
 					url: `${configs.card.apiBaseUrl}api/user/upload`,
 					filePath: src,
@@ -301,6 +304,7 @@ export default {
 						"Content-Type": "multipart/form-data"
 					},
 					success: function (res) {
+						wx.hideLoading ();
 						//服务器返回格式: { "Catalog": "testFolder", "FileName": "1.jpg", "Url": "https://test.com/1.jpg" }
 						if(res.statusCode == 404){
 							wx.showModal({
@@ -330,6 +334,12 @@ export default {
 								showCancel: false,
 
 							})
+						}else if(res.statusCode == 400){
+							wx.showLoading({
+								title: '提交中',
+								// mask:true,
+							})
+							_this.agenupdata (src)
 						}
 					},
 					fail: function (res) {
@@ -345,8 +355,57 @@ export default {
 				});
 			})
 			.catch(e => {
-			  console.error('获取图片失败')
+				console.error('获取图片失败')
 			})
+		},
+		agenupdata(ag) {
+			var _this = this
+			wx.uploadFile({
+				url: `${configs.card.apiBaseUrl}api/user/upload`,
+				filePath: ag,
+				name: 'url',
+				header: {
+					token: Auth.proxy.token.access_token,
+					"Content-Type": "multipart/form-data"
+				},
+				success: function (res) {
+					wx.hideLoading ();
+					//服务器返回格式: { "Catalog": "testFolder", "FileName": "1.jpg", "Url": "https://test.com/1.jpg" }
+					if(res.statusCode == 404){
+						wx.showModal({
+							title: '错误提示',
+							content: '登录失效，重新上传',
+							showCancel: false,
+							success: function (res) {
+								if(Auth.proxy.token.access_token){
+									Auth.refresh(Auth.proxy.token.access_token);
+									_this.getCropperImage();
+								}
+							}
+						})
+					}else if(res.statusCode == 200){
+						wx.showToast({
+							title: '上传成功',
+							icon: 'success',
+							duration: 2000
+						})
+						_this.img_url = JSON.parse(res.data).data
+						_this.cropper = false
+					}else if(res.statusCode == 500){
+						wx.showModal({
+							title: '错误提示',
+							content: '系统错误',
+							showCancel: false,
+
+						})
+					}
+				},
+				fail: function (res) {
+					wx.hideLoading ();
+
+
+				}
+			});
 		},
 		chooseimg() {
 			var _this =this
@@ -358,6 +417,7 @@ export default {
 			console.log(_this.pageid)
 			wx.showLoading({
 				title: '提交中',
+				// mask:true,
 			})
 			wx.pro.request({
 				// 通过_this.pageid  判断是修改还是新建
@@ -376,6 +436,7 @@ export default {
 						title: '保存成功',
 						icon: 'success',
 						duration: 2000,
+						mask:true,
 						success:()=>{
 							// 如果是修改，则修改成功回退
 							if(_this.pageid){
@@ -383,21 +444,8 @@ export default {
 									delta: 1
 								})
 							}else{
-								wx.showModal({
-									title: '是否继续完善资料',
-									icon: 'none',
-									cancelText:'查看名片',
-									duration: 2000,
-									success: function(res) {
-										if (res.confirm) {
-
-										} else if (res.cancel) {
-											wx.redirectTo({
-												url: '/pages/Home/show/main?id='+d.data,
-											})
-										}
-									}
-
+								wx.redirectTo({
+									url: '/pages/Home/show/main?id='+d.data,
 								})
 							}
 						}
@@ -413,7 +461,8 @@ export default {
 					wx.showToast({
 					  title: '请填写必填项',
 					  icon: 'none',
-					  duration: 2000
+					  duration: 2000,
+					  mask:true,
 					})
 				}else if(err.statusCode == 403){
 					console.log(err)
@@ -427,6 +476,7 @@ export default {
 						title: '错误提示',
 						content: '登录失效，重新上传',
 						showCancel: false,
+						mask:true,
 						success: function (res) {
 							if(Auth.proxy.token.access_token){
 								Auth.refresh(Auth.proxy.token.access_token);
