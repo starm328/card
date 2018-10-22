@@ -1,7 +1,7 @@
 <template>
 	<div class="people-index" :style="'padding-top:'+navgationHeight+'px;background:#eee;min-height:100vh'">
 		<ul>
-			<input type="" name="" placeholder="搜索">
+			<input type="text" name="" placeholder="搜索" v-model="key" confirm-type='search' @confirm="search">
 			<li :class="[type == 1 ? 'active':'']" @click="Gtype(1)">最具人气</li>
 			<li :class="[type == 2 ? 'active':'']" @click="Gtype(2)">最为活跃</li>
 			<li :class="[type == 3 ? 'active':'']" @click="Gtype(3)">最新发布</li>
@@ -36,6 +36,7 @@ export default {
 			onReachBottom:true,
 			pageSize:10,
 			type:1,
+			key:''
 		}
 	},
 
@@ -72,7 +73,7 @@ export default {
 	onReachBottom() {
 		var _this = this;
 		console.log(_this.onReachBottom)
-		if(_this.onReachBottom){
+		if(_this.onReachBottom && !_this.key){
 			wx.showLoading({
 				title: '玩命加载中',
 			})
@@ -86,8 +87,7 @@ export default {
 			.then(d => {
 				if(d.statusCode == 200){
 					wx.hideLoading ();
-
-					const _list = d.data;
+					const _list = d.data
 					console.log(d,_this.page,'001')
 					_this.list = [..._this.list,..._list];
 					if(_list.length < _this.pageSize) {
@@ -113,6 +113,49 @@ export default {
 				}
 				// 网络错误、或服务器返回 4XX、5XX
 			})
+		}else if(_this.onReachBottom && _this.key){
+			wx.showLoading({
+				title: '玩命加载中',
+			})
+			var _this = this
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/card/search`,
+				method: 'POST',
+				data: {
+					p:_this.page,
+					key:_this.key
+				},
+				header: {
+					token:Auth.proxy.token.access_token
+				}
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					wx.hideLoading ();
+					wx.stopPullDownRefresh()
+					const _list = d.data.result
+					_this.list = [..._this.list,..._list];
+					console.log(_list.length < _this.pageSize)
+					if(_list.length < _this.pageSize) {
+						_this.onReachBottom =  false
+						return
+					}
+					_this.page = _this.page + 1
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 404){
+					wx.removeStorageSync('token')
+				}else if(err.statusCode == 500){
+					wx.showToast({
+						title: '系统错误',
+						icon: 'none',
+						duration: 2000,
+					})
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
 		}
 
 
@@ -123,6 +166,7 @@ export default {
 			this.getdata()
 			this.page = 1
 			this.onReachBottom =  true
+			this.key = ''
 		},
 		getdata() {
 			var _this = this
@@ -137,6 +181,7 @@ export default {
 				if(d.statusCode == 200){
 					this.list = d.data
 					wx.stopPullDownRefresh()
+
 				}
 				// 2XX, 3XX
 			})
@@ -159,6 +204,41 @@ export default {
 				  url: '/pages/Home/share/main?id='+ cardid +'&time=' + date+'&token='+util.hexMD5(cardid + '_' + date) + '&isback=isback',
 				})
 		},
+		search(e) {
+			console.log(e)
+			var _this = this
+			_this.onReachBottom = true
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/card/search`,
+				method: 'POST',
+				data: {
+					p:0,
+					key:_this.key
+				},
+				header: {
+					token:Auth.proxy.token.access_token
+				}
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					this.list = d.data.result
+					wx.stopPullDownRefresh()
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 404){
+					wx.removeStorageSync('token')
+				}else if(err.statusCode == 500){
+					wx.showToast({
+						title: '系统错误',
+						icon: 'none',
+						duration: 2000,
+					})
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
+		}
 	}
 }
 </script>

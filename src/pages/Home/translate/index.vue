@@ -1,8 +1,10 @@
 <template>
 	<div class="cart-home-translate" :style="'padding-top:'+navgationHeight+'px'">
 		<stm-nav></stm-nav>
-		<img src="https://vpinpai.oss-cn-hangzhou.aliyuncs.com/yscard/%E5%9B%BE%E5%B1%82%202.png" style="width:100%" mode="widthFix" @click="pay(1)">
-		<img src="https://vpinpai.oss-cn-hangzhou.aliyuncs.com/yscard/%E5%9B%BE%E5%B1%82%203.png" style="width:100%" mode="widthFix" @click="pay(2)">
+		<img src="https://i1.vpinpai.cn/card/TuquY2rMUDXFYWD9g7lRDM8STCN1YQrBRejxljf7.jpeg"  mode="widthFix" style="width:50%;display:block;margin:20px auto">
+		<img src="https://i1.vpinpai.cn/card/G7VJA545Q0eROhD9n1Earah5kYnZA1ytzv8aLpti.jpeg"  mode="widthFix" style="width:80%;display:block;margin:10px auto 0 auto" @click="pay(1)">
+		<img src="https://i1.vpinpai.cn/card/l3vfvhpj98JXUv3Hd2QJp2xCLzf8oVZg6GZtTdm1.jpeg"  mode="widthFix" style="width:80%;display:block;margin:10px auto 0 auto" @click="pay(2)">
+		<img src="https://i1.vpinpai.cn/card/B4SSO4Uq9LSDD73e4gtMc6zNgX4DGoULQIo2ngTl.jpeg"  mode="widthFix" style="width:80%;display:block;margin:10px auto 0 auto">
 	</div>
 </template>
 
@@ -102,7 +104,6 @@ export default {
 
 <style lang="less" scoped>
 .cart-home-translate{
-	background:#4a4f62;
 	img{
 		vertical-align:bottom;
 	}

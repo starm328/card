@@ -298,7 +298,7 @@ export default {
 		},
 		chats() {
 			wx.navigateTo({
-				url: '/pages/Information/chat/main?id='+ this.id,
+				url: '/pages/Information/chat/main?id='+ this.cardData.card.user_id,
 			})
 		},
 		getdata () {
