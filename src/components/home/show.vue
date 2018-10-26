@@ -102,11 +102,8 @@
 				<p><i class="iconfont icon-shou"></i>靠谱({{cardData.card.reliable}})</p>
 			</div>
 
-
-			<div class="card-nav-btn">
-				<p style="padding:0">
-				<button open-type="share" :data-id="cardData.card.id" :data-name="cardData.card.name" :data-img="cardData.card.img_url"  class="card-nav-wBtn"  style="padding:0;background:none;">分享</button></p>
-				<p @click="chats">我的留言</p>
+			<div class="card-nav-wBtn" style="margin:10px auto;width:90%;">
+				<button open-type="share" :data-id="cardData.card.id" :data-name="cardData.card.name" :data-img="cardData.card.img_url"  class="card-nav-wBtn"  style="padding:0;background:none;">分享</button>
 			</div>
 
 			<div class="card-tile">
@@ -540,7 +537,7 @@ export default {
 		},
 		gocode(){
 			wx.navigateTo({
-			  url: '/pages/Card/Code/main'
+			  url: '/pages/Card/Code/main?id='+this.id
 			})
 		},
 		gobanner(){
@@ -985,6 +982,9 @@ export default {
 			border-radius:40px;
 			padding:10px 0;
 			margin:0 20px;
+			&:after{
+				display:none;
+			}
 		}
 	}
 }

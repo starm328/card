@@ -7,6 +7,7 @@
 
 <script>
 import configs from '@/utils/configs';
+var base64 = require('@/utils/base64.js')
 export default {
 	name: 'card-poster-item',
 	props: {
@@ -24,10 +25,15 @@ export default {
 			id:'',
 		}
 	},
+	onLoad(option) {
+		var _this = this;
+		_this.id = option.id;
+
+	},
 	onReady() {
 		var _this = this
 		wx.downloadFile({
-			url: configs.card.apiBaseUrl+'api/promotion/index/2?scene='+wx.getStorageSync('token').user_id+'&page=pages%2FHome%2Findex%2Fmain', //仅为示例，并非真实的资源
+			url: configs.card.apiBaseUrl+'api/promotion/index/2?scene='+wx.getStorageSync('token').user_id+'_'+ base64.baseEncode(this.id)+'&page=pages%2FHome%2Fshare%2Fmain', //仅为示例，并非真实的资源
 			success: function(resd) {
 				wx.downloadFile({
 					url: _this.bill,

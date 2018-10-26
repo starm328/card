@@ -46,6 +46,7 @@ export default {
 		'pages/Information/collection/main',
 		'pages/Information/apply/main',
 		'pages/Information/chat/main',
+		'pages/Information/chatlist/main',
 		'pages/Information/bonus/main',
 		'pages/Information/member/main',
 		'pages/Information/popularity/main',

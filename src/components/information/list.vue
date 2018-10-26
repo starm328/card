@@ -1,5 +1,16 @@
 <template>
 	<div class="information-index" :style="'padding-top:'+navgationHeight+'px'">
+		<dl  @click="chat">
+			<dt class="visit">
+				<div class="icon">
+					<i class="iconfont  icon-xiaolaba"></i>
+				</div>
+			</dt>
+			<dd>
+				<h6>留言</h6>
+				<p><em>系统</em></p>
+			</dd>
+		</dl>
 		<dl  @click="collection">
 			<dt class="collection">
 				<div class="icon">
@@ -86,7 +97,8 @@ export default {
 	data () {
 		return {
 			navgationHeight:'',
-			message:0
+			message:0,
+
 		}
 	},
 	onLoad() {
@@ -116,6 +128,11 @@ export default {
 		}
 	},
 	methods: {
+		chat() {
+			wx.navigateTo({
+				url: '/pages/Information/chatlist/main?id='+ wx.getStorageSync('token').user_id,
+			})
+		},
 		collection() {
 			wx.navigateTo({
 				url: '/pages/Information/collection/main',

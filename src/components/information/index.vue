@@ -13,17 +13,7 @@
 				<p>请留意你的名片交换消息</p>
 			</dd>
 		</dl>
-		<!-- <dl  @click="chat">
-			<dt class="visit">
-				<div class="icon">
-					<i class="iconfont  icon-xiaolaba"></i>
-				</div>
-			</dt>
-			<dd>
-				<h6>留言</h6>
-				<p><em>系统</em></p>
-			</dd>
-		</dl> -->
+
 		<button open-type="contact">
 		<dl>
 			<dt class="service">
@@ -93,11 +83,7 @@ export default {
 				url: '/pages/Information/exchange/main',
 			})
 		},
-		chat() {
-			wx.navigateTo({
-				url: '/pages/Information/chat/main',
-			})
-		},
+
 		system() {
 			wx.navigateTo({
 				url: '/pages/Information/list/main',

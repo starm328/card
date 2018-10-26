@@ -2,10 +2,6 @@
 <template>
 	<div class="information-chat" :style="'padding-top:'+navgationHeight+'px'">
 		<scroll-view scroll-y="true" style="height: 100vh;" :scroll-into-view="scrollinto" enable-back-to-top>
-			<dl v-for="(item,i) in chat" :key="i" :class="[nickName === item.wechatusers[0].nick_name ? 'meshare' : 'share']">
-				<dt><img :src="item.wechatusers[0].avatarUrl"  mode="widthFix"></dt>
-				<dd><p>{{item.content}}</p></dd>
-			</dl>
 			<dl v-if="sharecontent.length> 0" v-for="(item,i) in sharecontent " class="meshare" :key="i">
 				<dt><open-data type="userAvatarUrl" ></open-data></dt>
 				<dd><p>{{item}}</p></dd>
@@ -33,7 +29,6 @@ export default {
 			content:'',
 			sharecontent:[],
 			scrollinto:'',
-			nickName:wx.getStorageSync('WxUser') ?wx.getStorageSync('WxUser') :''
 
 		}
 	},
@@ -43,7 +38,6 @@ export default {
 	},
 	onLoad(option) {
 			this.id  = option.id
-			this.getdata();
 			var startBarHeight = 20
 			var navgationHeight = 44
 			var _this = this;
@@ -55,21 +49,19 @@ export default {
 				_this.navgationHeight= navgationHeight+startBarHeight
 			  }
 			})
-
-
 	},
 	methods: {
 
 		chats() {
 				var _this = this;
 				wx.pro.request({
-					url:`${configs.card.apiBaseUrl}api/card/wechats`,
+					url:`${configs.card.apiBaseUrl}api/user/wechats`,
 					method: 'POST',
 					header: {
 						token:Auth.proxy.token.access_token
 					},
 					data: {
-						card_id:_this.id,
+						user_id:_this.id,
 						content:_this.content
 					}
 
@@ -112,35 +104,6 @@ export default {
 
 
 		},
-		getdata() {
-			var _this = this;
-			wx.pro.request({
-				url:`${configs.card.apiBaseUrl}api/card/chats/`+_this.id,
-				method: 'GET',
-				header: {
-					token:Auth.proxy.token.access_token
-				}
-			})
-			.then(d => {
-				if(d.statusCode == 200){
-					_this.chat = d.data
-					_this.scrollinto = 'bottoms'
-				}
-				// 2XX, 3XX
-			})
-			.catch(err => {
-				if(err.statusCode == 404){
-					wx.removeStorageSync('token')
-				}else if(err.statusCode == 500){
-					wx.showToast({
-						title: '系统错误',
-						icon: 'none',
-						duration: 2000,
-					})
-				}
-				// 网络错误、或服务器返回 4XX、5XX
-			})
-		}
 	}
 }
 </script>

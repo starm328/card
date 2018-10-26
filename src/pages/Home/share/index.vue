@@ -250,7 +250,20 @@ export default {
 	    this.audioCtx = wx.createAudioContext('myAudio')
 	  },
 	onLoad(option) {
+
+		var _this = this;
 		this.option = option
+		_this.id = option.id;
+		if(option.scene){
+			var scene = decodeURIComponent(option.scene)
+			var scenes = scene.split("_");
+			if(scenes.length > 1){
+				wx.setStorageSync('pid',scenes[0])
+				_this.carddetail(scenes[1]);
+			}
+		}else {
+			_this.getdata();
+		}
 		if(option.pid){
 			wx.setStorageSync('pid',option.pid)
 		}
@@ -260,14 +273,8 @@ export default {
 		wx.setNavigationBarTitle({
 			title:'名片详情'
 		})
-		var _this = this;
-		_this.id = option.id;
-		_this.getdata();
 
 
-	},
-	onShow() {
-		this.getdata();
 	},
 	onUnload() {
 		this.cardData = '',
@@ -305,6 +312,67 @@ export default {
 			var _this = this;
 			wx.pro.request({
 				url:`${configs.card.apiBaseUrl}api/index/showcard/`+_this.option.id + '/'+ _this.option.time +'/'+_this.option.token,
+				method: 'GET',
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					wx.hideLoading ();
+					_this.cardData = d.data
+					_this.product = d.data.products
+					_this.cardfirm = d.data.firm
+					if(d.data.firm[0]){
+						_this.bill = d.data.firm[0].img.split(',')
+					}
+					if(d.data.products[0]){
+						_this.proimg = d.data.products[0].img.split(',')
+
+					}
+					if(d.data.auth.shareconceal == 1) {
+						wx.hideShareMenu()
+					}
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 404){
+					wx.showModal({
+						title: '你不能查看他的名片',
+						icon: 'none',
+						duration: 2000,
+						success: function(res) {
+							if (res.confirm) {
+								wx.redirectTo({
+									url: '/pages/Home/index/main',
+								})
+							} else if (res.cancel) {
+								wx.redirectTo({
+									url: '/pages/Home/index/main',
+								})
+							}
+						}
+
+					})
+
+				}else if(err.statusCode == 500){
+					wx.showToast({
+						title: '系统错误',
+						icon: 'none',
+						duration: 2000,
+						success:()=>{
+							wx.redirectTo({
+								url: '/pages/Home/index/main',
+							})
+						}
+					})
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
+		},
+
+		carddetail (id) {
+			var _this = this;
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/index/carddetail/`+id,
 				method: 'GET',
 			})
 			.then(d => {

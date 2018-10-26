@@ -16,18 +16,19 @@
 import Auth from '@/utils/Auth';
 import configs from '@/utils/configs';
 var util = require('@/utils/md5.js')
-
+var base64 = require('@/utils/base64.js')
 export default {
 	name: 'card-code',
 	onLoad(option) {
 		wx.hideShareMenu();
-
 		var _this = this;
+		_this.id = option.id;
 		_this.scene = wx.getStorageSync('token').user_id
 
 	},
 	data () {
 		return {
+			id:'',
 			scene:'',
 			img:'',
 			config:configs,
@@ -35,7 +36,7 @@ export default {
 	},
 	onReady(){
 		wx.downloadFile({
-			url: configs.card.apiBaseUrl+'api/promotion/index/2?scene='+this.scene+'&page=pages%2FHome%2Findex%2Fmain', //仅为示例，并非真实的资源
+			url: configs.card.apiBaseUrl+'api/promotion/index/2?scene='+ this.scene +'_'+ base64.baseEncode(this.id)+'&page=pages%2FHome%2Fshare%2Fmain', //仅为示例，并非真实的资源
 			success: function(res) {
 			// 只要服务器有响应数据，就会把响应内容写入文件并进入 success 回调，业务需要自行判断是否下载到了想要的内容
 			if(res.statusCode == 200){

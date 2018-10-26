@@ -29,13 +29,25 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
+			"current": 2,
 			"list": [
 				{
 					"id": 0,
 					"name": "share",
 					"pathName": "pages/Home/share/main",
 					"query": "id=516&time=1539581572759&token=0b27bf33a16e8790e9ad1d3eb038f906&pid=31"
+				},
+				{
+					"id": -1,
+					"name": "chat",
+					"pathName": "pages/Information/chat/main",
+					"query": "id=31"
+				},
+				{
+					"id": 2,
+					"name": "qrcode",
+					"pathName": "pages/Card/Code/main",
+					"query": "id=3"
 				}
 			]
 		}
