@@ -76,14 +76,20 @@
 
 				</div>
 				<div class="card-nav-li">
-					<p @click="praise"><i class="iconfont  icon-renqi"  :class="[haspraise? 'haspraise' :'']"></i>人气({{cardData.card.praise}})</p>
-					<p @click="reliable"><i class="iconfont icon-shou" :class="[hasreliable? 'hasreliable' :'']"></i>靠谱({{cardData.card.reliable}})</p>
+					<form @submit="praise" report-submit="true" class="li">
+						<button formType="submit"><i class="iconfont  icon-renqi"  :class="[haspraise? 'haspraise' :'']"></i>人气({{cardData.card.praise}})</button>
+					</form>
+					<form @submit="reliable" report-submit="true" class="li">
+						<button formType="submit"><i class="iconfont  icon-shou"  :class="[hasreliable? 'hasreliable' :'']"></i>人气({{cardData.card.reliable}})</button>
+					</form>
 				</div>
 				<div class="card-nav-btn">
-					<p @click="Preservation">保存到通讯录</p>
-					<p @click="collection">收藏</p>
-					<p @click="grouping">交换</p>
-					<p @click="chats">聊天</p>
+					<p @click="Preservation" class="li">保存到通讯录</p>
+					<form @submit="collection" report-submit="true" class="li">
+						<button formType="submit">收藏</button>
+					</form>
+					<p @click="grouping" class="li">交换</p>
+					<p @click="chats" class="li">聊天</p>
 				</div>
 
 				<div class="card-tile">
@@ -157,16 +163,21 @@
 			<div class="main">
 				<div class="title">选择名片交换</div>
 				<scroll-view scroll-x style=" white-space: nowrap;">
-						<dl v-for="(item,i) in  mecard" :key="i" @click="cardrequest(item.id)">
-							<dt>
-								<img :src="item.img_url" class="img" mode="widthFix">
-							</dt>
-							<dd>
-								<h5>{{item.name}}</h5>
-								<p>{{item.company}}</p>
-								<span>{{item.position}}</span>
+						<dl v-for="(item,i) in  mecard" :key="i">
+							<form @submit="cardrequest" report-submit="true" class="li">
+								<input type="text" name="id" :value="item.id" style="display:none">
+								<button formType="submit">
+									<dt>
+										<img :src="item.img_url" class="img" mode="widthFix">
+									</dt>
+									<dd>
+										<h5>{{item.name}}</h5>
+										<p>{{item.company}}</p>
+										<span>{{item.position}}</span>
 
-							</dd>
+									</dd>
+								</button>
+							</form>
 						</dl>
 				</scroll-view>
 			</div>
@@ -493,11 +504,12 @@ export default {
 				})
 			}
 		},
-		cardrequest(id) {
+		cardrequest(e) {
+			console.log(e.target)
 			if(Auth.proxy.token){
 				var _this = this;
 				wx.pro.request({
-					url:`${configs.card.apiBaseUrl}api/user/cardrequest/`+this.id +'/'+id,
+					url:`${configs.card.apiBaseUrl}api/user/cardrequest/`+this.id +'/'+e.target.value.id,
 					method: 'GET',
 					header: {
 						token:Auth.proxy.token.access_token
@@ -505,6 +517,7 @@ export default {
 				})
 				.then(d => {
 					if(d.statusCode == 200){
+
 						if(d.data.msg){
 							wx.showToast({
 								title: d.data.msg,
@@ -523,6 +536,22 @@ export default {
 							console.log(this.tempFilePath)
 							innerAudioContext.onPlay(() => {
 								console.log('开始播放')
+							})
+							wx.pro.request({
+								url:`${configs.card.apiBaseUrl}api/user/formid`,
+								method: 'POST',
+								data: {
+									form_id:e.target.formId,
+								},
+								header: {
+									token:Auth.proxy.token.access_token
+								}
+							})
+							.then(res => {
+								console.log(res)
+							})
+							.catch(err=>{
+								console.log(err)
 							})
 						}
 					}
@@ -550,7 +579,8 @@ export default {
 
 		},
 
-		collection() {
+
+		collection(e) {
 			if(Auth.proxy.token){
 				var _this = this;
 				wx.pro.request({
@@ -568,7 +598,24 @@ export default {
 								icon: 'none',
 								duration: 3000,
 							})
+
 						}else{
+							wx.pro.request({
+								url:`${configs.card.apiBaseUrl}api/user/formid`,
+								method: 'POST',
+								data: {
+									form_id:e.target.formId,
+								},
+								header: {
+									token:Auth.proxy.token.access_token
+								}
+							})
+							.then(res => {
+								console.log(res)
+							})
+							.catch(err=>{
+								console.log(err)
+							})
 							wx.showToast({
 								title:"收藏成功",
 								icon: 'success',
@@ -705,7 +752,7 @@ export default {
 			_this.stop = true
 
 		},
-		praise() {
+		praise(e) {
 
 				wx.pro.request({
 					url:`${configs.card.apiBaseUrl}api/card/praise/`+ this.id + '/' + (this.haspraise? 2 :1),
@@ -718,9 +765,41 @@ export default {
 					if(d.statusCode == 200){
 						if(!this.haspraise){
 								this.cardData.card.praise = this.cardData.card.praise + 1
+								wx.pro.request({
+									url:`${configs.card.apiBaseUrl}api/user/formid`,
+									method: 'POST',
+									data: {
+										form_id:e.target.formId,
+									},
+									header: {
+										token:Auth.proxy.token.access_token
+									}
+								})
+								.then(res => {
+									console.log(res)
+								})
+								.catch(err=>{
+									console.log(err)
+								})
 						}else {
 							if(this.cardData.card.praise > 0){
 								this.cardData.card.praise = this.cardData.card.praise - 1
+								wx.pro.request({
+									url:`${configs.card.apiBaseUrl}api/user/formid`,
+									method: 'POST',
+									data: {
+										form_id:e.target.formId,
+									},
+									header: {
+										token:Auth.proxy.token.access_token
+									}
+								})
+								.then(res => {
+									console.log(res)
+								})
+								.catch(err=>{
+									console.log(err)
+								})
 							}
 						}
 						this.haspraise = !this.haspraise
@@ -748,7 +827,7 @@ export default {
 					// 网络错误、或服务器返回 4XX、5XX
 				})
 		},
-		reliable() {
+		reliable(e) {
 
 			wx.pro.request({
 				url:`${configs.card.apiBaseUrl}api/card/reliable/`+ this.id + '/' + (this.hasreliable? 2 :1),
@@ -761,9 +840,41 @@ export default {
 				if(d.statusCode == 200){
 					if(!this.hasreliable){
 						this.cardData.card.reliable = this.cardData.card.reliable + 1
+						wx.pro.request({
+							url:`${configs.card.apiBaseUrl}api/user/formid`,
+							method: 'POST',
+							data: {
+								form_id:e.target.formId,
+							},
+							header: {
+								token:Auth.proxy.token.access_token
+							}
+						})
+						.then(res => {
+							console.log(res)
+						})
+						.catch(err=>{
+							console.log(err)
+						})
 					}else {
 						if(this.cardData.card.reliable > 0){
 							this.cardData.card.reliable = this.cardData.card.reliable - 1
+							wx.pro.request({
+								url:`${configs.card.apiBaseUrl}api/user/formid`,
+								method: 'POST',
+								data: {
+									form_id:e.target.formId,
+								},
+								header: {
+									token:Auth.proxy.token.access_token
+								}
+							})
+							.then(res => {
+								console.log(res)
+							})
+							.catch(err=>{
+								console.log(err)
+							})
 						}
 					}
 					this.hasreliable = !this.hasreliable
@@ -1043,7 +1154,7 @@ export default {
 		.card-nav-li{
 				margin:20px;
 				display:flex;
-				p{
+				form{
 					flex:1;
 					text-align:center;
 					color:#fff;
@@ -1052,12 +1163,23 @@ export default {
 						margin-bottom:5px;
 						font-size:@fontthree
 					}
+
+				}
+				button{
+					background:none;
+					margin:0;
+					padding:0;
+					color:#fff;
+					line-height:24px;
+					&:after{
+						display:none;
+					}
 				}
 		}
 		.card-nav-btn{
 			display:flex;
 			padding:20px;
-			p{
+			.li{
 				text-align:center;
 				background:@maincolor;
 				color:#fff;
@@ -1080,6 +1202,15 @@ export default {
 					margin-left: 10px;
 					flex:0 30%;
 					background:#2fd2b1
+				}
+				button{
+					display:inline-block;
+					line-height:9px;
+					background:none;
+					color:#fff;
+					&:after{
+						display:none
+					}
 				}
 			}
 		}
@@ -1218,6 +1349,7 @@ export default {
 		}
 	}
 	.grouping{
+
 		.bg{
 			position:fixed;
 			bottom:0;
@@ -1252,43 +1384,51 @@ export default {
 				overflow:hidden;
 				padding-bottom:10px;
 				box-shadow:0px 2px 9px 3px rgba(000, 000, 000, 0.1);
-				dt{
-					.img{
-						width:100%;
-					}
-				}
-				dd{
-					text-align:center;
-					h5{
-						white-space:normal;
-						font-size:@fontthree;
-						font-weight:none;
-						margin:10px 0 10px 0;
-						font-weight:bold;
-						padding:0 10px;
-						overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
-					}
-					p{
-						padding:0 10px;
-						white-space:normal;
-						color:@fontcolor;
-						font-size:@fonttwo;
-						margin-bottom:10px;
-						overflow: hidden;
-						text-overflow: ellipsis;
-						display: -webkit-box;
-						-webkit-box-orient: vertical;
-						-webkit-line-clamp: 1;
+				button{
+					line-height:20px;
 
+					&:after{
+						display:none;
 					}
-					span{
-						white-space:normal;
-						padding:0 10px;
-						font-size:@fonttwo;
-						color:@fontcolor;
-						overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
+					dt{
+						.img{
+							width:100%;
+						}
+					}
+					dd{
+						text-align:center;
+						h5{
+							white-space:normal;
+							font-size:@fontthree;
+							font-weight:none;
+							margin:10px 0 10px 0;
+							font-weight:bold;
+							padding:0 10px;
+							overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
+						}
+						p{
+							padding:0 10px;
+							white-space:normal;
+							line-height:18px;
+							color:@fontcolor;
+							font-size:@fonttwo;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							display: -webkit-box;
+							-webkit-box-orient: vertical;
+							-webkit-line-clamp: 1;
+
+						}
+						span{
+							white-space:normal;
+							padding:0 10px;
+							font-size:@fonttwo;
+							color:@fontcolor;
+							overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;
+						}
 					}
 				}
+
 			}
 			&:after{
 				clear:both;

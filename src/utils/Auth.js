@@ -37,7 +37,6 @@ class AuthManager
 	}
 
 	login (e){
-		console.log(e.userInfo)
 		wx.showLoading({
 			mask: true,
 			title: '加载中',
@@ -64,14 +63,12 @@ class AuthManager
 							_this.proxy.loaded =true
 							_this.proxy.logined =true
 							_this.proxy.token = d.data.data
-							console.log(_this.proxy.token)
 							wx.setStorageSync('token',d.data.data)
 						}
 						// 2XX, 3XX
 					})
 					.catch(err => {
 						wx.hideLoading();
-						console.log(err)
 						if(err.statusCode == 401){
 							wx.hideLoading();
 							wx.showToast({
