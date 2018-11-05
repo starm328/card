@@ -23,4 +23,6 @@ page{
 	min-height: 100vh;
 	padding-top:80px;
 }
+button.form_button{background-color:transparent;padding:0;margin:0;display:inline;position:static;border:0;padding-left:0;padding-right:0;border-radius:0;font-size:0rpx;color:transparent;text-align:inherit;}
+button.form_button::after{content:'';width:0;height:0;-webkit-transform:scale(1);transform:scale(1);display:none;background-color:transparent;}
 </style>

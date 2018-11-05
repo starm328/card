@@ -21,34 +21,59 @@
 										<li @click="ysmp">
 											<img src="https://i1.vpinpai.cn/card/FFo3QQixFs3Fv2zgfnBC6y84HsZEnC415T2xqOYF.png"  mode="widthFix" >
 											<p>关于一生名片</p>
+											<form @submit="gotoformid" :report-submit="true">
+												<button formType="submit" class="form_button"></button>
+											</form>
 										</li>
+
 										<li @click="video">
 											<img src="https://i1.vpinpai.cn/card/mS7GTlmC1fZdITHgBkXNhgmTnkBhQcVoCF5n3EkA.png"  mode="widthFix" >
 											<p>名片操作视频</p>
+											<form @submit="gotoformid" :report-submit="true">
+												<button formType="submit" class="form_button"></button>
+											</form>
 										</li>
 										<li @click="guize">
 											<img src="https://i1.vpinpai.cn/card/XR4HVEETBEKIySTpULIBAbk2mVe2OKlxGCZj6T85.png"  mode="widthFix" >
 											<p>会员权益</p>
+											<form @submit="gotoformid" :report-submit="true">
+												<button formType="submit" class="form_button"></button>
+											</form>
 										</li>
 										<li @click="jieda">
 											<img src="https://i1.vpinpai.cn/card/e7tc92wwPavlBvkB9Qt4jXo2pY3FD3JMl7ZAoBox.png"  mode="widthFix" >
 											<p>疑问解答</p>
+											<form @submit="gotoformid" :report-submit="true">
+												<button formType="submit" class="form_button"></button>
+											</form>
 										</li>
 										<li @click="meng">
 											<img src="https://i1.vpinpai.cn/card/rEzDKwaFE4bdM8rfslujVPd6cAK1KREECZuOgeSY.png"  mode="widthFix" >
 											<p>一生联盟</p>
+											<form @submit="gotoformid" :report-submit="true">
+												<button formType="submit" class="form_button"></button>
+											</form>
 										</li>
 										<li>
 											<img src="https://i1.vpinpai.cn/card/3gDWr8PwR7w5S5X6VpmSYrjUETEfSbqoO78lPOoF.png"  mode="widthFix" >
 											<p>每日签到</p>
+											<form @submit="gotoformid" :report-submit="true">
+												<button formType="submit" class="form_button"></button>
+											</form>
 										</li>
 										<li>
 											<img src="https://i1.vpinpai.cn/card/aqVZDfMromPx07Vb3NaVYkOYqjvLEGweC1CN1mh3.png"  mode="widthFix" >
 											<p>我的故事</p>
+											<form @submit="gotoformid" :report-submit="true">
+												<button formType="submit" class="form_button"></button>
+											</form>
 										</li>
 										<li @click="newcard">
 											<img src="https://i1.vpinpai.cn/card/dA4NPI3IgUFWhYKhAsuovYTV6pbrVbNZV6dC1aQt.png"  mode="widthFix" >
 											<p>免费创建名片</p>
+											<form @submit="gotoformid" :report-submit="true">
+												<button formType="submit" class="form_button"></button>
+											</form>
 										</li>
 									</ul>
 								</div>
@@ -136,8 +161,12 @@
 									</dl>
 
 								</div>
-								<div class="people-more" @click="gopeople">
-									查看更多
+								<div class="people-more" @click="gopeople" style="position:relative">
+									<form @submit="gotoformid" :report-submit="true">
+										<button formType="submit" class="form_button" style="color:#fff">
+												查看更多
+										</button>
+									</form>
 								</div>
 							</div>
 
@@ -148,6 +177,9 @@
 			<block v-for="(item,i) in showcards" :key="i">
 				<swiper-item item-id="dd" :class="[swiperCurrent == i ? 'active' : '']">
 					<div class="swiper-content" @click="card(item.id)" v-show="item">
+						<form @submit="gotoformid" :report-submit="true">
+							<button formType="submit" class="form_button"></button>
+						</form>
 						<img :src="item.img_url" class="img" mode="aspectFill">
 						<h5>{{item.name}}</h5>
 						<p>{{item.company}}</p>
@@ -194,22 +226,38 @@
 			</p>
 		</div>
 		<div class="share-card" v-if="swiperCurrent == -2" >
-			<p  @click="information">
-				<i class="iconfont icon-icon-test" style="color:#ffdb60"></i>
+			<div  @click="information">
+				<form @submit="gotoformid" :report-submit="true">
+					<button formType="submit" class="form_button">
+						<i class="iconfont icon-icon-test" style="color:#ffdb60"></i>
+					</button>
+				</form>
 				<span style="position:relative;color:#ffdb60" >消息<em style="width:10px;height:10px;background:red;color:#ffdb60;border-radius:50%;position:absolute;right:-10px;top:-35px;" v-if="message > 0"></em></span>
-			</p>
-			<p  @click="group()">
-				<i class="iconfont icon-ziliaoguanli" style="color:#ffdb60"></i>
+			</div>
+			<div  @click="group()">
+				<form @submit="gotoformid" :report-submit="true">
+					<button formType="submit" class="form_button">
+						<i class="iconfont icon-ziliaoguanli" style="color:#ffdb60"></i>
+					</button>
+				</form>
 				<span style="position:relative;color:#ffdb60" >好友</span>
-			</p>
-			<p  @click="gopeople">
-				<i class="iconfont icon-hangyexiehui" style="color:#ffdb60"></i>
+			</div>
+			<div  @click="gopeople">
+				<form @submit="gotoformid" :report-submit="true">
+					<button formType="submit" class="form_button">
+						<i class="iconfont icon-hangyexiehui" style="color:#ffdb60"></i>
+					</button>
+				</form>
 				<span style="position:relative;color:#ffdb60" >人脉</span>
-			</p>
-			<p  @click="user">
-				<i class="iconfont icon-huiyuan21" style="color:#ffdb60"></i>
+			</div>
+			<div  @click="user">
+				<form @submit="gotoformid" :report-submit="true">
+					<button formType="submit" class="form_button">
+						<i class="iconfont icon-huiyuan21" style="color:#ffdb60"></i>
+					</button>
+				</form>
 				<span style="position:relative;color:#ffdb60" s>个人中心</span>
-			</p>
+			</div>
 		</div>
 		<div class="share-card-main" v-if="share !== ''">
 			<div class="swiper-content">
@@ -526,6 +574,9 @@ export default {
 				url: '/pages/Information/index/main',
 			})
 		},
+		gotoformid(e) {
+			Auth.formid(e.target.formId)
+		}
 	}
 }
 </script>
@@ -676,15 +727,30 @@ export default {
 		}
 	}
 	.new-nav{
+
 			width:90%;
 			margin:0 auto 0 auto;
+
 			ul{
 				li{
+					position:relative;
 					width:calc(50% - 5px);
 					float:left;
 					background:#1f2228;
 					margin-bottom:8px;
 					text-align:center;
+					form{
+						position:absolute;
+						width:100%;
+						height:100%;
+						top:0;
+						left:0;
+						button{
+							width:100%;
+							height:100%;
+							display:block
+						}
+					}
 					img{
 						width:15%;
 						display:block;

@@ -138,6 +138,19 @@ export default {
 		transition: transform 0.5s;
 		text-align:center;
 		overflow:hidden;
+		position:relative;
+		form{
+			width:100%;
+			height:100%;
+			position:absolute;
+			left:0;
+			top:0;
+			button{
+				display:block;
+				width:100%;
+				height:100%;
+			}
+		}
 		button{
 			width:auto;
 			display:inline-block;
@@ -355,6 +368,7 @@ export default {
 			height:70vh;
 			padding-bottom:20px;
 			margin-top: -30px;
+
 		}
 		.nave{
 			width:100%;
@@ -420,15 +434,19 @@ export default {
 		text-align:center;
 		width:100%;
 		display:flex;
-		p{
+		div{
+			color:#999;
+			font-size:13px;
 			flex:1;
 			text-align:center;
 			i{
 				display:block;
 				font-size:35px;
 			}
-			color:#999;
-			font-size:13px;
+
+			button{
+				line-height:35px;
+			}
 		}
 	}
 	.dots{

@@ -1,10 +1,16 @@
 <template>
 	<div class="nav" :style="'height:'+navgationHeight + 'px'">
-		<i class="iconfont  icon-shangyiyehoutuifanhui-yuankuang" :style="'margin-top:'+fontmar +'px'" :class="fonticon" @click="back"></i>
+		<form @submit="gotoformid" :report-submit="true">
+			<button formType="submit" class="form_button"  style="color:#fff;">
+					<i class="iconfont  icon-shangyiyehoutuifanhui-yuankuang" :style="'margin-top:'+fontmar +'px'" :class="fonticon" @click="back"></i>
+			</button>
+		</form>
+
 	</div>
 </template>
 
 <script>
+import Auth from '@/utils/Auth';
 export default {
 	name: 'navigation',
 	data () {
@@ -28,7 +34,7 @@ export default {
 	},
 	computed: {
 		fontmar() {
-			return this.navgationHeight - 37
+			return this.navgationHeight - 60
 		}
 	},
 	methods: {
@@ -36,6 +42,9 @@ export default {
 			wx.navigateBack({
 			  delta: 1
 			})
+		},
+		gotoformid(e) {
+			Auth.formid(e.target.formId)
 		}
 	}
 }

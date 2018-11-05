@@ -121,5 +121,29 @@ class AuthManager
 			// 网络错误、或服务器返回 4XX、5XX
 		})
 	}
+
+	// 发送模板消息
+	formid (formId) {
+		var _this = this;
+		if(_this.proxy.token.access_token){
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/user/formid`,
+				method: 'POST',
+				data: {
+					form_id:formId,
+				},
+				header: {
+					token:_this.proxy.token.access_token
+				}
+			})
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err=>{
+				console.log(err)
+			})
+		}
+
+	}
 }
 export default new AuthManager();

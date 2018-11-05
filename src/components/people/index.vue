@@ -1,7 +1,11 @@
 <template>
 	<div class="people-index" :style="'padding-top:'+navgationHeight+'px;background:#eee;min-height:100vh'">
 		<ul>
-			<input type="text" name="" placeholder="搜索" v-model="key" confirm-type='search' @confirm="search">
+			<div class="search">
+				<img src="https://i1.vpinpai.cn/card/pPvXu91xAfgnxSFnnArzIR7L27n1HH8rRN53QzYi.png" mode="widthFix">
+				<input type="text" name="" placeholder="搜索" v-model="key" confirm-type='search' @confirm="search">
+				<i class="iconfont icon-icon-test"  @click="information"></i>
+			</div>
 			<li :class="[type == 1 ? 'active':'']" @click="Gtype(1)">最具人气</li>
 			<li :class="[type == 2 ? 'active':'']" @click="Gtype(2)">最为活跃</li>
 			<li :class="[type == 3 ? 'active':'']" @click="Gtype(3)">最新发布</li>
@@ -9,7 +13,11 @@
 		<div class="list">
 			<dl v-for="(item,i) in list" @tap="longtap(item.id)" :key="i">
 				<dt>
-					<img :src="item.img_url"  class="img" mode="widthFix">
+					<form @submit="gotoformid" :report-submit="true">
+						<button formType="submit" class="form_button">
+							<img :src="item.img_url"  class="img" mode="widthFix">
+						</button>
+					</form>
 				</dt>
 				<dd>
 					<h6>{{item.name}}</h6>
@@ -161,6 +169,14 @@ export default {
 
 	},
 	methods: {
+		information(){
+			wx.navigateTo({
+				url: '/pages/Information/index/main',
+			})
+		},
+		gotoformid(e) {
+			Auth.formid(e.target.formId)
+		},
 		Gtype(e){
 			this.type = e
 			this.getdata()
@@ -255,15 +271,32 @@ export default {
 		text-align:center;
 	}
 	ul{
-		input{
+		.search{
+			background:#eee;
 			width:95%;
 			height:35px;
-			line-height:35px;
-			background:#eee;
 			margin:4px auto 10px auto;
-			text-indent:10px;
-			font-size:13px;
+			display:flex;
+			img{
+				width:25px;
+				margin:5px;
+				float:left;
+			}
+			input{
+				flex:1;
+				height:35px;
+				line-height:35px;
+				text-indent:10px;
+				font-size:13px;
+				float:left;
+			}
+			i{
+				background:#fff;
+				padding:6px;
+				color:#fa6b5b;
+			}
 		}
+
 		width:100%;
 		background:#fff;
 		padding-bottom:10px;

@@ -537,22 +537,7 @@ export default {
 							innerAudioContext.onPlay(() => {
 								console.log('开始播放')
 							})
-							wx.pro.request({
-								url:`${configs.card.apiBaseUrl}api/user/formid`,
-								method: 'POST',
-								data: {
-									form_id:e.target.formId,
-								},
-								header: {
-									token:Auth.proxy.token.access_token
-								}
-							})
-							.then(res => {
-								console.log(res)
-							})
-							.catch(err=>{
-								console.log(err)
-							})
+							Auth.formid(e.target.formId)
 						}
 					}
 					// 2XX, 3XX
@@ -600,22 +585,7 @@ export default {
 							})
 
 						}else{
-							wx.pro.request({
-								url:`${configs.card.apiBaseUrl}api/user/formid`,
-								method: 'POST',
-								data: {
-									form_id:e.target.formId,
-								},
-								header: {
-									token:Auth.proxy.token.access_token
-								}
-							})
-							.then(res => {
-								console.log(res)
-							})
-							.catch(err=>{
-								console.log(err)
-							})
+							Auth.formid(e.target.formId)
 							wx.showToast({
 								title:"收藏成功",
 								icon: 'success',
@@ -765,41 +735,11 @@ export default {
 					if(d.statusCode == 200){
 						if(!this.haspraise){
 								this.cardData.card.praise = this.cardData.card.praise + 1
-								wx.pro.request({
-									url:`${configs.card.apiBaseUrl}api/user/formid`,
-									method: 'POST',
-									data: {
-										form_id:e.target.formId,
-									},
-									header: {
-										token:Auth.proxy.token.access_token
-									}
-								})
-								.then(res => {
-									console.log(res)
-								})
-								.catch(err=>{
-									console.log(err)
-								})
+								Auth.formid(e.target.formId)
 						}else {
 							if(this.cardData.card.praise > 0){
 								this.cardData.card.praise = this.cardData.card.praise - 1
-								wx.pro.request({
-									url:`${configs.card.apiBaseUrl}api/user/formid`,
-									method: 'POST',
-									data: {
-										form_id:e.target.formId,
-									},
-									header: {
-										token:Auth.proxy.token.access_token
-									}
-								})
-								.then(res => {
-									console.log(res)
-								})
-								.catch(err=>{
-									console.log(err)
-								})
+								Auth.formid(e.target.formId)
 							}
 						}
 						this.haspraise = !this.haspraise
@@ -840,41 +780,11 @@ export default {
 				if(d.statusCode == 200){
 					if(!this.hasreliable){
 						this.cardData.card.reliable = this.cardData.card.reliable + 1
-						wx.pro.request({
-							url:`${configs.card.apiBaseUrl}api/user/formid`,
-							method: 'POST',
-							data: {
-								form_id:e.target.formId,
-							},
-							header: {
-								token:Auth.proxy.token.access_token
-							}
-						})
-						.then(res => {
-							console.log(res)
-						})
-						.catch(err=>{
-							console.log(err)
-						})
+						Auth.formid(e.target.formId)
 					}else {
 						if(this.cardData.card.reliable > 0){
 							this.cardData.card.reliable = this.cardData.card.reliable - 1
-							wx.pro.request({
-								url:`${configs.card.apiBaseUrl}api/user/formid`,
-								method: 'POST',
-								data: {
-									form_id:e.target.formId,
-								},
-								header: {
-									token:Auth.proxy.token.access_token
-								}
-							})
-							.then(res => {
-								console.log(res)
-							})
-							.catch(err=>{
-								console.log(err)
-							})
+							Auth.formid(e.target.formId)
 						}
 					}
 					this.hasreliable = !this.hasreliable
