@@ -21,15 +21,11 @@ class AuthManager
 	};
 	constructor()
 	{
-		if(wx.getStorageSync('token') && new Date(wx.getStorageSync('token').expired_at) > new Date()) {
+		if(wx.getStorageSync('token') ) {
 			this.proxy.token = wx.getStorageSync('token');
 			this.proxy.loaded = true
 			this.proxy.logined = true
-
 		// 如果token过期刷新token
-		}else if(wx.getStorageSync('token') && new Date(wx.getStorageSync('token').expired_at) <= new Date()){
-			this.refresh(wx.getStorageSync('token').access_token)
-
 		}else{
 			this.proxy.loaded = true
 		}
@@ -96,10 +92,10 @@ class AuthManager
 
 	}
 
-	refresh(token) {
+	refresh() {
 		var _this = this;
 		wx.pro.request({
-			url:`${configs.card.apiBaseUrl}api/login/refresh/${token}`,
+			url:`${configs.card.apiBaseUrl}api/login/refresh/${wx.getStorageSync('token').access_token}`,
 			method: 'GET',
 		})
 		.then(d => {

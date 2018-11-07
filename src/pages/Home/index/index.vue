@@ -434,6 +434,10 @@ export default {
 		text-align:center;
 		width:100%;
 		display:flex;
+		p{
+			margin:0 auto;
+			color:#fff;
+		}
 		div{
 			color:#999;
 			font-size:13px;

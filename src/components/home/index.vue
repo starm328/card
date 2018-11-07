@@ -220,8 +220,8 @@
 			</p>
 		</div>
 		<div class="share-card" v-for="(item,i) in showcards" :key="i">
-			<p  v-show="swiperCurrent == i">
-				<i class="iconfont icon-navicon-dxfs" @click="shareS(i)"></i>
+			<p  v-show="swiperCurrent == i" @click="shareS(i)">
+				<i class="iconfont icon-navicon-dxfs" ></i>
 				<span>发名片</span>
 			</p>
 		</div>
@@ -371,8 +371,7 @@ export default {
 			.catch(err => {
 				wx.hideLoading ();
 				if(err.statusCode == 404){
-					Auth.proxy.token = ''
-					wx.removeStorageSync('token')
+					Auth.refresh()
 					// Auth.RefreshToken();
 				}
 				// 网络错误、或服务器返回 4XX、5XX
@@ -401,8 +400,7 @@ export default {
 			.catch(err => {
 				wx.hideLoading ();
 				if(err.statusCode == 404){
-					Auth.proxy.token = ''
-					wx.removeStorageSync('token')
+					Auth.refresh()
 					// Auth.RefreshToken();
 				}
 				// 网络错误、或服务器返回 4XX、5XX
@@ -451,7 +449,7 @@ export default {
 			})
 			.catch(err => {
 				if(err.statusCode == 404){
-					wx.removeStorageSync('token')
+					Auth.refresh()
 				}else if(err.statusCode == 500){
 					wx.showToast({
 						title: '系统错误',
