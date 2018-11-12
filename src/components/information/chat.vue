@@ -2,15 +2,21 @@
 <template>
 	<div class="information-chat" :style="'padding-top:'+navgationHeight+'px'">
 		<scroll-view scroll-y="true" style="height: 100vh;" :scroll-into-view="scrollinto" enable-back-to-top>
+			<dl v-if="chat.length> 0" v-for="(item,i) in chat"  :key="i" :class="[userid == item.from_user_id ? 'meshare' : '']">
+				<dt><img :src="item.from_avatarUrl" mode="widthFix"></dt>
+				<dd><p>{{item.content}}</p></dd>
+			</dl>
+
 			<dl v-if="sharecontent.length> 0" v-for="(item,i) in sharecontent " class="meshare" :key="i">
 				<dt><open-data type="userAvatarUrl" ></open-data></dt>
 				<dd><p>{{item}}</p></dd>
 			</dl>
+
 			<div class="bottom">
-				<input type="text" name="" placeholder="请输入消息" v-model="content" confirm-type="send" @confirm="chats"  auto-focus>
+				<input type="text" name="" placeholder="请输入消息" v-model="content" confirm-type="send" @confirm="chats" >
 				<p @click="chats">发送</p>
 			</div>
-			<view style="height:120px;" id="bottoms"></view>
+			<view style="height:120px;" id="bottoms" v-if="chat.length> 0"></view>
 		</scroll-view>
 
 	</div>
@@ -29,15 +35,18 @@ export default {
 			content:'',
 			sharecontent:[],
 			scrollinto:'',
-
+			userid:wx.getStorageSync('token').user_id
 		}
 	},
 	onUnload() {
 		this.sharecontent = []
 		this.chat= ''
+		this.scrollinto=''
 	},
 	onLoad(option) {
+		console.log(option)
 			this.id  = option.id
+			this.getdata()
 			var startBarHeight = 20
 			var navgationHeight = 44
 			var _this = this;
@@ -51,7 +60,39 @@ export default {
 			})
 	},
 	methods: {
+		getdata() {
+			var _this = this;
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/user/chats/${_this.id}`,
+				method: 'GET',
+				header: {
+					token:Auth.proxy.token.access_token
+				},
 
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					_this.chat = d.data
+					_this.scrollinto = 'bottoms'
+
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 404){
+					Auth.proxy.token = ''
+					wx.removeStorageSync('token')
+					// Auth.RefreshToken();
+				}else if(err.statusCode == 500){
+					wx.showToast({
+						title: '系统错误',
+						icon: 'none',
+						duration: 2000,
+					})
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
+		},
 		chats() {
 				var _this = this;
 				wx.pro.request({

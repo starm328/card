@@ -1,12 +1,12 @@
 
 <template>
-	<div class="information-system" :style="'padding-top:'+navgationHeight+'px'">
-		<dl v-for="(item,i) in message" :key="i" @click="chats(item.from_user_id)">
+	<div class="information-system" >
+		<dl v-for="(item,i) in message" :key="i" @click="chats(item.user_id)">
 			<dt class="visit">
-				<img :src="item.origin_avatarUrl" mode="widthFix">
+				<img :src="item.avatarUrl" mode="widthFix">
 			</dt>
 			<dd>
-				<h6>{{item.content}}</h6>
+				<h6>{{item.nick_name}}</h6>
 				<p>{{item.updated_at}}</p>
 			</dd>
 		</dl>
@@ -23,7 +23,7 @@ export default {
 		return {
 			navgationHeight:'',
 			onReachBottom:true,
-			message:'',
+			message:[],
 			page:1,
 			pageSize:10,
 			id:''
@@ -36,9 +36,10 @@ export default {
 	onUnload() {
 		this.onReachBottom =  true,
 		this.page = 1
+		this.message = []
 	},
 	onLoad(option) {
-			this.id  = option.id
+			this.id  = wx.getStorageSync('token').user_id
 			this.getdata()
 			var startBarHeight = 20
 			var navgationHeight = 44
@@ -54,57 +55,57 @@ export default {
 
 
 	},
-	onReachBottom() {
-		var _this = this;
-		console.log(_this.onReachBottom)
-		if(_this.onReachBottom){
-			wx.showLoading({
-				title: '玩命加载中',
-			})
-			wx.pro.request({
-				url:`${configs.card.apiBaseUrl}api/user/chats/`+_this.id,
-				method: 'GET',
-				data: {
-					p: _this.page
-				},
-				header: {
-					token:Auth.proxy.token.access_token
-				}
-			})
-			.then(d => {
-				if(d.statusCode == 200){
-					wx.hideLoading ();
+	// onReachBottom() {
+	// 	var _this = this;
+	// 	console.log(_this.onReachBottom)
+	// 	if(_this.onReachBottom){
+	// 		wx.showLoading({
+	// 			title: '玩命加载中',
+	// 		})
+	// 		wx.pro.request({
+	// 			url:`${configs.card.apiBaseUrl}api/user/chats/`+_this.id,
+	// 			method: 'GET',
+	// 			data: {
+	// 				p: _this.page
+	// 			},
+	// 			header: {
+	// 				token:Auth.proxy.token.access_token
+	// 			}
+	// 		})
+	// 		.then(d => {
+	// 			if(d.statusCode == 200){
+	// 				wx.hideLoading ();
 
-					const _list = d.data;
-					console.log(d,_this.page,'001')
-					_this.message = [..._this.message,..._list];
-					if(_list.length < _this.pageSize) {
-						_this.onReachBottom =  false
-						return
-					}
+	// 				const _list = d.data;
+	// 				console.log(d,_this.page,'001')
+	// 				_this.message = [..._this.message,..._list];
+	// 				if(_list.length < _this.pageSize) {
+	// 					_this.onReachBottom =  false
+	// 					return
+	// 				}
 
-					_this.page = _this.page + 1
-					// _this.records = d.data
-				}
-				// 2XX, 3XX
-			})
-			.catch(err => {
-				wx.hideLoading ();
-				if(err.statusCode == 404){
-					wx.removeStorageSync('token')
-				}else if(err.statusCode == 500){
-					wx.showToast({
-						title: '系统错误',
-						icon: 'none',
-						duration: 2000,
-					})
-				}
-				// 网络错误、或服务器返回 4XX、5XX
-			})
-		}
+	// 				_this.page = _this.page + 1
+	// 				// _this.records = d.data
+	// 			}
+	// 			// 2XX, 3XX
+	// 		})
+	// 		.catch(err => {
+	// 			wx.hideLoading ();
+	// 			if(err.statusCode == 404){
+	// 				wx.removeStorageSync('token')
+	// 			}else if(err.statusCode == 500){
+	// 				wx.showToast({
+	// 					title: '系统错误',
+	// 					icon: 'none',
+	// 					duration: 2000,
+	// 				})
+	// 			}
+	// 			// 网络错误、或服务器返回 4XX、5XX
+	// 		})
+	// 	}
 
 
-	},
+	// },
 	methods: {
 		chats(id) {
 			wx.navigateTo({
@@ -114,19 +115,18 @@ export default {
 		getdata() {
 			var _this = this;
 			wx.pro.request({
-				url:`${configs.card.apiBaseUrl}api/user/chats/`+_this.id,
+				url:`${configs.card.apiBaseUrl}api/user/chatslist`,
 				method: 'GET',
 				header: {
 					token:Auth.proxy.token.access_token
 				},
-				data: {
-					p:0
-				}
 			})
 			.then(d => {
 				if(d.statusCode == 200){
-					_this.message = d.data
-					_this.scrollinto = 'bottoms'
+					console.log(d)
+					for (var i = 0; i<d.data.length; i++) {
+						_this.userlist(d.data[i])
+					}
 				}
 				// 2XX, 3XX
 			})
@@ -142,7 +142,35 @@ export default {
 				}
 				// 网络错误、或服务器返回 4XX、5XX
 			})
-		}
+		},
+		userlist(id) {
+			var _this = this;
+			wx.pro.request({
+				url:`${configs.card.apiBaseUrl}api/user/userinfo/${id}`,
+				method: 'GET',
+				header: {
+					token:Auth.proxy.token.access_token
+				},
+			})
+			.then(d => {
+				if(d.statusCode == 200){
+					_this.message.push(d.data)
+				}
+				// 2XX, 3XX
+			})
+			.catch(err => {
+				if(err.statusCode == 404){
+					wx.removeStorageSync('token')
+				}else if(err.statusCode == 500){
+					wx.showToast({
+						title: '系统错误',
+						icon: 'none',
+						duration: 2000,
+					})
+				}
+				// 网络错误、或服务器返回 4XX、5XX
+			})
+		},
 	}
 }
 </script>

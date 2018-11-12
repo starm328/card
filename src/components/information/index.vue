@@ -96,7 +96,6 @@ export default {
 <style lang="less" scoped>
 @import '../../configs/style.less';
 .information-index{
-	min-height:100vh;
 	background:#fff;
 	dl{
 		padding:20px 20px 0 20px;

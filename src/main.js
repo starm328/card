@@ -82,8 +82,9 @@ export default {
 		'pages/about/guize/main',
 		'pages/about/video/main',
 		'pages/about/jieda/main',
-		'pages/agreement/main'
-
+		'pages/agreement/main',
+		// 钱包
+		'pages/wallet/main'
 		],
 		window: {
 			backgroundTextStyle: 'light',

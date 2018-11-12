@@ -12,6 +12,12 @@
 				<div class="tequan" v-if="user[0]" @click="privilege">{{user[0].label}}特权</div>
 			</div>
 			<div class="enterprise-nav" >
+				<div class="stm-cell  enterprise-nav-list">
+					<div class="cell-warp" @click="wallet">
+						<div class="cell-left enterprise-tit">我的钱包</div>
+						<i class="iconfont icon-arrow-right-copy-copy-copy"></i>
+					</div>
+				</div>
 				<div class="stm-cell  enterprise-nav-list" v-if="user[0] && user[0].id !==97">
 					<div class="cell-warp" @click="translate">
 						<div class="cell-left enterprise-tit">选择升级</div>
@@ -192,6 +198,11 @@ export default {
 		JoinedTeam(){
 			wx.navigateTo({
 			  url: '/pages/Team/main'
+			})
+		},
+		wallet () {
+			wx.navigateTo({
+			  url: '/pages/wallet/main'
 			})
 		},
 		invitation(){

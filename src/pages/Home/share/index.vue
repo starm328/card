@@ -80,7 +80,7 @@
 						<button formType="submit"><i class="iconfont  icon-renqi"  :class="[haspraise? 'haspraise' :'']"></i>人气({{cardData.card.praise}})</button>
 					</form>
 					<form @submit="reliable" report-submit="true" class="li">
-						<button formType="submit"><i class="iconfont  icon-shou"  :class="[hasreliable? 'hasreliable' :'']"></i>人气({{cardData.card.reliable}})</button>
+						<button formType="submit"><i class="iconfont  icon-shou"  :class="[hasreliable? 'hasreliable' :'']"></i>靠谱({{cardData.card.reliable}})</button>
 					</form>
 				</div>
 				<div class="card-nav-btn">

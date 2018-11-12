@@ -1,6 +1,5 @@
 <template>
 	<div class="home-index-component">
-		{{current}}
 		<swiper :indicator-dots="indicatorDots"
 		:duration="duration" previous-margin="40px" next-margin="40px" @change="bindchange"  v-show="showcards" :style="'padding-top:'+(navgationHeight)+'px'" :current="current">
 
