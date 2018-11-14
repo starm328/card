@@ -50,7 +50,7 @@ export default {
 			return this.scrollTop / 400 > 0.9  ? 'active' :  ''
 		},
 		fontmar() {
-			return this.navgationHeight - 37
+			return this.navgationHeight - 60
 		}
 	},
 	methods: {

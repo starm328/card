@@ -13,18 +13,16 @@
 			<p v-if="item.fee !==null">
 				{{item.fee.title}}：<span class="fg-gray">{{item.fee.rate}}:{{item.fee.denominator}}</span>
 			</p>
-			{{item.id}}
 			<st-withdrawablelimits :id="item.id"></st-withdrawablelimits>
+			<div style="width:96%;margin:0 auto">
+				<form @submit="gotoformid" :report-submit="true">
+					<button formType="submit" @click="withdrawals(item.id)" class="stm-main-button stm-m10-t" style="color:#fff;">
+							提现
+					</button>
+				</form>
+			</div>
 		</div>
-		<div style="width:96%;margin:0 auto">
-			<form @submit="gotoformid" :report-submit="true">
-				<button formType="submit" class="stm-main-button stm-m10-t" style="color:#fff;">
-						提现
-				</button>
-			</form>
-			<p style="text-align:center;font-size:15px;line-height:45px;">提现记录</p>
-		</div>
- -->
+		<p style="text-align:center;font-size:15px;line-height:45px;">提现记录</p> -->
 	</div>
 </template>
 
@@ -34,7 +32,7 @@ import configs from '@/utils/configs';
 import Withdrawablelimits from '@/components/wallet/limits';
 export default {
 	name: 'wallet-index',
-	compontents: {
+	components: {
 		'st-withdrawablelimits':Withdrawablelimits
 	},
 	data () {
@@ -180,6 +178,11 @@ export default {
 		},
 		gotoformid(e) {
 			Auth.formid(e.target.formId)
+		},
+		withdrawals(id){
+			wx.navigateTo({
+				url: '/pages/wallet/form/main?id='+ id,
+			})
 		}
 	}
 }
@@ -190,9 +193,14 @@ export default {
 @import '../../configs/main.less';
 .wallet-index{
 	.withdrawable{
+		background:#fff;
 		font-size:@fonttwo;
-		width:96%;
-		margin:10px auto;
+		width:calc(100% - 20px);
+		padding:10px;
+		margin:0 auto;
+		p{
+			color:@fontcolor;
+		}
 	}
 	.detial{
 		padding-bottom:20px;

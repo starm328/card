@@ -12,10 +12,12 @@
 				<dd><p>{{item}}</p></dd>
 			</dl>
 
+			<form @submit="gotoformid" :report-submit="true">
 			<div class="bottom">
 				<input type="text" name="" placeholder="请输入消息" v-model="content" confirm-type="send" @confirm="chats" >
-				<p @click="chats">发送</p>
+				<button formType="submit" class="form_button"  style="color:#fff;"><p @click="chats">发送</p></button>
 			</div>
+			</form>
 			<view style="height:120px;" id="bottoms" v-if="chat.length> 0"></view>
 		</scroll-view>
 
@@ -60,6 +62,9 @@ export default {
 			})
 	},
 	methods: {
+		gotoformid(e) {
+			Auth.formid(e.target.formId)
+		},
 		getdata() {
 			var _this = this;
 			wx.pro.request({
@@ -113,11 +118,12 @@ export default {
 							title:"发送成功",
 							icon: 'success',
 							duration: 3000,
+							mask:true,
 						})
 						_this.sharecontent.push(_this.content)
 						setTimeout(()=>{
 							_this.content = ''
-						},1000)
+						},500)
 
 					}
 					// 2XX, 3XX

@@ -84,7 +84,8 @@ export default {
 		'pages/about/jieda/main',
 		'pages/agreement/main',
 		// 钱包
-		'pages/wallet/main'
+		'pages/wallet/main',
+		'pages/wallet/form/main'
 		],
 		window: {
 			backgroundTextStyle: 'light',
