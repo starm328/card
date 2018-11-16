@@ -2,7 +2,7 @@
 	<div class="information-exchange" :style="'padding-top:'+navgationHeight+'px'">
 
 		<div class="list">
-			<dl v-for="(item,i) in quest" :key="i" @tap="longtap(item.user_id)" @longpress="longpress(item.id,i)"  @touchend="touchend(i)" :class="[scale == i ? ' scale': '']" v-show="item.card">
+			<dl v-for="(item,i) in quest" :key="i" @tap="longtap(item.card.user_id)" @longpress="longpress(item.id,i)"  @touchend="touchend(i)" :class="[scale == i ? ' scale': '']" v-show="item.card">
 				<dt v-if="item.card">
 					<img :src="item.card.img_url" class="img" mode="widthFix">
 				</dt>

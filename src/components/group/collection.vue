@@ -3,7 +3,7 @@
 		<st-nodata v-if="quest.length == 0"></st-nodata>
 
 		<div class="list" v-else>
-			<dl v-for="(item,i) in quest" :key="i" @tap="longtap(item.user_id)" @longpress="longpress(item.id,i)" :class="[scale == i ? ' scale': '']" @touchend="touchend(i)" v-if="item.card">
+			<dl v-for="(item,i) in quest" :key="i" @tap="longtap(item.card.user_id)" @longpress="longpress(item.id,i)" :class="[scale == i ? ' scale': '']" @touchend="touchend(i)" v-if="item.card">
 				<dt v-if="item.card">
 					<img :src="item.card.img_url" class="img" mode="widthFix">
 				</dt>

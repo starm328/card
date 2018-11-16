@@ -12,15 +12,15 @@
 				<dd><p>{{item}}</p></dd>
 			</dl>
 
-			<form @submit="gotoformid" :report-submit="true">
+
+			<view style="height:120px;" id="bottoms" v-if="chat.length> 0"></view>
+		</scroll-view>
+		<form @submit="gotoformid" :report-submit="true">
 			<div class="bottom">
 				<input type="text" name="" placeholder="请输入消息" v-model="content" confirm-type="send" @confirm="chats" >
 				<button formType="submit" class="form_button"  style="color:#fff;"><p @click="chats">发送</p></button>
 			</div>
 			</form>
-			<view style="height:120px;" id="bottoms" v-if="chat.length> 0"></view>
-		</scroll-view>
-
 	</div>
 </template>
 
