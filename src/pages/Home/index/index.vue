@@ -1,6 +1,6 @@
 <template>
 	<div class="home-index">
-		<div style="height:75vh;padding-top:40px;" v-if="!auth.proxy.token">
+		<!-- <div style="height:75vh;padding-top:40px;" v-if="!auth.proxy.token">
 			<div class="swiper-content"   >
 					<div class="imgno">
 						<open-data type="userAvatarUrl" class="img"></open-data>
@@ -20,7 +20,7 @@
 			<div v-else-if="auth.proxy.token">
 				<stm-swiper></stm-swiper>
 			</div>
-			<stm-phone v-if="sign" @log="oversign"></stm-phone>
+			<stm-phone v-if="sign" @log="oversign"></stm-phone> -->
 
 	</div>
 </template>
