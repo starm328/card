@@ -1,6 +1,3 @@
-# reward
-
-> 文章打赏
 
 ## Build Setup
 
